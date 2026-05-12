@@ -25,7 +25,7 @@ De esta manera, los productos primero llegan al almacén central, donde son reci
 
 ## Estado del proyecto
 
-🚧 Proyecto en desarrollo 🚧
+ Proyecto en desarrollo 
 
 ## Funcionalidades
 
@@ -46,12 +46,3 @@ Para acceder al proyecto, clonar el repositorio con el siguiente comando:
 
 ```bash
 git clone URL_DEL_REPOSITORIO
-
-## Tecnologías utilizadas
-
-| Tecnología | Uso en el proyecto |
-|---|---|
-| Spring Boot | Framework utilizado para desarrollar la API REST del sistema. |
-| Angular | Framework utilizado para desarrollar el frontend. |
-| MySQL | Base de datos relacional del sistema. |
-| Docker Compose | Ejecución conjunta del backend, frontend y base de datos. |

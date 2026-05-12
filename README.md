@@ -10,9 +10,6 @@
 - [Acceso al proyecto](#acceso-al-proyecto)
 - [Abre y ejecuta el proyecto](#abre-y-ejecuta-el-proyecto)
 - [Tecnologías utilizadas](#tecnologías-utilizadas)
-- [Documentación](#documentación)
-- [Desarrolladora](#desarrolladora)
-- [Licencia](#licencia)
 
 ## Descripción del proyecto
 
@@ -49,3 +46,12 @@ Para acceder al proyecto, clonar el repositorio con el siguiente comando:
 
 ```bash
 git clone URL_DEL_REPOSITORIO
+
+## Tecnologías utilizadas
+
+| Tecnología | Uso en el proyecto |
+|---|---|
+| Spring Boot | Framework utilizado para desarrollar la API REST del sistema. |
+| Angular | Framework utilizado para desarrollar el frontend. |
+| MySQL | Base de datos relacional del sistema. |
+| Docker Compose | Ejecución conjunta del backend, frontend y base de datos. |

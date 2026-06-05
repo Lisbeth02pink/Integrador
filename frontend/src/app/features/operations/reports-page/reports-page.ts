@@ -7,7 +7,7 @@ import { InventoryMovement, InventoryService, InventoryWarehouseSummary } from '
 import { Product } from '../../../core/services/products';
 import { SaleSummary, SalesService } from '../../../core/services/sales';
 import { Supplier, SupplierDelivery, SuppliersService } from '../../../core/services/suppliers';
-
+ 
 @Component({
   selector: 'app-reports-page',
   imports: [CommonModule, FormsModule, CurrencyPipe],
@@ -17,7 +17,7 @@ import { Supplier, SupplierDelivery, SuppliersService } from '../../../core/serv
 export class ReportsPage implements OnInit {
   fromDate = '2026-04-01';
   toDate = '2026-05-06';
-
+ 
   movements: InventoryMovement[] = [];
   lowStock: Product[] = [];
   warehouseSummary: InventoryWarehouseSummary[] = [];
@@ -27,7 +27,7 @@ export class ReportsPage implements OnInit {
   sales: SaleSummary[] = [];
   errorMessage = '';
   loading = false;
-
+ 
   constructor(
     private inventoryService: InventoryService,
     private internalOrdersService: InternalOrdersService,
@@ -35,58 +35,58 @@ export class ReportsPage implements OnInit {
     private salesService: SalesService,
     private cdr: ChangeDetectorRef
   ) {}
-
+ 
   ngOnInit() {
     this.loadReports();
   }
-
+ 
   get ingresosPeriodo() {
     return this.sales.reduce((acc, item) => acc + item.ingresos, 0);
   }
-
+ 
   get egresosPeriodo() {
     return this.sales.reduce((acc, item) => acc + item.egresos, 0);
   }
-
+ 
   get utilidadPeriodo() {
     return this.ingresosPeriodo - this.egresosPeriodo;
   }
-
+ 
   get transferencias() {
     return this.movements.filter((item) => item.tipo === 'Transferencia');
   }
-
+ 
   get ingresosProveedor() {
     return this.movements.filter((item) => item.tipo === 'Ingreso');
   }
-
+ 
   get pedidosPendientes() {
     return this.orders.filter((item) => item.status === 'Pendiente').length;
   }
-
+ 
   get pedidosEnProceso() {
     return this.orders.filter((item) => ['Aprobado', 'Preparando', 'En ruta'].includes(item.status)).length;
   }
-
+ 
   get pedidosEntregados() {
     return this.orders.filter((item) => item.status === 'Entregado').length;
   }
-
+ 
   get proveedoresActivos() {
     return this.suppliers.filter((item) => item.estado === 1).length;
   }
-
+ 
   get totalStockTiendas() {
     const centralId = this.centralWarehouseId;
     return this.warehouseSummary
       .filter((item) => item.warehouse.id !== centralId)
       .reduce((acc, item) => acc + item.stockTotal, 0);
   }
-
+ 
   get stockCentral() {
     return this.warehouseSummary.find((item) => item.warehouse.id === this.centralWarehouseId)?.stockTotal ?? 0;
   }
-
+ 
   get topSuppliers() {
     return [...this.deliveries]
       .reduce((acc, item) => {
@@ -96,14 +96,14 @@ export class ReportsPage implements OnInit {
       }, new Map<string, number>())
       .entries();
   }
-
+ 
   get topSuppliersList() {
     return Array.from(this.topSuppliers)
       .map(([name, quantity]) => ({ name, quantity }))
       .sort((a, b) => b.quantity - a.quantity)
       .slice(0, 5);
   }
-
+ 
   get topProductsMoved() {
     return Array.from(
       this.movements.reduce((acc, item) => {
@@ -116,7 +116,7 @@ export class ReportsPage implements OnInit {
       .sort((a, b) => b.quantity - a.quantity)
       .slice(0, 5);
   }
-
+ 
   private get centralWarehouseId() {
     return [...this.warehouseSummary]
       .sort((a, b) => {
@@ -128,11 +128,11 @@ export class ReportsPage implements OnInit {
         return b.stockTotal - a.stockTotal;
       })[0]?.warehouse.id;
   }
-
+ 
   loadReports() {
     this.loading = true;
     this.errorMessage = '';
-
+ 
     forkJoin({
       movements: this.inventoryService.listMovements(),
       lowStock: this.inventoryService.listLowStock(),
@@ -159,5 +159,21 @@ export class ReportsPage implements OnInit {
         this.cdr.detectChanges();
       },
     });
+  }
+ 
+  exportarUsuariosExcel() {
+    const url = 'http://localhost:8080/api/reportes/usuarios/excel';
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'reporte_usuarios.xlsx';
+    link.click();
+  }
+ 
+  exportarProductosExcel() {
+    const url = 'http://localhost:8080/api/reportes/productos/excel';
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'reporte_productos.xlsx';
+    link.click();
   }
 }

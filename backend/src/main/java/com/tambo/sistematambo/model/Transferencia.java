@@ -34,6 +34,12 @@ public class Transferencia {
     @Column(nullable = false)
     private LocalDateTime fecha;
 
+    @Column(name = "fecha_envio")
+    private LocalDateTime fechaEnvio;
+
+    @Column(name = "fecha_recepcion")
+    private LocalDateTime fechaRecepcion;
+
     @Column(nullable = false, length = 30)
     private String estado;
 
@@ -76,6 +82,22 @@ public class Transferencia {
 
     public void setFecha(LocalDateTime fecha) {
         this.fecha = fecha;
+    }
+
+    public LocalDateTime getFechaEnvio() {
+        return fechaEnvio;
+    }
+
+    public void setFechaEnvio(LocalDateTime fechaEnvio) {
+        this.fechaEnvio = fechaEnvio;
+    }
+
+    public LocalDateTime getFechaRecepcion() {
+        return fechaRecepcion;
+    }
+
+    public void setFechaRecepcion(LocalDateTime fechaRecepcion) {
+        this.fechaRecepcion = fechaRecepcion;
     }
 
     public String getEstado() {

@@ -1,0 +1,2892 @@
+:root {
+  --ui-text-main: #2a2540;
+  --ui-text-soft: #7d6e88;
+  --ui-surface: rgba(255, 255, 255, 0.98);
+  --ui-surface-strong: #ffffff;
+  --ui-border: rgba(87, 35, 100, 0.14);
+  --ui-purple: #572364;
+  --ui-purple-deep: #3d1545;
+  --ui-purple-soft: rgba(142, 27, 143, 0.08);
+  --ui-purple-muted: rgba(87, 35, 100, 0.04);
+  --ui-yellow: #ffcc00;
+  --ui-yellow-soft: rgba(255, 204, 0, 0.16);
+  --ui-green: #166534;
+  --ui-red: #d9534f;
+  --ui-blue: #2c4766;
+  --ui-shadow: 0 14px 36px rgba(87, 35, 100, 0.08);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  color: var(--ui-text-main);
+  font-family: "Aptos", "Segoe UI Variable Text", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  background:
+    radial-gradient(circle at top left, rgba(87, 35, 100, 0.05), transparent 22%),
+    radial-gradient(circle at top right, rgba(255, 204, 0, 0.08), transparent 18%),
+    linear-gradient(180deg, #faf8fc 0%, #ffffff 40%, #f6f2f9 100%);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+.ui-page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.ui-card,
+.ui-hero,
+.ui-stat-card,
+.ui-modal {
+  background: var(--ui-surface);
+  border: 1px solid var(--ui-border);
+  border-radius: 16px;
+  box-shadow: var(--ui-shadow);
+  backdrop-filter: blur(8px);
+}
+
+.ui-card,
+.ui-hero {
+  padding: 20px;
+}
+
+.ui-hero {
+  position: relative;
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(251, 248, 252, 0.98)),
+    linear-gradient(130deg, rgba(255, 204, 0, 0.06), transparent 35%);
+  color: var(--ui-text-main);
+}
+
+.ui-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0 auto auto 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(87, 35, 100, 0.16), transparent 35%);
+}
+
+.ui-toolbar,
+.ui-card-header,
+.ui-modal-header,
+.ui-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.ui-toolbar {
+  margin-bottom: 14px;
+}
+
+.ui-kicker {
+  margin: 0 0 6px;
+  color: var(--ui-purple);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.ui-hero .ui-kicker,
+.ui-hero .ui-description {
+  display: none;
+}
+
+.ui-title {
+  margin: 0;
+  font-size: clamp(1.35rem, 1.55vw, 1.8rem);
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+}
+
+.ui-description,
+.ui-helper-text,
+.ui-card-header p {
+  color: var(--ui-text-soft);
+}
+
+.ui-description {
+  max-width: 920px;
+  line-height: 1.5;
+  font-size: 0.96rem;
+}
+
+.ui-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 10px 18px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  cursor: pointer;
+  text-decoration: none;
+  font-weight: 700;
+  line-height: 1;
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    background 0.18s ease,
+    border-color 0.18s ease,
+    color 0.18s ease;
+}
+
+.ui-btn:hover,
+.ui-icon-btn:hover,
+.ui-action-btn:hover {
+  transform: translateY(-1px);
+}
+
+.ui-btn-primary {
+  background: linear-gradient(180deg, #ffd84d, #ffcc00);
+  color: var(--ui-purple-deep);
+  border-color: rgba(168, 120, 0, 0.12);
+  box-shadow: 0 10px 22px rgba(255, 204, 0, 0.24);
+}
+
+.ui-btn-secondary,
+.ui-btn-ghost,
+.ui-icon-btn {
+  border: 1px solid var(--ui-border);
+}
+
+.ui-btn-secondary {
+  background: linear-gradient(135deg, #6d2a7c, #572364);
+  color: #ffffff;
+  box-shadow: 0 10px 22px rgba(87, 35, 100, 0.18);
+}
+
+.ui-btn-ghost,
+.ui-icon-btn {
+  background: #ffffff;
+  color: var(--ui-purple-deep);
+}
+
+.ui-btn-ghost {
+  min-height: 42px;
+  padding: 10px 16px;
+  font-size: 0.9rem;
+}
+
+.ui-btn-ghost:hover,
+.ui-icon-btn:hover {
+  background: rgba(87, 35, 100, 0.05);
+  border-color: rgba(87, 35, 100, 0.22);
+}
+
+.ui-icon-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 14px;
+  padding: 0;
+}
+
+.ui-table-wrap {
+  overflow-x: auto;
+}
+
+.ui-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.ui-table th,
+.ui-table td {
+  padding: 12px 14px;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.ui-table th {
+  color: var(--ui-text-soft);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  font-weight: 800;
+  text-transform: uppercase;
+  background: rgba(87, 35, 100, 0.035);
+}
+
+.ui-table tbody tr {
+  border-top: 1px solid rgba(87, 35, 100, 0.08);
+}
+
+.ui-table tbody tr:hover {
+  background: rgba(87, 35, 100, 0.03);
+}
+
+.ui-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(22, 101, 52, 0.12);
+  color: var(--ui-green);
+  font-weight: 700;
+  font-size: 0.78rem;
+}
+
+.ui-status::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.ui-status.is-warning {
+  background: rgba(255, 204, 0, 0.18);
+  color: #8a6a00;
+}
+
+.ui-status.is-danger,
+.ui-status.is-inactive {
+  background: rgba(185, 28, 28, 0.12);
+  color: var(--ui-red);
+}
+
+.ui-status.is-info {
+  background: rgba(37, 99, 235, 0.12);
+  color: var(--ui-blue);
+}
+
+.ui-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.ui-form-grid-single {
+  grid-template-columns: 1fr;
+}
+
+.ui-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ui-field label {
+  font-weight: 700;
+  color: #4b425d;
+  font-size: 0.84rem;
+  line-height: 1.35;
+}
+
+.ui-field input,
+.ui-field select,
+.ui-field textarea {
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 16px;
+  border: 1px solid rgba(87, 35, 100, 0.16);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.96);
+  color: #1a1a1a;
+  box-shadow: 0 2px 8px rgba(87, 35, 100, 0.03);
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    background 0.18s ease;
+}
+
+.ui-field textarea {
+  min-height: 112px;
+  resize: vertical;
+}
+
+.ui-field input::placeholder,
+.ui-field textarea::placeholder {
+  color: #9a8ca8;
+}
+
+.ui-field input:focus,
+.ui-field select:focus,
+.ui-field textarea:focus {
+  outline: none;
+  border-color: rgba(87, 35, 100, 0.36);
+  box-shadow:
+    0 0 0 4px rgba(87, 35, 100, 0.1),
+    0 8px 18px rgba(87, 35, 100, 0.08);
+}
+
+.ui-field.has-error input,
+.ui-field.has-error select,
+.ui-field.has-error textarea,
+.ui-field input.ng-invalid.ng-touched,
+.ui-field select.ng-invalid.ng-touched,
+.ui-field textarea.ng-invalid.ng-touched {
+  border-color: rgba(217, 83, 79, 0.65);
+  box-shadow: 0 0 0 3px rgba(217, 83, 79, 0.1);
+}
+
+.ui-error-text {
+  margin: 4px 0 0;
+  color: var(--ui-red);
+  font-size: 0.76rem;
+  line-height: 1.4;
+}
+
+.ui-inline-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.ui-action-btn {
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid transparent;
+  border-radius: 14px;
+  cursor: pointer;
+  box-shadow: 0 8px 16px rgba(87, 35, 100, 0.06);
+}
+
+.ui-action-btn svg,
+.ui-btn svg,
+.ui-icon-btn svg {
+  width: 17px;
+  height: 17px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.ui-action-btn.edit {
+  background: rgba(255, 204, 0, 0.18);
+  border-color: rgba(255, 204, 0, 0.24);
+  color: #8a6500;
+}
+
+.ui-action-btn.status {
+  background: rgba(87, 35, 100, 0.1);
+  border-color: rgba(87, 35, 100, 0.16);
+  color: var(--ui-purple);
+}
+
+.ui-action-btn.delete {
+  background: rgba(185, 28, 28, 0.1);
+  border-color: rgba(185, 28, 28, 0.16);
+  color: var(--ui-red);
+}
+
+.ui-action-btn.permissions {
+  background: rgba(44, 71, 102, 0.12);
+  border-color: rgba(44, 71, 102, 0.16);
+  color: var(--ui-blue);
+}
+
+.ui-action-btn.face {
+  background: rgba(87, 35, 100, 0.1);
+  border-color: rgba(87, 35, 100, 0.16);
+  color: var(--ui-purple);
+}
+
+.ui-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(17, 24, 39, 0.36);
+  z-index: 1000;
+}
+
+.ui-modal {
+  width: min(100%, 720px);
+  padding: 20px;
+}
+
+.ui-modal-lg {
+  width: min(100%, 920px);
+}
+
+.ui-modal-header {
+  margin-bottom: 14px;
+}
+
+.ui-modal-footer {
+  margin-top: 16px;
+}
+
+.ui-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.ui-stat-card {
+  position: relative;
+  overflow: hidden;
+  padding: 15px 16px;
+}
+
+.ui-stat-card::after {
+  content: "";
+  position: absolute;
+  inset: 0 auto auto 0;
+  width: 100%;
+  height: 3px;
+  border-radius: 16px 16px 0 0;
+  background: linear-gradient(90deg, rgba(142, 27, 143, 0.95), rgba(255, 204, 0, 0.85));
+}
+
+.ui-stat-card span,
+.ui-stat-card small {
+  display: block;
+}
+
+.ui-stat-card span {
+  color: var(--ui-text-soft);
+  font-size: 0.8rem;
+}
+
+.ui-stat-card strong {
+  display: block;
+  margin: 6px 0 3px;
+  font-size: 1.55rem;
+  letter-spacing: -0.04em;
+}
+
+.ui-stat-card small {
+  color: var(--ui-text-soft);
+}
+
+.ui-actions-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.ui-pane-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.ui-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: rgba(111, 66, 217, 0.08);
+  color: var(--ui-purple);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.ui-chip.is-yellow {
+  background: rgba(255, 204, 0, 0.16);
+  color: #8a6a00;
+}
+
+.ui-chip.is-danger {
+  background: rgba(185, 28, 28, 0.12);
+  color: var(--ui-red);
+}
+
+.ui-chip.is-success {
+  background: rgba(21, 128, 61, 0.12);
+  color: var(--ui-green);
+}
+
+.ui-metric-list,
+.ui-stack-list {
+  display: grid;
+  gap: 10px;
+}
+
+.ui-metric-row,
+.ui-stack-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #fcfbff, #ffffff);
+  border: 1px solid rgba(87, 35, 100, 0.08);
+}
+
+.ui-metric-row strong,
+.ui-stack-item strong,
+.ui-metric-row span,
+.ui-stack-item span,
+.ui-metric-row small,
+.ui-stack-item small {
+  display: block;
+}
+
+.ui-metric-row span,
+.ui-stack-item span,
+.ui-metric-row small,
+.ui-stack-item small {
+  color: var(--ui-text-soft);
+}
+
+.ui-progress {
+  width: 100%;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(87, 35, 100, 0.1);
+  overflow: hidden;
+}
+
+.ui-progress > span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #8e1b8f, #ffcc00);
+}
+
+.ui-card-header h3,
+.ui-modal-header h3 {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.ui-card-header p,
+.ui-modal-header p,
+.ui-helper-text {
+  margin: 4px 0 0;
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.ui-map-surface {
+  min-height: 280px;
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 15% 18%, rgba(255, 204, 0, 0.24), transparent 10%),
+    radial-gradient(circle at 38% 46%, rgba(87, 35, 100, 0.08), transparent 12%),
+    radial-gradient(circle at 68% 30%, rgba(87, 35, 100, 0.06), transparent 12%),
+    linear-gradient(180deg, #f3f4f6 0%, #f9fafb 40%, #ffffff 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.ui-map-path {
+  position: absolute;
+  left: 10%;
+  right: 12%;
+  top: 16%;
+  bottom: 14%;
+  border-left: 4px dashed rgba(87, 35, 100, 0.4);
+  border-bottom: 4px dashed rgba(87, 35, 100, 0.4);
+  border-radius: 0 0 0 44px;
+  transform: skewY(-12deg);
+}
+
+.ui-map-stop {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.94);
+  color: var(--ui-purple-deep);
+  border: 1px solid rgba(87, 35, 100, 0.08);
+  box-shadow: 0 10px 24px rgba(87, 35, 100, 0.08);
+  font-weight: 700;
+}
+
+.ui-map-stop::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #ffcc00;
+}
+
+.error-text {
+  color: var(--ui-red);
+  font-weight: 700;
+}
+
+/* Module visual alignment. Keep this scoped to page content so the sidebar stays untouched. */
+.content .inventory-page {
+  min-height: auto;
+  padding: 0;
+  background: transparent;
+  color: var(--ui-text-main);
+  gap: 20px;
+}
+
+.ui-page > .wh-hero,
+.clientes-page > .clientes-hero,
+.content .inventory-page > .inv-header {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(251, 248, 252, 0.98)),
+    linear-gradient(130deg, rgba(255, 204, 0, 0.06), transparent 35%);
+  border: 1px solid var(--ui-border);
+  border-radius: 16px;
+  box-shadow: var(--ui-shadow);
+  color: var(--ui-text-main);
+  padding: 20px;
+}
+
+.ui-page .wh-stat-card,
+.ui-page .sp-stat-card,
+.clientes-page .stat-card,
+.content .inventory-page .inv-kpi-card {
+  background: var(--ui-surface);
+  border: 1px solid var(--ui-border);
+  border-radius: 16px;
+  box-shadow: var(--ui-shadow);
+  color: var(--ui-text-main);
+}
+
+.ui-page .warehouse-card,
+.ui-page .supplier-card,
+.ui-page .category-card,
+.ui-page .store-card,
+.ui-page .order-card,
+.ui-page .draft-item,
+.ui-page .route-card,
+.ui-page .transfer-item,
+.clientes-page .table-card,
+.clientes-page .modal-card,
+.content .attendance-page .camera-card,
+.content .attendance-page .side-card,
+.content .attendance-page .employees-card,
+.content .inventory-page .ui-card,
+.content .inventory-page .inv-flow-card,
+.content .inventory-page .inv-panel,
+.content .inventory-page .inv-kardex-card {
+  background: var(--ui-surface);
+  border: 1px solid var(--ui-border);
+  border-radius: 16px;
+  box-shadow: var(--ui-shadow);
+  color: var(--ui-text-main);
+}
+
+.ui-page .warehouse-card:hover,
+.ui-page .supplier-card:hover,
+.ui-page .category-card:hover,
+.ui-page .store-card:hover,
+.ui-page .route-card:hover,
+.ui-page .transfer-item:hover {
+  box-shadow: 0 18px 42px rgba(87, 35, 100, 0.12);
+}
+
+.ui-page .wh-hero-title,
+.clientes-page h2,
+.content .inventory-page .inv-header-title,
+.content .inventory-page .inv-section-header h3,
+.content .inventory-page .inv-kardex-header h3 {
+  color: var(--ui-text-main);
+  letter-spacing: -0.02em;
+}
+
+.clientes-page .eyebrow,
+.clientes-page .modal-kicker,
+.content .inventory-page .inv-eyebrow {
+  color: var(--ui-purple);
+}
+
+.ui-page .wh-hero-sub,
+.clientes-page .description,
+.clientes-page .table-header p,
+.ui-page .route-header span,
+.ui-page .route-card p,
+.ui-page .route-card small,
+.ui-page .transfer-item span,
+.ui-page .transfer-item small,
+.content .attendance-page .camera-helper,
+.content .attendance-page .employees-table thead th,
+.content .inventory-page .inv-kpi-body span,
+.content .inventory-page .inv-kpi-body small,
+.content .inventory-page .inv-section-header p,
+.content .inventory-page .inv-kardex-header p,
+.content .inventory-page .inv-warehouse-meta,
+.content .inventory-page .inv-filter-label {
+  color: var(--ui-text-soft);
+}
+
+.ui-page .wh-stats-row,
+.content .inventory-page .inv-kpi-row {
+  gap: 14px;
+}
+
+.ui-page .sp-stats-grid,
+.clientes-page .stats-grid {
+  gap: 14px;
+}
+
+.content .attendance-page {
+  gap: 20px;
+  color: var(--ui-text-main);
+}
+
+.content .attendance-page .attendance-grid {
+  gap: 20px;
+}
+
+.content .attendance-page .camera-card,
+.content .attendance-page .side-card,
+.content .attendance-page .employees-card {
+  border-radius: 16px;
+}
+
+.content .attendance-page .camera-header h2,
+.content .attendance-page .side-header h3,
+.content .attendance-page .employees-header h2 {
+  color: var(--ui-text-main);
+  letter-spacing: -0.02em;
+}
+
+.content .attendance-page .employees-kicker {
+  color: var(--ui-purple);
+}
+
+.content .attendance-page .exit-btn {
+  background: linear-gradient(135deg, #6d2a7c, #572364);
+}
+
+.content .attendance-page .entry-btn {
+  background: linear-gradient(135deg, #128642, #16a34a);
+}
+
+.content .attendance-page .employees-table thead th {
+  background: var(--ui-purple-muted);
+  border-bottom-color: rgba(87, 35, 100, 0.1);
+}
+
+.content .attendance-page .employees-table tbody td {
+  border-bottom-color: rgba(87, 35, 100, 0.08);
+  color: var(--ui-text-main);
+}
+
+.ui-page .route-meta-grid,
+.content .inventory-page .inv-node--central,
+.content .inventory-page .inv-node--regional,
+.content .inventory-page .inv-node--tienda,
+.content .inventory-page .inv-warehouse-item,
+.content .inventory-page .inv-empty-state {
+  background: rgba(87, 35, 100, 0.03);
+  border-color: rgba(87, 35, 100, 0.12);
+  border-radius: 12px;
+}
+
+.ui-page .route-leaflet-map {
+  border-color: rgba(87, 35, 100, 0.14);
+  border-radius: 16px;
+}
+
+.ui-page .wh-stat-icon--purple,
+.ui-page .sp-stat-icon--purple,
+.ui-page .wh-avatar--central,
+.content .inventory-page .inv-node-icon {
+  background: var(--ui-purple-soft);
+  color: var(--ui-purple);
+}
+
+.content .inventory-page .ui-btn-primary,
+.ui-page .date-filters .ui-btn-secondary,
+.clientes-page .primary-action,
+.clientes-page .lookup-btn {
+  background: linear-gradient(180deg, #ffd84d, #ffcc00);
+  color: #211a08;
+  border-color: rgba(168, 120, 0, 0.12);
+  box-shadow: 0 10px 22px rgba(255, 204, 0, 0.24);
+}
+
+.content .inventory-page .ui-btn-secondary,
+.clientes-page .secondary-action {
+  background: linear-gradient(135deg, #6d2a7c, #572364);
+  color: #fff;
+}
+
+.clientes-page th,
+.content .inventory-page .ui-table th {
+  background: var(--ui-purple-muted);
+  color: var(--ui-text-soft);
+}
+
+.clientes-page tbody tr,
+.content .inventory-page .ui-table td,
+.content .inventory-page .ui-table-wrap {
+  border-color: rgba(87, 35, 100, 0.1);
+}
+
+@media (max-width: 1080px) {
+  .ui-stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .ui-actions-grid,
+  .ui-pane-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 900px) {
+  .ui-form-grid,
+  .ui-stats-grid,
+  .ui-actions-grid,
+  .ui-pane-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ui-toolbar,
+  .ui-card-header,
+  .ui-modal-header,
+  .ui-modal-footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .ui-page .wh-hero,
+  .clientes-page .clientes-hero,
+  .content .inventory-page .inv-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+/* Mockup-style ERP polish: CSS-only, scoped to module content. Sidebar styles are not targeted here. */
+:root {
+  --ui-page-bg:
+    radial-gradient(circle at top left, rgba(151, 71, 255, 0.13), transparent 30%),
+    linear-gradient(180deg, #fbf6ff 0%, #f4eafd 45%, #f7f2fb 100%);
+  --ui-card-bg: #ffffff;
+  --ui-card-border: #e2e4ec;
+  --ui-card-shadow: 0 10px 28px rgba(20, 24, 40, 0.055);
+  --ui-card-shadow-hover: 0 14px 34px rgba(20, 24, 40, 0.075);
+  --ui-radius-card: 14px;
+  --ui-radius-control: 10px;
+  --ui-title: #17122f;
+  --ui-muted: #67617c;
+  --ui-purple-brand: #8e1b8f;
+  --ui-purple-brand-dark: #6f1580;
+  --ui-yellow-brand: #ffcb05;
+}
+
+body {
+  background: var(--ui-page-bg);
+  color: var(--ui-title);
+}
+
+.content {
+  background: var(--ui-page-bg) !important;
+  min-height: 100vh;
+}
+
+.ui-page,
+.clientes-page,
+.content .inventory-page,
+.content .attendance-page {
+  gap: 18px;
+  color: var(--ui-title);
+}
+
+.ui-card,
+.ui-hero,
+.ui-stat-card,
+.ui-modal,
+.ui-page > .wh-hero,
+.clientes-page > .clientes-hero,
+.content .inventory-page > .inv-header,
+.ui-page .warehouse-card,
+.ui-page .supplier-card,
+.ui-page .category-card,
+.ui-page .store-card,
+.ui-page .order-card,
+.ui-page .draft-item,
+.ui-page .route-card,
+.ui-page .transfer-item,
+.clientes-page .table-card,
+.clientes-page .modal-card,
+.content .attendance-page .camera-card,
+.content .attendance-page .side-card,
+.content .attendance-page .employees-card,
+.content .inventory-page .ui-card,
+.content .inventory-page .inv-flow-card,
+.content .inventory-page .inv-panel,
+.content .inventory-page .inv-kardex-card {
+  background: var(--ui-card-bg);
+  border: 1px solid var(--ui-card-border);
+  border-radius: var(--ui-radius-card);
+  box-shadow: var(--ui-card-shadow);
+  backdrop-filter: none;
+}
+
+.ui-card,
+.ui-hero,
+.ui-page > .wh-hero,
+.clientes-page > .clientes-hero,
+.content .inventory-page > .inv-header {
+  padding: 22px 24px;
+}
+
+.ui-hero,
+.ui-page > .wh-hero,
+.clientes-page > .clientes-hero,
+.content .inventory-page > .inv-header {
+  position: relative;
+  min-height: 98px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background: #ffffff;
+  color: var(--ui-title);
+}
+
+.ui-hero {
+  padding-left: 118px;
+}
+
+.ui-hero::before {
+  content: "";
+  position: absolute;
+  left: 24px;
+  top: 50%;
+  width: 70px;
+  height: 70px;
+  border-radius: 16px;
+  background:
+    linear-gradient(135deg, rgba(142, 27, 143, 0.18), rgba(142, 27, 143, 0.06)),
+    #f6ecfb;
+}
+
+.ui-hero::after {
+  display: none;
+}
+
+.ui-toolbar,
+.ui-card-header,
+.ui-modal-header,
+.ui-modal-footer {
+  gap: 16px;
+}
+
+.ui-hero .ui-toolbar,
+.ui-page > .wh-hero .wh-hero-content,
+.clientes-page > .clientes-hero,
+.content .inventory-page > .inv-header {
+  width: 100%;
+}
+
+.ui-hero .ui-kicker {
+  display: none;
+}
+
+.ui-hero .ui-description {
+  display: block;
+  max-width: 720px;
+  margin: 7px 0 0;
+  color: var(--ui-muted);
+  font-size: 0.94rem;
+  line-height: 1.45;
+}
+
+.ui-title,
+.ui-card-header h3,
+.ui-modal-header h3,
+.ui-page .wh-hero-title,
+.clientes-page h2,
+.clientes-page .table-header h3,
+.content .inventory-page .inv-header-title,
+.content .inventory-page .inv-section-header h3,
+.content .inventory-page .inv-kardex-header h3,
+.content .attendance-page .camera-header h2,
+.content .attendance-page .side-header h3,
+.content .attendance-page .employees-header h2 {
+  color: var(--ui-title);
+  font-weight: 900;
+  letter-spacing: -0.025em;
+}
+
+.ui-title,
+.clientes-page h2,
+.content .inventory-page .inv-header-title {
+  font-size: clamp(1.35rem, 1.35vw, 1.65rem);
+}
+
+.ui-description,
+.ui-helper-text,
+.ui-card-header p,
+.ui-modal-header p,
+.ui-page .wh-hero-sub,
+.clientes-page .description,
+.clientes-page .table-header p,
+.content .inventory-page .inv-section-header p,
+.content .inventory-page .inv-kardex-header p {
+  color: var(--ui-muted);
+}
+
+.ui-btn,
+.clientes-page .primary-action,
+.clientes-page .secondary-action,
+.clientes-page .lookup-btn,
+.clientes-page .action-btn,
+.content .inventory-page .inv-btn-action,
+.content .attendance-page .entry-btn,
+.content .attendance-page .exit-btn,
+.content .attendance-page .excel-btn,
+.content .attendance-page .pdf-btn {
+  min-height: 42px;
+  border-radius: var(--ui-radius-control);
+  font-weight: 850;
+}
+
+.ui-btn-primary,
+.content .inventory-page .ui-btn-primary,
+.ui-page .date-filters .ui-btn-secondary,
+.clientes-page .primary-action,
+.clientes-page .lookup-btn {
+  background: linear-gradient(180deg, #ffd84d 0%, var(--ui-yellow-brand) 100%);
+  border-color: rgba(171, 121, 0, 0.18);
+  color: #1b1620;
+  box-shadow: 0 8px 18px rgba(255, 203, 5, 0.22);
+}
+
+.ui-btn-secondary,
+.content .inventory-page .ui-btn-secondary,
+.clientes-page .secondary-action,
+.content .attendance-page .exit-btn {
+  background: linear-gradient(180deg, var(--ui-purple-brand) 0%, var(--ui-purple-brand-dark) 100%);
+  border-color: rgba(111, 21, 128, 0.18);
+  color: #ffffff;
+  box-shadow: 0 8px 18px rgba(142, 27, 143, 0.2);
+}
+
+.ui-btn-ghost,
+.ui-icon-btn,
+.clientes-page .action-btn {
+  background: #ffffff;
+  border-color: #dfe2ec;
+  color: var(--ui-purple-brand);
+}
+
+.ui-stats-grid,
+.ui-page .wh-stats-row,
+.content .inventory-page .inv-kpi-row,
+.clientes-page .stats-grid {
+  gap: 16px;
+}
+
+.ui-stat-card,
+.ui-page .wh-stat-card,
+.ui-page .sp-stat-card,
+.clientes-page .stat-card,
+.content .inventory-page .inv-kpi-card {
+  min-height: 92px;
+  display: grid;
+  grid-template-columns: 58px minmax(0, 1fr);
+  align-items: center;
+  column-gap: 16px;
+  padding: 18px 20px;
+  border-radius: var(--ui-radius-card);
+  background: #ffffff;
+  border-color: var(--ui-card-border);
+  box-shadow: var(--ui-card-shadow);
+}
+
+.ui-stat-card::after {
+  display: none;
+}
+
+.ui-stat-card::before,
+.clientes-page .stat-card::before,
+.content .inventory-page .inv-kpi-card::before {
+  content: "";
+  width: 54px;
+  height: 54px;
+  grid-row: 1 / span 3;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(142, 27, 143, 0.16), rgba(142, 27, 143, 0.06));
+}
+
+.ui-stat-card:nth-child(2n)::before,
+.content .inventory-page .inv-kpi-card:nth-child(2n)::before {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.16), rgba(239, 68, 68, 0.06));
+}
+
+.ui-stat-card:nth-child(3n)::before,
+.content .inventory-page .inv-kpi-card:nth-child(3n)::before {
+  background: linear-gradient(135deg, rgba(22, 163, 74, 0.16), rgba(22, 163, 74, 0.06));
+}
+
+.ui-stat-card:nth-child(4n)::before,
+.content .inventory-page .inv-kpi-card:nth-child(4n)::before {
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.16), rgba(37, 99, 235, 0.06));
+}
+
+.ui-stat-card span,
+.ui-stat-card strong,
+.ui-stat-card small,
+.clientes-page .stat-card span,
+.clientes-page .stat-card strong,
+.content .inventory-page .inv-kpi-body {
+  grid-column: 2;
+}
+
+.ui-stat-card span,
+.ui-page .wh-stat-card span,
+.ui-page .sp-stat-label,
+.clientes-page .stat-card span,
+.content .inventory-page .inv-kpi-body span {
+  color: var(--ui-muted);
+  font-size: 0.84rem;
+  font-weight: 750;
+}
+
+.ui-stat-card strong,
+.ui-page .wh-stat-card strong,
+.ui-page .sp-stat-value,
+.clientes-page .stat-card strong,
+.content .inventory-page .inv-kpi-body strong {
+  margin: 3px 0 2px;
+  color: var(--ui-title);
+  font-size: 1.48rem;
+  font-weight: 950;
+  letter-spacing: -0.04em;
+}
+
+.ui-stat-card small,
+.ui-page .wh-stat-card small,
+.ui-page .sp-stat-sub,
+.content .inventory-page .inv-kpi-body small {
+  color: var(--ui-muted);
+  font-size: 0.78rem;
+}
+
+.ui-form-grid {
+  gap: 14px;
+}
+
+.ui-field {
+  gap: 6px;
+}
+
+.ui-field label {
+  color: #46405e;
+  font-size: 0.78rem;
+  font-weight: 850;
+}
+
+.ui-field input,
+.ui-field select,
+.ui-field textarea,
+.content .inventory-page .inv-filter-select,
+.clientes-page input,
+.clientes-page select,
+.clientes-page textarea {
+  min-height: 42px;
+  border-radius: var(--ui-radius-control);
+  border-color: #dce0ea;
+  background: #ffffff;
+  color: var(--ui-title);
+  box-shadow: none;
+}
+
+.ui-field textarea,
+.clientes-page textarea {
+  min-height: 92px;
+}
+
+.ui-field input:focus,
+.ui-field select:focus,
+.ui-field textarea:focus,
+.content .inventory-page .inv-filter-select:focus,
+.clientes-page input:focus,
+.clientes-page select:focus,
+.clientes-page textarea:focus {
+  border-color: rgba(142, 27, 143, 0.42);
+  box-shadow: 0 0 0 3px rgba(142, 27, 143, 0.09);
+}
+
+.ui-table-wrap,
+.clientes-page .table-wrapper,
+.content .attendance-page .table-wrap {
+  overflow: auto;
+  border: 1px solid var(--ui-card-border);
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.ui-table,
+.clientes-page table,
+.content .attendance-page .employees-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.ui-table th,
+.clientes-page th,
+.content .attendance-page .employees-table thead th {
+  padding: 12px 14px;
+  background: #f7f7fa;
+  color: #67617c;
+  border-bottom: 1px solid var(--ui-card-border);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.ui-table td,
+.clientes-page td,
+.content .attendance-page .employees-table tbody td {
+  padding: 13px 14px;
+  border-top: 0;
+  border-bottom: 1px solid #edf0f5;
+  color: #29243f;
+  font-size: 0.88rem;
+}
+
+.ui-table tbody tr:hover,
+.clientes-page tbody tr:hover,
+.content .attendance-page .employees-table tbody tr:hover {
+  background: #fbf9fd;
+}
+
+.ui-metric-row,
+.ui-stack-item,
+.ui-page .route-meta-grid,
+.content .inventory-page .inv-node--central,
+.content .inventory-page .inv-node--regional,
+.content .inventory-page .inv-node--tienda,
+.content .inventory-page .inv-warehouse-item,
+.content .inventory-page .inv-empty-state {
+  background: #fbfbfd;
+  border: 1px solid #e6e8f0;
+  border-radius: 12px;
+}
+
+.ui-chip,
+.ui-status,
+.clientes-page .status,
+.content .attendance-page .status-badge {
+  border-radius: 999px;
+  font-weight: 850;
+}
+
+.ui-progress {
+  height: 7px;
+  background: #ebe7f0;
+}
+
+.ui-progress > span {
+  background: linear-gradient(90deg, var(--ui-purple-brand), #b845d6);
+}
+
+.ui-page .warehouse-card:hover,
+.ui-page .supplier-card:hover,
+.ui-page .category-card:hover,
+.ui-page .store-card:hover,
+.ui-page .route-card:hover,
+.ui-page .transfer-item:hover {
+  transform: none;
+  box-shadow: var(--ui-card-shadow-hover);
+}
+
+.category-card,
+.store-card,
+.supplier-card,
+.warehouse-card {
+  overflow: hidden;
+}
+
+.category-cover {
+  height: 130px;
+  border-radius: 12px;
+}
+
+.product-image {
+  border-radius: 8px;
+}
+
+.route-leaflet-map {
+  border-radius: 12px;
+}
+
+@media (max-width: 1080px) {
+  .ui-stats-grid,
+  .ui-page .wh-stats-row,
+  .content .inventory-page .inv-kpi-row,
+  .clientes-page .stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .ui-card,
+  .ui-hero,
+  .ui-page > .wh-hero,
+  .clientes-page > .clientes-hero,
+  .content .inventory-page > .inv-header {
+    padding: 18px;
+  }
+
+  .ui-hero {
+    padding-left: 18px;
+    padding-top: 100px;
+  }
+
+  .ui-hero::before {
+    left: 18px;
+    top: 18px;
+    transform: none;
+  }
+
+  .ui-stats-grid,
+  .ui-page .wh-stats-row,
+  .content .inventory-page .inv-kpi-row,
+  .clientes-page .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ui-stat-card,
+  .ui-page .wh-stat-card,
+  .ui-page .sp-stat-card,
+  .clientes-page .stat-card,
+  .content .inventory-page .inv-kpi-card {
+    grid-template-columns: 50px minmax(0, 1fr);
+  }
+
+  .ui-stat-card::before,
+  .clientes-page .stat-card::before,
+  .content .inventory-page .inv-kpi-card::before {
+    width: 48px;
+    height: 48px;
+  }
+}
+
+/* =========================================================
+   FINAL UNIFIED ADMIN THEME
+   Pantallas internas alineadas al estilo de Proveedores.
+   ========================================================= */
+.content .ui-page {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 18px;
+}
+
+.content .ui-hero,
+.content .ui-card,
+.content .ui-stat-card,
+.content .ui-modal,
+.content .warehouse-card,
+.content .supplier-card,
+.content .category-card,
+.content .store-card,
+.content .order-card,
+.content .transfer-item,
+.content .route-card {
+  border: 1px solid #dde1ea !important;
+  border-radius: 16px !important;
+  background: #ffffff !important;
+  box-shadow: 0 10px 26px rgba(17, 24, 39, 0.055) !important;
+}
+
+.content .ui-hero {
+  position: relative;
+  min-height: 128px;
+  padding: 26px 32px !important;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  overflow: hidden;
+}
+
+.content .ui-hero::after {
+  display: none !important;
+}
+
+.content .ui-hero::before {
+  content: "" !important;
+  width: 72px;
+  height: 72px;
+  min-width: 72px;
+  border-radius: 18px;
+  display: block !important;
+  background:
+    linear-gradient(135deg, rgba(139, 32, 199, 0.16), rgba(139, 32, 199, 0.06)),
+    #f3e7f8;
+}
+
+.content .ui-hero:has(.sp-hero-icon)::before,
+.content .ui-hero:has(.hero-icon)::before,
+.content .ui-hero:has(.orders-hero-icon)::before {
+  display: none !important;
+  content: none !important;
+}
+
+.content .ui-hero .ui-toolbar {
+  width: 100%;
+  margin: 0;
+  align-items: center;
+}
+
+.content .ui-title,
+.content .ui-card-header h3,
+.content .ui-modal-header h3,
+.content .wh-hero-title,
+.content .inv-header-title {
+  color: #17122f !important;
+  font-weight: 900 !important;
+  letter-spacing: 0 !important;
+}
+
+.content .ui-title {
+  margin: 0 0 6px;
+  font-size: 1.45rem !important;
+  line-height: 1.16;
+}
+
+.content .ui-description,
+.content .ui-card-header p,
+.content .ui-modal-header p,
+.content .ui-helper-text,
+.content .wh-hero-sub,
+.content .inv-section-header p,
+.content .inv-kardex-header p {
+  color: #67617c !important;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.content .ui-hero .ui-kicker,
+.content .ui-hero .ui-description {
+  display: block;
+}
+
+.content .ui-kicker {
+  color: #8b20c7 !important;
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin: 0 0 4px;
+}
+
+.content .ui-card {
+  padding: 18px 18px 20px !important;
+}
+
+.content .ui-card-header {
+  margin-bottom: 14px;
+}
+
+.content .ui-stats-grid,
+.content .sp-stats-grid,
+.content .orders-stats-grid,
+.content .dashboard-kpis {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 16px !important;
+}
+
+.content .ui-stat-card {
+  min-height: 82px;
+  padding: 18px 20px !important;
+  display: grid !important;
+  grid-template-columns: 54px minmax(0, 1fr) !important;
+  align-items: center !important;
+  column-gap: 16px !important;
+  overflow: hidden;
+}
+
+.content .ui-stat-card::after {
+  display: none !important;
+}
+
+.content .ui-stat-card::before {
+  content: "" !important;
+  width: 54px;
+  height: 54px;
+  grid-row: 1 / span 3;
+  border-radius: 50%;
+  background: #f3e7f8;
+  display: block !important;
+}
+
+.content .ui-stat-card:nth-child(2n)::before {
+  background: #e8f8eb;
+}
+
+.content .ui-stat-card:nth-child(3n)::before {
+  background: #fff2dd;
+}
+
+.content .ui-stat-card:nth-child(4n)::before {
+  background: #eaf2ff;
+}
+
+.content .ui-stat-card .sp-stat-icon,
+.content .ui-stat-card .orders-stat-icon,
+.content .ui-stat-card .stat-icon {
+  grid-column: 1;
+  grid-row: 1 / span 3;
+  width: 54px !important;
+  height: 54px !important;
+  min-width: 54px !important;
+  min-height: 54px !important;
+  margin: 0 !important;
+  border-radius: 50% !important;
+}
+
+.content .ui-stat-card:has(.sp-stat-icon)::before,
+.content .ui-stat-card:has(.orders-stat-icon)::before,
+.content .ui-stat-card:has(.stat-icon)::before {
+  display: none !important;
+  content: none !important;
+}
+
+.content .ui-stat-card span,
+.content .sp-stat-label {
+  color: #25213b !important;
+  font-size: 13px !important;
+  font-weight: 750 !important;
+}
+
+.content .ui-stat-card strong,
+.content .sp-stat-value {
+  margin: 3px 0 2px !important;
+  color: #17122f !important;
+  font-size: 24px !important;
+  line-height: 1 !important;
+  font-weight: 900 !important;
+}
+
+.content .ui-stat-card small,
+.content .sp-stat-sub {
+  color: #77728a !important;
+  font-size: 12px !important;
+  font-weight: 650 !important;
+}
+
+.content .ui-btn {
+  min-height: 42px;
+  border-radius: 10px !important;
+  font-weight: 800;
+}
+
+.content .ui-btn svg,
+.content .ui-icon-btn svg,
+.content .ui-action-btn svg {
+  width: 16px;
+  height: 16px;
+  min-width: 16px;
+  display: block;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.content .ui-icon-btn svg,
+.content .ui-action-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.content .ui-btn-primary {
+  min-width: 170px;
+  min-height: 46px;
+  border: none !important;
+  background: linear-gradient(180deg, #ffd84d, #ffcb05) !important;
+  color: #17122f !important;
+  box-shadow: none !important;
+}
+
+.content .ui-btn-secondary {
+  background: #ffffff !important;
+  color: #17122f !important;
+  border: 1px solid #dde1ea !important;
+  box-shadow: none !important;
+}
+
+.content .ui-btn-ghost,
+.content .ui-icon-btn {
+  background: #ffffff !important;
+  color: #2364d8 !important;
+  border: 1px solid #b9cdf8 !important;
+  box-shadow: none !important;
+}
+
+.content .ui-field {
+  gap: 6px;
+}
+
+.content .ui-field label {
+  color: #46405e !important;
+  font-size: 0.78rem !important;
+  font-weight: 850 !important;
+}
+
+.content .ui-field input,
+.content .ui-field select,
+.content .ui-field textarea {
+  min-height: 42px !important;
+  border-radius: 10px !important;
+  border-color: #dce0ea !important;
+  background: #ffffff !important;
+  box-shadow: none !important;
+}
+
+.content .ui-field textarea {
+  min-height: 92px !important;
+}
+
+.content .ui-table-wrap {
+  border: 1px solid #dde1ea;
+  border-radius: 12px;
+  overflow: auto;
+}
+
+.content .ui-table thead,
+.content .ui-table th {
+  background: #f7f7fa !important;
+}
+
+.content .ui-table th {
+  color: #77728a !important;
+  font-size: 0.72rem !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.content .ui-table td {
+  color: #25213b !important;
+  font-size: 0.88rem;
+}
+
+.content .ui-status,
+.content .ui-chip {
+  border-radius: 999px !important;
+  font-weight: 850 !important;
+}
+
+.content .ui-modal {
+  border-radius: 18px !important;
+}
+
+.content .ui-modal-backdrop {
+  background: rgba(17, 24, 39, 0.36);
+  backdrop-filter: blur(2px);
+}
+
+@media (max-width: 1200px) {
+  .content .ui-stats-grid,
+  .content .sp-stats-grid,
+  .content .orders-stats-grid,
+  .content .dashboard-kpis {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .content .ui-page {
+    padding: 14px;
+  }
+
+  .content .ui-hero {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px !important;
+  }
+
+  .content .ui-hero::before {
+    width: 60px;
+    height: 60px;
+    min-width: 60px;
+  }
+
+  .content .ui-stats-grid,
+  .content .sp-stats-grid,
+  .content .orders-stats-grid,
+  .content .dashboard-kpis {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* =========================================================
+   FINAL MODULE ALIGNMENT PASS
+   Fuerza las paginas restantes al mismo lenguaje visual de
+   Proveedores, Almacenes, Pedidos Internos y Transferencias.
+   ========================================================= */
+.content .inventory-page,
+.content .sales-page,
+.content .stores-page,
+.content .products-page,
+.content .categories-page,
+.content .reports-page,
+.content .mermas-page,
+.content .alertas-page,
+.content .reception-page {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 18px !important;
+  padding: 18px !important;
+  background: #f5f6fa !important;
+}
+
+.content .sales-hero,
+.content .inv-hero,
+.content .wh-hero {
+  position: relative !important;
+  min-height: 128px !important;
+  padding: 26px 32px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 22px !important;
+  overflow: hidden !important;
+  border: 1px solid #dde1ea !important;
+  border-radius: 16px !important;
+  background: #ffffff !important;
+  box-shadow: 0 10px 26px rgba(17, 24, 39, 0.055) !important;
+}
+
+.content .sales-hero::before,
+.content .inv-hero::before,
+.content .wh-hero::before,
+.content .sales-hero::after,
+.content .inv-hero::after,
+.content .wh-hero::after {
+  display: none !important;
+  content: none !important;
+}
+
+.content .sales-hero-icon,
+.content .inv-hero-icon,
+.content .wh-hero-icon,
+.content .sp-hero-icon,
+.content .orders-hero-icon,
+.content .transfers-hero-icon,
+.content .routes-hero-icon {
+  width: 72px !important;
+  height: 72px !important;
+  min-width: 72px !important;
+  border-radius: 18px !important;
+  display: grid !important;
+  place-items: center !important;
+  color: #8b20c7 !important;
+  background: linear-gradient(135deg, rgba(139, 32, 199, 0.16), rgba(139, 32, 199, 0.06)), #f3e7f8 !important;
+  box-shadow: none !important;
+}
+
+.content .sales-hero-content,
+.content .inv-hero-content,
+.content .wh-hero-content,
+.content .orders-hero-content,
+.content .transfers-hero-content,
+.content .routes-hero-content {
+  width: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 18px !important;
+}
+
+.content .sales-stats-grid,
+.content .inv-kpi-row,
+.content .wh-stats-row,
+.content .routes-stats-grid,
+.content .transfers-stats-grid {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 16px !important;
+}
+
+.content .sales-stat-card,
+.content .inv-kpi-card,
+.content .wh-stat-card,
+.content .routes-stat-card,
+.content .transfers-stat-card,
+.content .sp-stat-card,
+.content .orders-stat-card {
+  min-height: 92px !important;
+  padding: 18px 20px !important;
+  display: grid !important;
+  grid-template-columns: 54px minmax(0, 1fr) !important;
+  align-items: center !important;
+  column-gap: 16px !important;
+  border: 1px solid #dde1ea !important;
+  border-radius: 16px !important;
+  background: #ffffff !important;
+  box-shadow: 0 10px 26px rgba(17, 24, 39, 0.055) !important;
+  overflow: hidden !important;
+}
+
+.content .sales-stat-card::before,
+.content .inv-kpi-card::before,
+.content .wh-stat-card::before,
+.content .routes-stat-card::before,
+.content .transfers-stat-card::before,
+.content .sp-stat-card::before,
+.content .orders-stat-card::before,
+.content .sales-stat-card::after,
+.content .inv-kpi-card::after,
+.content .wh-stat-card::after,
+.content .routes-stat-card::after,
+.content .transfers-stat-card::after,
+.content .sp-stat-card::after,
+.content .orders-stat-card::after {
+  display: none !important;
+  content: none !important;
+}
+
+.content .sales-stat-icon,
+.content .inv-kpi-icon,
+.content .wh-stat-icon,
+.content .routes-stat-icon,
+.content .transfers-stat-icon,
+.content .sp-stat-icon,
+.content .orders-stat-icon {
+  grid-column: 1 !important;
+  grid-row: 1 / span 3 !important;
+  width: 54px !important;
+  height: 54px !important;
+  min-width: 54px !important;
+  min-height: 54px !important;
+  margin: 0 !important;
+  border-radius: 50% !important;
+  display: grid !important;
+  place-items: center !important;
+  box-shadow: none !important;
+}
+
+.content .sales-stat-icon--purple,
+.content .inv-kpi-icon--purple,
+.content .wh-stat-icon--purple,
+.content .routes-stat-icon--purple,
+.content .transfers-stat-icon--purple,
+.content .sp-stat-icon--purple,
+.content .orders-stat-icon--purple {
+  color: #8b20c7 !important;
+  background: #f3e7f8 !important;
+}
+
+.content .sales-stat-icon--green,
+.content .inv-kpi-icon--green,
+.content .wh-stat-icon--green,
+.content .routes-stat-icon--green,
+.content .transfers-stat-icon--green,
+.content .sp-stat-icon--green,
+.content .orders-stat-icon--green {
+  color: #198a3e !important;
+  background: #e8f8eb !important;
+}
+
+.content .sales-stat-icon--orange,
+.content .sales-stat-icon--red,
+.content .inv-kpi-icon--orange,
+.content .wh-stat-icon--orange,
+.content .routes-stat-icon--red,
+.content .orders-stat-icon--orange {
+  color: #b56b00 !important;
+  background: #fff2dd !important;
+}
+
+.content .sales-stat-icon--blue,
+.content .inv-kpi-icon--blue,
+.content .wh-stat-icon--blue,
+.content .routes-stat-icon--blue,
+.content .transfers-stat-icon--blue,
+.content .sp-stat-icon--blue,
+.content .orders-stat-icon--blue {
+  color: #2364d8 !important;
+  background: #eaf2ff !important;
+}
+
+.content .sales-stat-card span,
+.content .inv-kpi-body span,
+.content .wh-stat-card span,
+.content .routes-stat-card span,
+.content .transfers-stat-card span {
+  color: #25213b !important;
+  font-size: 13px !important;
+  font-weight: 750 !important;
+}
+
+.content .sales-stat-card strong,
+.content .inv-kpi-body strong,
+.content .wh-stat-card strong,
+.content .routes-stat-card strong,
+.content .transfers-stat-card strong {
+  margin: 3px 0 2px !important;
+  color: #17122f !important;
+  font-size: 24px !important;
+  line-height: 1 !important;
+  font-weight: 900 !important;
+}
+
+.content .sales-stat-card small,
+.content .inv-kpi-body small,
+.content .wh-stat-card small,
+.content .routes-stat-card small,
+.content .transfers-stat-card small {
+  color: #77728a !important;
+  font-size: 12px !important;
+  font-weight: 650 !important;
+}
+
+.content .sales-chart-card,
+.content .sales-products-card,
+.content .sales-table-card,
+.content .inv-flow-card,
+.content .inv-panel,
+.content .inv-kardex-card,
+.content .routes-map-card,
+.content .routes-tracking-card,
+.content .transfers-form-card,
+.content .transfers-recent-card,
+.content .transfers-history-card {
+  border: 1px solid #dde1ea !important;
+  border-radius: 16px !important;
+  background: #ffffff !important;
+  box-shadow: 0 10px 26px rgba(17, 24, 39, 0.055) !important;
+}
+
+.content .stores-grid,
+.content .categories-grid,
+.content .suppliers-grid,
+.content .warehouse-grid,
+.content .routes-grid {
+  gap: 16px !important;
+}
+
+.content .store-card,
+.content .category-card,
+.content .supplier-card,
+.content .warehouse-card,
+.content .route-card {
+  border: 1px solid #dde1ea !important;
+  border-radius: 16px !important;
+  background: #ffffff !important;
+  box-shadow: 0 10px 26px rgba(17, 24, 39, 0.055) !important;
+}
+
+.content .sales-card-header,
+.content .inv-section-header,
+.content .inv-kardex-header,
+.content .routes-table-header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 14px !important;
+  margin-bottom: 14px !important;
+}
+
+.content .sales-card-header h3,
+.content .inv-section-header h3,
+.content .inv-kardex-header h3,
+.content .routes-table-header h3 {
+  margin: 0 !important;
+  color: #17122f !important;
+  font-size: 1.05rem !important;
+  font-weight: 900 !important;
+}
+
+.content .sales-view-btn,
+.content .routes-view-all,
+.content .transfers-link,
+.content .routes-tracking-footer a {
+  min-height: 38px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  border: 1px solid #dde1ea !important;
+  border-radius: 10px !important;
+  background: #ffffff !important;
+  color: #17122f !important;
+  font-weight: 800 !important;
+  text-decoration: none !important;
+  box-shadow: none !important;
+}
+
+.content .date-filters {
+  padding: 10px !important;
+  border: 1px solid #edf0f5 !important;
+  border-radius: 14px !important;
+  background: #fafbfe !important;
+}
+
+.content .ui-inline-actions,
+.content .route-actions,
+.content .inv-hero-actions {
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: 10px !important;
+}
+
+.content .ui-modal-backdrop .wh-modal {
+  max-width: 980px !important;
+  width: min(980px, calc(100vw - 28px)) !important;
+  max-height: min(92vh, 860px) !important;
+  overflow: auto !important;
+  border: 1px solid #dde1ea !important;
+  border-radius: 18px !important;
+  background: #ffffff !important;
+  box-shadow: 0 24px 70px rgba(17, 24, 39, 0.25) !important;
+}
+
+.content .wh-modal-header,
+.content .wh-modal-footer {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 14px !important;
+  border-color: #edf0f5 !important;
+  background: #ffffff !important;
+}
+
+.content .wh-modal-footer {
+  justify-content: flex-end !important;
+}
+
+@media (max-width: 1200px) {
+  .content .sales-stats-grid,
+  .content .inv-kpi-row,
+  .content .wh-stats-row,
+  .content .routes-stats-grid,
+  .content .transfers-stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .content .inventory-page,
+  .content .sales-page,
+  .content .stores-page,
+  .content .products-page,
+  .content .categories-page,
+  .content .reports-page,
+  .content .mermas-page,
+  .content .alertas-page,
+  .content .reception-page {
+    padding: 14px !important;
+  }
+
+  .content .sales-hero,
+  .content .inv-hero,
+  .content .wh-hero {
+    padding: 20px !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+
+  .content .sales-hero-content,
+  .content .inv-hero-content,
+  .content .wh-hero-content,
+  .content .orders-hero-content,
+  .content .transfers-hero-content,
+  .content .routes-hero-content {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+
+  .content .sales-hero-icon,
+  .content .inv-hero-icon,
+  .content .wh-hero-icon,
+  .content .sp-hero-icon,
+  .content .orders-hero-icon,
+  .content .transfers-hero-icon,
+  .content .routes-hero-icon {
+    width: 60px !important;
+    height: 60px !important;
+    min-width: 60px !important;
+  }
+
+  .content .sales-stats-grid,
+  .content .inv-kpi-row,
+  .content .wh-stats-row,
+  .content .routes-stats-grid,
+  .content .transfers-stats-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* =========================================================
+   COMPACT ENTERPRISE SCALE
+   Reduce altura, espaciado y tipografia para un dashboard
+   logistico mas proporcional y profesional.
+   ========================================================= */
+.content {
+  font-size: 14px;
+}
+
+.content .ui-page,
+.content .dashboard-page,
+.content .inventory-page,
+.content .sales-page,
+.content .stores-page,
+.content .products-page,
+.content .categories-page,
+.content .reports-page,
+.content .mermas-page,
+.content .alertas-page,
+.content .reception-page {
+  gap: 12px !important;
+  padding: 14px !important;
+}
+
+.content .ui-hero,
+.content .sales-hero,
+.content .inv-hero,
+.content .wh-hero {
+  min-height: 92px !important;
+  padding: 18px 22px !important;
+  gap: 14px !important;
+  border-radius: 14px !important;
+}
+
+.content .ui-hero::before {
+  width: 52px !important;
+  height: 52px !important;
+  min-width: 52px !important;
+  border-radius: 14px !important;
+}
+
+.content .sales-hero-icon,
+.content .inv-hero-icon,
+.content .wh-hero-icon,
+.content .sp-hero-icon,
+.content .orders-hero-icon,
+.content .transfers-hero-icon,
+.content .routes-hero-icon,
+.content .hero-icon {
+  width: 52px !important;
+  height: 52px !important;
+  min-width: 52px !important;
+  border-radius: 14px !important;
+}
+
+.content .sales-hero-icon svg,
+.content .inv-hero-icon svg,
+.content .wh-hero-icon svg,
+.content .sp-hero-icon svg,
+.content .orders-hero-icon svg,
+.content .transfers-hero-icon svg,
+.content .routes-hero-icon svg,
+.content .hero-icon svg {
+  width: 24px !important;
+  height: 24px !important;
+}
+
+.content .ui-title,
+.content .wh-hero-title,
+.content .inv-header-title,
+.content .dashboard-hero .ui-title {
+  font-size: 24px !important;
+  line-height: 1.15 !important;
+  letter-spacing: 0 !important;
+}
+
+.content .ui-kicker {
+  margin-bottom: 4px !important;
+  font-size: 10px !important;
+  letter-spacing: 0.11em !important;
+}
+
+.content .ui-description,
+.content .wh-hero-sub,
+.content .inv-section-header p,
+.content .inv-kardex-header p,
+.content .ui-card-header p,
+.content .ui-modal-header p,
+.content .ui-helper-text {
+  font-size: 13px !important;
+  line-height: 1.38 !important;
+}
+
+.content .ui-card,
+.content .sales-chart-card,
+.content .sales-products-card,
+.content .sales-table-card,
+.content .inv-flow-card,
+.content .inv-panel,
+.content .inv-kardex-card,
+.content .routes-map-card,
+.content .routes-tracking-card,
+.content .transfers-form-card,
+.content .transfers-recent-card,
+.content .transfers-history-card {
+  padding: 14px 16px !important;
+  border-radius: 14px !important;
+}
+
+.content .ui-card-header,
+.content .ui-toolbar,
+.content .sales-card-header,
+.content .inv-section-header,
+.content .inv-kardex-header,
+.content .routes-table-header {
+  gap: 10px !important;
+  margin-bottom: 10px !important;
+}
+
+.content .ui-card-header h3,
+.content .ui-toolbar h2,
+.content .sales-card-header h3,
+.content .inv-section-header h3,
+.content .inv-kardex-header h3,
+.content .routes-table-header h3,
+.content .ui-modal-header h3 {
+  font-size: 16px !important;
+  line-height: 1.22 !important;
+}
+
+.content .ui-stats-grid,
+.content .sp-stats-grid,
+.content .orders-stats-grid,
+.content .dashboard-kpis,
+.content .sales-stats-grid,
+.content .inv-kpi-row,
+.content .wh-stats-row,
+.content .routes-stats-grid,
+.content .transfers-stats-grid {
+  gap: 10px !important;
+}
+
+.content .ui-stat-card,
+.content .dashboard-kpi,
+.content .sales-stat-card,
+.content .inv-kpi-card,
+.content .wh-stat-card,
+.content .routes-stat-card,
+.content .transfers-stat-card,
+.content .sp-stat-card,
+.content .orders-stat-card {
+  min-height: 72px !important;
+  padding: 12px 14px !important;
+  grid-template-columns: 40px minmax(0, 1fr) !important;
+  column-gap: 10px !important;
+  border-radius: 13px !important;
+}
+
+.content .ui-stat-card::before {
+  width: 40px !important;
+  height: 40px !important;
+  min-width: 40px !important;
+}
+
+.content .stat-icon,
+.content .sales-stat-icon,
+.content .inv-kpi-icon,
+.content .wh-stat-icon,
+.content .routes-stat-icon,
+.content .transfers-stat-icon,
+.content .sp-stat-icon,
+.content .orders-stat-icon,
+.content .ui-stat-card .sp-stat-icon,
+.content .ui-stat-card .orders-stat-icon,
+.content .ui-stat-card .stat-icon {
+  width: 40px !important;
+  height: 40px !important;
+  min-width: 40px !important;
+  min-height: 40px !important;
+}
+
+.content .stat-icon svg,
+.content .sales-stat-icon svg,
+.content .inv-kpi-icon svg,
+.content .wh-stat-icon svg,
+.content .routes-stat-icon svg,
+.content .transfers-stat-icon svg,
+.content .sp-stat-icon svg,
+.content .orders-stat-icon svg {
+  width: 19px !important;
+  height: 19px !important;
+  min-width: 19px !important;
+  min-height: 19px !important;
+}
+
+.content .ui-stat-card span,
+.content .sp-stat-label,
+.content .stat-content span,
+.content .sales-stat-card span,
+.content .inv-kpi-body span,
+.content .wh-stat-card span,
+.content .routes-stat-card span,
+.content .transfers-stat-card span {
+  font-size: 12px !important;
+}
+
+.content .ui-stat-card strong,
+.content .sp-stat-value,
+.content .stat-content strong,
+.content .sales-stat-card strong,
+.content .inv-kpi-body strong,
+.content .wh-stat-card strong,
+.content .routes-stat-card strong,
+.content .transfers-stat-card strong {
+  font-size: 20px !important;
+}
+
+.content .ui-stat-card small,
+.content .sp-stat-sub,
+.content .stat-content small,
+.content .sales-stat-card small,
+.content .inv-kpi-body small,
+.content .wh-stat-card small,
+.content .routes-stat-card small,
+.content .transfers-stat-card small {
+  font-size: 11px !important;
+}
+
+.content .ui-btn,
+.content .sales-view-btn,
+.content .routes-view-all,
+.content .transfers-link,
+.content .routes-tracking-footer a {
+  min-height: 34px !important;
+  padding: 7px 12px !important;
+  border-radius: 9px !important;
+  font-size: 13px !important;
+  gap: 7px !important;
+}
+
+.content .ui-btn-primary {
+  min-width: 132px !important;
+  min-height: 38px !important;
+}
+
+.content .ui-btn svg,
+.content .ui-icon-btn svg,
+.content .ui-action-btn svg {
+  width: 14px !important;
+  height: 14px !important;
+  min-width: 14px !important;
+}
+
+.content .ui-icon-btn,
+.content .ui-action-btn {
+  width: 34px !important;
+  height: 34px !important;
+  min-width: 34px !important;
+  min-height: 34px !important;
+  border-radius: 9px !important;
+}
+
+.content .ui-field label {
+  font-size: 12px !important;
+}
+
+.content .ui-field input,
+.content .ui-field select,
+.content .ui-field textarea {
+  min-height: 36px !important;
+  border-radius: 9px !important;
+  font-size: 14px !important;
+}
+
+.content .ui-field textarea {
+  min-height: 76px !important;
+}
+
+.content .ui-table th {
+  padding: 9px 11px !important;
+  font-size: 10px !important;
+}
+
+.content .ui-table td {
+  padding: 10px 11px !important;
+  font-size: 13px !important;
+}
+
+.content .ui-status,
+.content .ui-chip {
+  min-height: 22px !important;
+  padding: 0 9px !important;
+  font-size: 10.5px !important;
+}
+
+.content .store-card,
+.content .category-card,
+.content .supplier-card,
+.content .warehouse-card,
+.content .route-card,
+.content .order-card,
+.content .draft-item,
+.content .transfer-item {
+  padding: 14px !important;
+  border-radius: 13px !important;
+}
+
+.content .stores-grid,
+.content .categories-grid,
+.content .suppliers-grid,
+.content .warehouse-grid,
+.content .routes-grid,
+.content .ui-pane-grid,
+.content .reports-grid,
+.content .sales-mid-grid,
+.content .inv-mid-grid,
+.content .transfers-layout {
+  gap: 12px !important;
+}
+
+.content .date-filters {
+  padding: 8px !important;
+  gap: 8px !important;
+  border-radius: 12px !important;
+}
+
+.content .ui-modal {
+  border-radius: 14px !important;
+}
+
+.content .ui-modal-header,
+.content .ui-modal-footer,
+.content .wh-modal-header,
+.content .wh-modal-footer {
+  padding: 14px 16px !important;
+}
+
+@media (max-width: 768px) {
+  .content .ui-page,
+  .content .dashboard-page,
+  .content .inventory-page,
+  .content .sales-page,
+  .content .stores-page,
+  .content .products-page,
+  .content .categories-page,
+  .content .reports-page,
+  .content .mermas-page,
+  .content .alertas-page,
+  .content .reception-page {
+    padding: 12px !important;
+    gap: 10px !important;
+  }
+
+  .content .ui-hero,
+  .content .sales-hero,
+  .content .inv-hero,
+  .content .wh-hero {
+    min-height: auto !important;
+    padding: 14px !important;
+  }
+
+  .content .ui-title,
+  .content .wh-hero-title,
+  .content .inv-header-title {
+    font-size: 22px !important;
+  }
+
+  .content .ui-stat-card,
+  .content .dashboard-kpi,
+  .content .sales-stat-card,
+  .content .inv-kpi-card,
+  .content .wh-stat-card,
+  .content .routes-stat-card,
+  .content .transfers-stat-card,
+  .content .sp-stat-card,
+  .content .orders-stat-card {
+    min-height: 68px !important;
+    padding: 11px 12px !important;
+  }
+}
+
+/* =========================================================
+   SUPPLIERS LOOK FOR LOGISTICS MODULES
+   Mantiene la estructura existente; solo unifica diseno.
+   ========================================================= */
+.content .inventory-page,
+.content .orders-page,
+.content .transfers-page,
+.content .routes-page,
+.content .reception-page,
+.content .mermas-page,
+.content .alertas-page,
+.content .ui-page {
+  background:
+    radial-gradient(circle at top left, rgba(139, 32, 199, 0.10), transparent 34%),
+    linear-gradient(180deg, #fbf7ff 0%, #f4eef9 48%, #f7f4fa 100%) !important;
+}
+
+.content .ui-hero,
+.content .inv-hero,
+.content .routes-hero,
+.content .transfers-hero,
+.content .orders-hero {
+  border: 1px solid #dde1ea !important;
+  border-radius: 16px !important;
+  background: #ffffff !important;
+  box-shadow: 0 10px 26px rgba(17, 24, 39, 0.055) !important;
+}
+
+.content .ui-hero .ui-toolbar,
+.content .orders-hero-content,
+.content .transfers-hero-content,
+.content .routes-hero-content,
+.content .inv-hero-content {
+  width: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 18px !important;
+}
+
+.content .sp-hero-icon,
+.content .orders-hero-icon,
+.content .transfers-hero-icon,
+.content .routes-hero-icon,
+.content .inv-hero-icon,
+.content .ui-hero::before {
+  width: 52px !important;
+  height: 52px !important;
+  min-width: 52px !important;
+  border-radius: 14px !important;
+  display: grid !important;
+  place-items: center !important;
+  color: #8b20c7 !important;
+  background: #f3e7f8 !important;
+  box-shadow: none !important;
+}
+
+.content .ui-hero:has(.sp-hero-icon)::before,
+.content .ui-hero:has(.orders-hero-icon)::before,
+.content .ui-hero:has(.transfers-hero-icon)::before,
+.content .ui-hero:has(.routes-hero-icon)::before,
+.content .inv-hero:has(.inv-hero-icon)::before {
+  display: none !important;
+  content: none !important;
+}
+
+.content .routes-hero-map {
+  display: none !important;
+}
+
+.content .ui-title,
+.content .inv-header-title,
+.content .wh-hero-title {
+  max-width: 760px !important;
+  color: #17122f !important;
+  font-size: 24px !important;
+  line-height: 1.15 !important;
+  font-weight: 900 !important;
+  letter-spacing: 0 !important;
+}
+
+.content .ui-description {
+  max-width: 780px !important;
+  color: #67617c !important;
+  font-size: 13px !important;
+}
+
+.content .ui-card,
+.content .orders-form-card,
+.content .orders-list-card,
+.content .transfers-form-card,
+.content .transfers-recent-card,
+.content .transfers-history-card,
+.content .routes-map-card,
+.content .routes-tracking-card,
+.content .inv-flow-card,
+.content .inv-panel,
+.content .inv-kardex-card {
+  border: 1px solid #dde1ea !important;
+  border-radius: 16px !important;
+  background: #ffffff !important;
+  box-shadow: 0 10px 26px rgba(17, 24, 39, 0.055) !important;
+  padding: 14px 16px !important;
+}
+
+.content .ui-card-header h3,
+.content .inv-section-header h3,
+.content .inv-kardex-header h3,
+.content .routes-table-header h3 {
+  color: #17122f !important;
+  font-size: 16px !important;
+  font-weight: 900 !important;
+  margin: 0 !important;
+}
+
+.content .ui-card-header p,
+.content .inv-section-header p,
+.content .inv-kardex-header p {
+  color: #67617c !important;
+  font-size: 12px !important;
+}
+
+.content .ui-stats-grid,
+.content .orders-stats-grid,
+.content .transfers-stats-grid,
+.content .routes-stats-grid,
+.content .inv-kpi-row {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 10px !important;
+}
+
+.content .ui-stat-card,
+.content .orders-stat-card,
+.content .transfers-stat-card,
+.content .routes-stat-card,
+.content .inv-kpi-card {
+  min-height: 72px !important;
+  padding: 12px 14px !important;
+  border: 1px solid #dde1ea !important;
+  border-radius: 14px !important;
+  background: #ffffff !important;
+  box-shadow: 0 10px 26px rgba(17, 24, 39, 0.055) !important;
+}
+
+.content .ui-stat-card:not(:has(.sp-stat-icon)):not(:has(.orders-stat-icon)):not(:has(.transfers-stat-icon)):not(:has(.routes-stat-icon)):not(:has(.inv-kpi-icon)) {
+  display: grid !important;
+  grid-template-columns: 40px minmax(0, 1fr) !important;
+  align-items: center !important;
+  column-gap: 10px !important;
+}
+
+.content .ui-stat-card:not(:has(.sp-stat-icon)):not(:has(.orders-stat-icon)):not(:has(.transfers-stat-icon)):not(:has(.routes-stat-icon)):not(:has(.inv-kpi-icon))::before {
+  content: "" !important;
+  display: block !important;
+  width: 40px !important;
+  height: 40px !important;
+  min-width: 40px !important;
+  border-radius: 50% !important;
+  background: #f3e7f8 !important;
+  grid-row: 1 / span 3 !important;
+}
+
+.content .ui-stat-card span,
+.content .orders-stat-card span,
+.content .transfers-stat-card span,
+.content .routes-stat-card span,
+.content .inv-kpi-body span {
+  color: #25213b !important;
+  font-size: 12px !important;
+  font-weight: 750 !important;
+}
+
+.content .ui-stat-card strong,
+.content .orders-stat-card strong,
+.content .transfers-stat-card strong,
+.content .routes-stat-card strong,
+.content .inv-kpi-body strong {
+  color: #17122f !important;
+  font-size: 20px !important;
+  line-height: 1 !important;
+  font-weight: 900 !important;
+}
+
+.content .ui-stat-card small,
+.content .orders-stat-card small,
+.content .transfers-stat-card small,
+.content .routes-stat-card small,
+.content .inv-kpi-body small {
+  color: #77728a !important;
+  font-size: 11px !important;
+  font-weight: 650 !important;
+}
+
+.content .sp-stat-icon,
+.content .orders-stat-icon,
+.content .transfers-stat-icon,
+.content .routes-stat-icon,
+.content .inv-kpi-icon,
+.content .transfer-icon,
+.content .order-doc-icon,
+.content .inv-warehouse-icon,
+.content .inv-product-avatar {
+  width: 40px !important;
+  height: 40px !important;
+  min-width: 40px !important;
+  border-radius: 50% !important;
+  display: grid !important;
+  place-items: center !important;
+  background: #f3e7f8 !important;
+  color: #8b20c7 !important;
+}
+
+.content .sp-stat-icon--green,
+.content .orders-stat-icon--green,
+.content .transfers-stat-icon--green,
+.content .routes-stat-icon--green,
+.content .inv-kpi-icon--green {
+  background: #e8f8eb !important;
+  color: #149447 !important;
+}
+
+.content .sp-stat-icon--orange,
+.content .orders-stat-icon--orange,
+.content .routes-stat-icon--red,
+.content .inv-kpi-icon--orange,
+.content .inv-kpi-icon--red {
+  background: #fff2dd !important;
+  color: #d88911 !important;
+}
+
+.content .sp-stat-icon--blue,
+.content .orders-stat-icon--blue,
+.content .transfers-stat-icon--blue,
+.content .routes-stat-icon--blue,
+.content .inv-kpi-icon--blue {
+  background: #eaf2ff !important;
+  color: #2364d8 !important;
+}
+
+.content .supplier-card,
+.content .order-card,
+.content .draft-item,
+.content .transfer-item,
+.content .route-card,
+.content .inv-warehouse-item,
+.content .ui-stack-item {
+  border: 1px solid #dde1ea !important;
+  border-radius: 14px !important;
+  background: #ffffff !important;
+  box-shadow: none !important;
+}
+
+.content .ui-stack-item {
+  min-height: 50px !important;
+  padding: 12px 14px !important;
+}
+
+.content .supplier-card:hover,
+.content .order-card:hover,
+.content .transfer-item:hover,
+.content .route-card:hover,
+.content .ui-stack-item:hover {
+  box-shadow: 0 14px 34px rgba(17, 24, 39, 0.07) !important;
+  transform: translateY(-1px) !important;
+}
+
+.content .ui-btn,
+.content .sp-btn-sm,
+.content .status-actions .ui-btn,
+.content .route-actions .ui-btn {
+  min-height: 34px !important;
+  padding: 7px 12px !important;
+  border-radius: 9px !important;
+  font-size: 12.5px !important;
+  font-weight: 800 !important;
+}
+
+.content .ui-btn-primary {
+  min-width: 132px !important;
+  min-height: 38px !important;
+  background: linear-gradient(180deg, #ffd84d, #ffcb05) !important;
+  color: #17122f !important;
+  border: none !important;
+}
+
+.content .ui-status {
+  background: #e8f8eb !important;
+  color: #15823d !important;
+  border-radius: 999px !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+}
+
+.content .ui-status.is-warning,
+.content .ui-stat-card.is-warning .ui-status {
+  background: #fff2dd !important;
+  color: #a16207 !important;
+}
+
+.content .ui-status.is-danger,
+.content .ui-stat-card.is-danger .ui-status {
+  background: #fff0f0 !important;
+  color: #b42318 !important;
+}
+
+.content .ui-status.is-info {
+  background: #eaf2ff !important;
+  color: #2364d8 !important;
+}
+
+.content .ui-table-wrap,
+.content .routes-table-wrap {
+  border: 1px solid #e2e5ec !important;
+  border-radius: 10px !important;
+  background: #ffffff !important;
+}
+
+.content .ui-table,
+.content .routes-table {
+  background: #ffffff !important;
+  font-size: 13px !important;
+}
+
+.content .ui-table thead,
+.content .routes-table thead {
+  background: #f8f9fc !important;
+}
+
+.content .ui-table th,
+.content .routes-table th {
+  padding: 10px 12px !important;
+  color: #38334f !important;
+  font-size: 11px !important;
+  font-weight: 900 !important;
+  border-bottom: 1px solid #e2e5ec !important;
+}
+
+.content .ui-table td,
+.content .routes-table td {
+  padding: 10px 12px !important;
+  color: #25213b !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  border-bottom: 1px solid #eef0f5 !important;
+}
+
+@media (max-width: 1200px) {
+  .content .ui-stats-grid,
+  .content .orders-stats-grid,
+  .content .transfers-stats-grid,
+  .content .routes-stats-grid,
+  .content .inv-kpi-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .content .ui-hero .ui-toolbar,
+  .content .orders-hero-content,
+  .content .transfers-hero-content,
+  .content .routes-hero-content,
+  .content .inv-hero-content {
+    align-items: flex-start !important;
+    flex-direction: column !important;
+  }
+
+  .content .ui-stats-grid,
+  .content .orders-stats-grid,
+  .content .transfers-stats-grid,
+  .content .routes-stats-grid,
+  .content .inv-kpi-row {
+    grid-template-columns: 1fr !important;
+  }
+}

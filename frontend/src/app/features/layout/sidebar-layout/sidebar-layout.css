@@ -1,0 +1,597 @@
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+/* =========================================================
+   LAYOUT PRINCIPAL
+========================================================= */
+
+.dashboard-shell {
+  --sidebar-width: 248px;
+
+  min-height: 100vh;
+
+  display: grid;
+  grid-template-columns: var(--sidebar-width) 1fr;
+
+  background: #f4f5f7;
+
+  transition: grid-template-columns 0.18s ease;
+}
+
+/* =========================================================
+   SIDEBAR COLLAPSED
+========================================================= */
+
+.dashboard-shell.sidebar-collapsed {
+  grid-template-columns: 76px 1fr;
+}
+
+.dashboard-shell.sidebar-collapsed .brand-text,
+.dashboard-shell.sidebar-collapsed .group-title,
+.dashboard-shell.sidebar-collapsed .nav-label,
+.dashboard-shell.sidebar-collapsed .sidebar-user-info,
+.dashboard-shell.sidebar-collapsed .logout-btn span,
+.dashboard-shell.sidebar-collapsed .chevron {
+  display: none;
+}
+
+.dashboard-shell.sidebar-collapsed .brand {
+  justify-content: center;
+}
+
+.dashboard-shell.sidebar-collapsed .group-header {
+  justify-content: center;
+}
+
+.dashboard-shell.sidebar-collapsed .nav-item {
+  justify-content: center;
+  padding: 10px;
+}
+
+.dashboard-shell.sidebar-collapsed .sidebar-user {
+  justify-content: center;
+}
+
+.dashboard-shell.sidebar-collapsed .logout-btn {
+  justify-content: center;
+}
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+.sidebar {
+  position: sticky;
+  top: 0;
+
+  height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+
+  padding: 12px 10px;
+
+  overflow: hidden;
+
+  color: #ffffff;
+
+  background: #8e1b8f;
+}
+
+/* =========================================================
+   BRAND
+========================================================= */
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 8px 10px 14px;
+
+  flex-shrink: 0;
+}
+
+.brand img {
+  width: 44px;
+  height: 44px;
+
+  object-fit: cover;
+
+  border-radius: 13px;
+
+  background: #ffffff;
+}
+
+.brand h1 {
+  margin: 0;
+
+  font-size: 1.55rem;
+  font-weight: 900;
+
+  line-height: 1;
+
+  letter-spacing: -0.04em;
+}
+
+/* =========================================================
+   NAV GROUPS
+========================================================= */
+
+.nav-groups {
+  flex: 1;
+  min-height: 0;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 14px;
+
+  padding-right: 6px;
+}
+
+/* =========================================================
+   SCROLLBAR
+========================================================= */
+
+.nav-groups::-webkit-scrollbar {
+  width: 6px;
+}
+
+.nav-groups::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.nav-groups::-webkit-scrollbar-thumb {
+  background: #bb4ebd;
+  border-radius: 999px;
+}
+
+.nav-groups::-webkit-scrollbar-thumb:hover {
+  background: #d061d3;
+}
+
+/* =========================================================
+   NAV GROUP
+========================================================= */
+
+.nav-group {
+  display: flex;
+  flex-direction: column;
+
+  gap: 6px;
+}
+
+/* =========================================================
+   GROUP HEADER
+========================================================= */
+
+.group-header {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 8px;
+
+  border: none;
+  background: transparent;
+
+  color: #efc9ef;
+
+  font-size: 0.68rem;
+  font-weight: 900;
+
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/* =========================================================
+   ITEMS
+========================================================= */
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  min-height: 44px;
+
+  padding: 9px 12px;
+
+  border-radius: 12px;
+
+  color: #ffffff;
+  text-decoration: none;
+
+  background: transparent;
+
+  transition:
+    background 0.16s ease,
+    transform 0.16s ease;
+}
+
+/* =========================================================
+   HOVER
+========================================================= */
+
+.nav-item:hover {
+  background: rgba(255,255,255,0.08);
+
+  transform: translateX(2px);
+
+  cursor: pointer;
+}
+
+/* =========================================================
+   ACTIVE
+========================================================= */
+
+.nav-item.active {
+  background: #ffcf00;
+
+  border-left: 4px solid #ffffff;
+
+  color: #1b1b1b;
+}
+
+.nav-item.active .nav-label {
+  color: #1b1b1b;
+}
+
+/* =========================================================
+   ICONOS
+========================================================= */
+
+.nav-icon-image {
+  width: 26px;
+  height: 26px;
+
+  object-fit: contain;
+
+  flex-shrink: 0;
+}
+
+/* =========================================================
+   LABEL
+========================================================= */
+
+.nav-label {
+  flex: 1;
+
+  font-size: 0.9rem;
+  font-weight: 800;
+
+  line-height: 1.1;
+
+  color: #ffffff;
+}
+
+/* =========================================================
+   USER CARD
+========================================================= */
+
+.sidebar-user {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 12px 8px;
+
+  margin-top: 10px;
+
+  border-top: 1px solid rgba(255,255,255,0.14);
+}
+
+.sidebar-user-avatar {
+  width: 38px;
+  height: 38px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #ffcf00;
+
+  color: #241b35;
+
+  font-size: 0.88rem;
+  font-weight: 900;
+
+  flex-shrink: 0;
+}
+
+.sidebar-user-info {
+  min-width: 0;
+}
+
+.sidebar-user-info strong {
+  display: block;
+
+  font-size: 0.82rem;
+  font-weight: 800;
+
+  color: #ffffff;
+}
+
+.sidebar-user-info span {
+  display: block;
+
+  margin-top: 2px;
+
+  font-size: 0.7rem;
+
+  color: #f3dff3;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.sidebar-footer {
+  padding-top: 10px;
+
+  flex-shrink: 0;
+}
+
+/* =========================================================
+   LOGOUT
+========================================================= */
+
+.logout-btn {
+  width: 100%;
+
+  min-height: 42px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  border: none;
+
+  border-radius: 12px;
+
+  background: #151515;
+
+  color: #ffffff;
+
+  font-size: 0.86rem;
+  font-weight: 800;
+
+  cursor: pointer;
+
+  transition: background 0.15s ease;
+}
+
+.logout-btn:hover {
+  background: #050505;
+}
+
+/* =========================================================
+   MAIN LAYOUT
+========================================================= */
+
+.main-layout {
+  display: flex;
+  flex-direction: column;
+
+  min-width: 0;
+  min-height: 100vh;
+
+  background: #f4f5f7;
+}
+
+/* =========================================================
+   TOPBAR
+========================================================= */
+
+.topbar {
+  height: 60px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 22px;
+
+  background: #ffffff;
+
+  border-bottom: 1px solid #ebe7f2;
+}
+
+/* =========================================================
+   TOPBAR LEFT
+========================================================= */
+
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.topbar-left h1 {
+  margin: 0;
+
+  font-size: 1.35rem;
+  font-weight: 900;
+
+  color: #241b35;
+
+  letter-spacing: -0.04em;
+}
+
+/* =========================================================
+   HAMBURGER
+========================================================= */
+
+.hamburger-btn {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  width: 38px;
+  height: 38px;
+
+  border: none;
+  border-radius: 11px;
+
+  background: #f4f1f8;
+
+  color: #2b183f;
+
+  cursor: pointer;
+
+  flex-shrink: 0;
+
+  transition: background 0.15s ease;
+}
+
+.hamburger-btn:hover {
+  background: #ebe4f4;
+}
+
+/* =========================================================
+   TOPBAR RIGHT
+========================================================= */
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+}
+
+/* =========================================================
+   USER TOPBAR
+========================================================= */
+
+.topbar-user {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+}
+
+.user-avatar {
+  width: 38px;
+  height: 38px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #8e1b8f;
+
+  color: #ffffff;
+
+  font-size: 0.84rem;
+  font-weight: 900;
+}
+
+.user-info strong {
+  display: block;
+
+  font-size: 0.84rem;
+
+  color: #241b35;
+}
+
+.user-info span {
+  font-size: 0.74rem;
+
+  color: #857f95;
+}
+
+/* =========================================================
+   CONTENT
+========================================================= */
+
+.content {
+  flex: 1;
+
+  min-width: 0;
+
+  padding: 16px 18px;
+
+  overflow: auto;
+
+  background: #f4f5f7;
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 768px) {
+
+  .dashboard-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    position: fixed;
+
+    top: 0;
+    left: 0;
+    bottom: 0;
+
+    width: min(260px, 86vw);
+
+    transform: translateX(-100%);
+
+    transition: transform 0.18s ease;
+
+    z-index: 1100;
+  }
+
+  .dashboard-shell.sidebar-open .sidebar {
+    transform: translateX(0);
+  }
+
+  .content {
+    padding: 14px;
+  }
+
+  .topbar {
+    height: 56px;
+    padding: 0 14px;
+  }
+
+  .topbar-left h1 {
+    font-size: 1.08rem;
+  }
+
+  .nav-label {
+    font-size: 0.88rem;
+  }
+
+  .nav-icon-image {
+    width: 24px;
+    height: 24px;
+  }
+
+  .nav-item {
+    min-height: 42px;
+  }
+
+  .user-info {
+    display: none;
+  }
+}

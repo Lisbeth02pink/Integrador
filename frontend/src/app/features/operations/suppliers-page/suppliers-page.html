@@ -1,0 +1,512 @@
+<section class="ui-page">
+
+  <!-- ══ HERO ══════════════════════════════════════════════════════════════════ -->
+  <div class="ui-hero">
+    <div class="sp-hero-icon">
+    <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+      <path d="M11 17a4 4 0 0 1-5.657 0l-2.829-2.828a4 4 0 0 1 5.657-5.657l.707.707"/>
+      <path d="M13 7a4 4 0 0 1 5.657 0l2.829 2.828a4 4 0 0 1-5.657 5.657l-.707-.707"/>
+      <path d="M8 12h8"/>
+    </svg>
+  </div>
+    <div class="ui-toolbar">
+      <div>
+        <h2 class="ui-title">Abastecimiento de proveedores al almacén central</h2>
+      </div>
+
+      <button type="button" class="ui-btn ui-btn-primary sp-btn-new" (click)="openModal()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="12" y1="5" x2="12" y2="19"/>
+          <line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+        Nuevo proveedor
+      </button>
+    </div>
+  </div>
+
+  <!-- ══ STATS ═════════════════════════════════════════════════════════════════ -->
+  <div class="ui-stats-grid sp-stats-grid">
+
+    <article class="ui-stat-card sp-stat-card">
+      <div class="sp-stat-icon sp-stat-icon--purple">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+      </div>
+      <div>
+        <span class="sp-stat-label">Total proveedores</span>
+        <strong class="sp-stat-value">{{ totalSuppliers }}</strong>
+        <small class="sp-stat-sub positive">↑ {{ activeSuppliers }} activos</small>
+      </div>
+    </article>
+
+    <article class="ui-stat-card sp-stat-card">
+      <div class="sp-stat-icon sp-stat-icon--green">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <rect x="1" y="3" width="15" height="13"/>
+          <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+          <circle cx="5.5" cy="18.5" r="2.5"/>
+          <circle cx="18.5" cy="18.5" r="2.5"/>
+        </svg>
+      </div>
+      <div>
+        <span class="sp-stat-label">Entregas del mes</span>
+        <strong class="sp-stat-value">{{ deliveries.length || 0 }}</strong>
+        <small class="sp-stat-sub positive">↑ entregas registradas</small>
+      </div>
+    </article>
+
+    <article class="ui-stat-card sp-stat-card">
+      <div class="sp-stat-icon sp-stat-icon--orange">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <line x1="12" y1="1" x2="12" y2="23"/>
+          <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7H14a3.5 3.5 0 0 1 0 7H6"/>
+        </svg>
+      </div>
+      <div>
+        <span class="sp-stat-label">Ingresos hoy</span>
+        <strong class="sp-stat-value">S/ 28,450</strong>
+        <small class="sp-stat-sub positive">↑ 12% vs. ayer</small>
+      </div>
+    </article>
+
+    <article class="ui-stat-card sp-stat-card">
+      <div class="sp-stat-icon sp-stat-icon--blue">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M3 9l1-5h16l1 5"/>
+          <path d="M5 9v11h14V9"/>
+          <path d="M9 20v-6h6v6"/>
+        </svg>
+      </div>
+      <div>
+        <span class="sp-stat-label">Proveedores activos</span>
+        <strong class="sp-stat-value">{{ activeSuppliers }}</strong>
+        <small class="sp-stat-sub positive">83% del total</small>
+      </div>
+    </article>
+
+  </div>
+
+  <!-- ══ DIRECTORIO ════════════════════════════════════════════════════════════ -->
+  <section class="ui-card">
+    <div class="ui-card-header">
+      <div>
+        <h3>Directorio de proveedores</h3>
+        <p>Control de abastecimiento hacia el almacén central.</p>
+      </div>
+    </div>
+
+    <p *ngIf="errorMessage" class="error-text">{{ errorMessage }}</p>
+    <p *ngIf="loading" class="ui-helper-text">Cargando proveedores...</p>
+
+    <div class="suppliers-grid" *ngIf="!loading">
+      <article class="supplier-card" *ngFor="let supplier of suppliers">
+        <div class="supplier-head">
+          <div class="sp-card-brand">
+            <div class="sp-card-avatar">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M3 21h18"/>
+                <path d="M5 21V7l8-4v18"/>
+                <path d="M19 21V11l-6-4"/>
+                <path d="M9 9v.01"/>
+                <path d="M9 12v.01"/>
+                <path d="M9 15v.01"/>
+                <path d="M9 18v.01"/>
+              </svg>
+            </div>
+            <div>
+              <strong>{{ supplier.razonSocial }}</strong>
+              <span>RUC {{ supplier.ruc }}</span>
+            </div>
+          </div>
+
+          <span class="ui-status" [class.is-inactive]="supplier.estado !== 1">
+            {{ supplier.estado === 1 ? 'Activo' : 'Inactivo' }}
+          </span>
+        </div>
+
+        <div class="sp-card-info">
+          <div class="sp-card-row sp-card-row-contact">
+            <span>{{ supplier.contacto }}</span>
+          </div>
+
+          <div class="sp-card-row sp-card-row-phone">
+            <span>{{ supplier.telefono }}</span>
+          </div>
+
+          <div class="sp-card-row sp-card-row-email">
+            <span>{{ supplier.correo }}</span>
+          </div>
+
+          <div class="sp-card-row sp-card-row-address">
+            <span>{{ supplier.direccion }}</span>
+          </div>
+
+          <div class="sp-card-row sp-card-row-products">
+            <span>{{ supplier.productosSuministrados || 'Sin detalle' }}</span>
+          </div>
+        </div>
+
+        <div class="sp-card-deliveries">
+          <span>Total de entregas</span>
+          <strong>{{ supplier.historialEntregas || 'Sin historial' }}</strong>
+        </div>
+
+        <div class="ui-inline-actions sp-card-actions">
+          <button class="ui-btn ui-btn-outline-purple sp-btn-sm" type="button" (click)="editSupplier(supplier)">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+            </svg>
+            Editar
+          </button>
+
+          <button class="ui-btn ui-btn-outline-green sp-btn-sm" type="button" (click)="openDeliveryModal(supplier)">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <rect x="1" y="3" width="15" height="13"/>
+              <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+              <circle cx="5.5" cy="18.5" r="2.5"/>
+              <circle cx="18.5" cy="18.5" r="2.5"/>
+            </svg>
+            Registrar entrega
+          </button>
+
+          <button class="ui-btn ui-btn-outline-blue sp-btn-sm" type="button" (click)="toggleSupplierStatus(supplier)">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+            </svg>
+            Estado
+          </button>
+        </div>
+      </article>
+
+      <!-- Empty state -->
+      <div class="sp-empty" *ngIf="suppliers.length === 0">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+          <rect x="2" y="7" width="20" height="14" rx="2"/>
+          <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+        </svg>
+        <p>No hay proveedores registrados</p>
+        <small>Haz clic en "Nuevo proveedor" para comenzar.</small>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ INGRESOS RECIENTES ═════════════════════════════════════════════════════ -->
+  <section class="ui-card">
+    <div class="ui-card-header">
+      <div>
+        <h3>Ingresos recientes al almacén central</h3>
+        <p>Entregas reales de proveedores que ya impactaron el stock del sistema.</p>
+      </div>
+    </div>
+
+    <div class="ui-table-wrap">
+      <table class="ui-table">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Proveedor</th>
+            <th>Producto</th>
+            <th>Cantidad</th>
+            <th>Destino</th>
+            <th>Observaciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let delivery of deliveries">
+            <td>{{ delivery.deliveredAt }}</td>
+            <td>{{ delivery.supplierName }}</td>
+            <td>{{ delivery.productName }}<br /><small>{{ delivery.productSku }}</small></td>
+            <td><span class="sp-qty-badge">{{ delivery.quantity }}</span></td>
+            <td>{{ delivery.warehouseName }}</td>
+            <td>{{ delivery.notes || '-' }}</td>
+          </tr>
+
+          <tr *ngIf="deliveries.length === 0">
+            <td colspan="6" class="sp-table-empty">
+              <div class="sp-table-empty-inner">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                </svg>
+                <p>No hay ingresos recientes</p>
+                <small>Aún no se registran ingresos al almacén central.</small>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ══ MODAL: NUEVO / EDITAR PROVEEDOR ═══════════════════════════════════════ -->
+  <div class="ui-modal-backdrop" *ngIf="modalOpen" (click)="closeModal()">
+    <div class="ui-modal ui-modal-lg sp-modal" (click)="$event.stopPropagation()">
+
+      <div class="ui-modal-header sp-modal-header">
+        <div>
+          <p class="ui-kicker">Proveedor</p>
+          <h3>{{ editingSupplierId ? 'Editar proveedor' : 'Nuevo proveedor' }}</h3>
+        </div>
+
+        <button class="ui-icon-btn" type="button" (click)="closeModal()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- ── Bloque SUNAT ──────────────────────────────────────────────────── -->
+      <div class="sp-sunat-block">
+        <div class="sp-sunat-row">
+          <div class="ui-field sp-ruc-field">
+            <label>RUC</label>
+            <input [(ngModel)]="form.ruc" name="supplierRuc" maxlength="11" placeholder="Ej. 20601030013" />
+          </div>
+
+          <button
+            type="button"
+            class="ui-btn ui-btn-primary sp-sunat-btn"
+            (click)="buscarEnSunat()"
+            [disabled]="sunatLoading">
+            <svg *ngIf="!sunatLoading" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <circle cx="11" cy="11" r="8"/>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+            <span class="sp-spinner" *ngIf="sunatLoading"></span>
+            {{ sunatLoading ? 'Buscando...' : 'Buscar en SUNAT' }}
+          </button>
+        </div>
+
+        <!-- Error SUNAT -->
+        <div class="sp-sunat-error" *ngIf="sunatError">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          {{ sunatError }}
+        </div>
+
+        <!-- Resultado SUNAT -->
+        <div class="sp-sunat-result" *ngIf="sunatResult && sunatSuccess">
+          <div class="sp-sunat-result-header">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+              <polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+            <strong>Información encontrada en SUNAT (API GRATIS)</strong>
+          </div>
+
+          <small>Los datos han sido obtenidos automáticamente.</small>
+
+          <div class="sp-sunat-card">
+            <div class="sp-sunat-card-head">
+              <strong>{{ sunatResult.razonSocial }}</strong>
+
+              <span class="sp-sunat-badge sp-sunat-badge--activo" *ngIf="sunatResult.estado === 'ACTIVO'">
+                ACTIVO
+              </span>
+
+              <span class="sp-sunat-badge sp-sunat-badge--inactivo" *ngIf="sunatResult.estado !== 'ACTIVO'">
+                {{ sunatResult.estado }}
+              </span>
+            </div>
+
+            <div class="sp-sunat-data-grid">
+              <div>
+                <span>Número de RUC</span>
+                <strong>{{ sunatResult.numeroDocumento }}</strong>
+              </div>
+              <div>
+                <span>Estado</span>
+                <strong>{{ sunatResult.estado }}</strong>
+              </div>
+              <div>
+                <span>Razón Social</span>
+                <strong>{{ sunatResult.razonSocial }}</strong>
+              </div>
+              <div>
+                <span>Condición</span>
+                <strong>{{ sunatResult.condicion }}</strong>
+              </div>
+              <div>
+                <span>Nombre Comercial</span>
+                <strong>-</strong>
+              </div>
+              <div>
+                <span>Dirección</span>
+                <strong>{{ sunatResult.direccion }}</strong>
+              </div>
+            </div>
+
+            <button type="button" class="sp-sunat-update-btn" (click)="usarDatosSunat()">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <polyline points="1 4 1 10 7 10"/>
+                <path d="M3.51 15a9 9 0 1 0 .49-3.51"/>
+              </svg>
+              Actualizar datos
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Campos del formulario ─────────────────────────────────────────── -->
+      <div class="ui-form-grid">
+        <div class="ui-field">
+          <label>Contacto principal <span class="sp-required">*</span></label>
+          <input [(ngModel)]="form.contacto" name="supplierContact" placeholder="Nombre completo" />
+        </div>
+
+        <div class="ui-field">
+          <label>Teléfono <span class="sp-required">*</span></label>
+          <input [(ngModel)]="form.telefono" name="supplierPhone" placeholder="Ej. 987 654 321" />
+        </div>
+
+        <div class="ui-field">
+          <label>Correo electrónico <span class="sp-required">*</span></label>
+          <input [(ngModel)]="form.correo" name="supplierEmail" placeholder="ejemplo@correo.com" />
+        </div>
+
+        <div class="ui-field">
+          <label>Dirección <span class="sp-required">*</span></label>
+          <input [(ngModel)]="form.direccion" name="supplierAddress" placeholder="Dirección fiscal o comercial" />
+        </div>
+
+        <div class="ui-field">
+          <label>Razón Social</label>
+          <input [(ngModel)]="form.razonSocial" name="supplierName" placeholder="Se autocompleta desde SUNAT" />
+        </div>
+
+        <div class="ui-field">
+          <label>Productos / Servicios</label>
+          <input [(ngModel)]="form.productosSuministrados" name="supplierProducts" placeholder="Ej. Bebidas, Snacks, Limpieza" />
+        </div>
+      </div>
+
+      <div class="ui-field sp-field-obs">
+        <label>Observaciones</label>
+        <input [(ngModel)]="form.historialEntregas" name="supplierHistory" placeholder="Información adicional (opcional)" />
+      </div>
+
+      <div class="sp-active-check">
+        <input type="checkbox" id="spActivo" [(ngModel)]="form.activo" name="supplierActivo" />
+        <label for="spActivo">Proveedor activo</label>
+      </div>
+
+      <p *ngIf="errorMessage" class="error-text">{{ errorMessage }}</p>
+
+      <div class="ui-modal-footer">
+        <button class="ui-btn ui-btn-secondary" type="button" (click)="closeModal()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+          Cancelar
+        </button>
+
+        <button class="ui-btn ui-btn-primary sp-save-btn" type="button" (click)="saveSupplier()" [disabled]="saving">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+            <polyline points="17 21 17 13 7 13 7 21"/>
+            <polyline points="7 3 7 8 15 8"/>
+          </svg>
+          {{ saving ? 'Guardando...' : 'Guardar proveedor' }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ MODAL: REGISTRAR ENTREGA ═══════════════════════════════════════════════ -->
+  <div class="ui-modal-backdrop" *ngIf="deliveryModalOpen" (click)="closeDeliveryModal()">
+    <div class="ui-modal sp-modal" (click)="$event.stopPropagation()">
+
+      <div class="ui-modal-header sp-modal-header">
+        <div>
+          <p class="ui-kicker">Entrega proveedor</p>
+          <h3>Registrar ingreso al almacén central</h3>
+        </div>
+
+        <button class="ui-icon-btn" type="button" (click)="closeDeliveryModal()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="ui-form-grid ui-form-grid-single">
+        <div class="ui-field">
+          <label>Producto</label>
+          <select [(ngModel)]="deliveryForm.productId" name="deliveryProduct">
+            <option [ngValue]="0">Seleccione</option>
+            <option *ngFor="let product of centralProducts" [ngValue]="product.id">
+              {{ product.nombre }} - {{ product.sku }}
+            </option>
+          </select>
+        </div>
+
+        <div class="ui-field">
+          <label>Almacén destino</label>
+          <input [value]="centralWarehouse?.nombre || 'Sin definir'" disabled class="sp-input-disabled" />
+        </div>
+
+        <div class="ui-field">
+          <label>Cantidad recibida</label>
+          <input type="number" min="1" [(ngModel)]="deliveryForm.quantity" name="deliveryQuantity" placeholder="0" />
+        </div>
+
+        <div class="ui-field">
+          <label>Observaciones</label>
+          <textarea rows="3" [(ngModel)]="deliveryForm.notes" name="deliveryNotes" placeholder="Opcional"></textarea>
+        </div>
+      </div>
+
+      <p *ngIf="errorMessage" class="error-text">{{ errorMessage }}</p>
+
+      <div class="sp-delivery-tip">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <rect x="1" y="3" width="15" height="13"/>
+          <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+          <circle cx="5.5" cy="18.5" r="2.5"/>
+          <circle cx="18.5" cy="18.5" r="2.5"/>
+        </svg>
+
+        <div>
+          <strong>¿Para qué sirve "Registrar entrega"?</strong>
+          <p>
+            Permite registrar una entrega REAL que ya llegó al almacén.<br />
+            Esto impacta directamente en el stock del sistema.
+          </p>
+        </div>
+      </div>
+
+      <div class="ui-modal-footer">
+        <button class="ui-btn ui-btn-secondary" type="button" (click)="closeDeliveryModal()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+          Cancelar
+        </button>
+
+        <button class="ui-btn ui-btn-primary sp-save-btn" type="button" (click)="saveDelivery()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <rect x="1" y="3" width="15" height="13"/>
+            <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+            <circle cx="5.5" cy="18.5" r="2.5"/>
+            <circle cx="18.5" cy="18.5" r="2.5"/>
+          </svg>
+          Registrar ingreso
+        </button>
+      </div>
+    </div>
+  </div>
+
+</section>

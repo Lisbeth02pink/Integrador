@@ -1,0 +1,340 @@
+<section class="ui-page inventory-page">
+
+  <!-- ══ HERO ══════════════════════════════════════════════════════════════════ -->
+  <div class="inv-hero">
+    <div class="inv-hero-icon">
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1">
+        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+        <path d="M3.3 7L12 12l8.7-5"/>
+        <path d="M12 22V12"/>
+      </svg>
+    </div>
+
+    <div class="inv-hero-content">
+      <div>
+        <h2 class="inv-header-title">Resumen general del stock y disponibilidad</h2>
+      </div>
+
+      <div class="inv-hero-actions">
+        <span class="inv-online-badge">
+          <span class="inv-online-dot"></span>
+          Sistema operativo
+        </span>
+
+        <a class="ui-btn ui-btn-primary inv-btn-action" routerLink="/dashboard/transferencias">
+          Nueva transferencia
+          <span aria-hidden="true">→</span>
+        </a>
+
+        <button type="button" class="ui-btn ui-btn-secondary inv-btn-action" (click)="exportKardex()">
+          Exportar kardex
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ KPI CARDS ═════════════════════════════════════════════════════════════ -->
+  <div class="inv-kpi-row">
+    <article class="inv-kpi-card">
+      <div class="inv-kpi-icon inv-kpi-icon--purple">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+        </svg>
+      </div>
+
+      <div class="inv-kpi-body">
+        <span>Stock total disponible</span>
+        <strong>{{ formatNumber(totalStock) }}</strong>
+        <small>unidades</small>
+      </div>
+    </article>
+
+    <article class="inv-kpi-card">
+      <div class="inv-kpi-icon inv-kpi-icon--green">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+          <line x1="7" y1="7" x2="7.01" y2="7"/>
+        </svg>
+      </div>
+
+      <div class="inv-kpi-body">
+        <span>Productos activos</span>
+        <strong>{{ formatNumber(totalProducts) }}</strong>
+        <small>registrados</small>
+      </div>
+    </article>
+
+    <article class="inv-kpi-card">
+      <div class="inv-kpi-icon inv-kpi-icon--orange">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <line x1="12" y1="1" x2="12" y2="23"/>
+          <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+        </svg>
+      </div>
+
+      <div class="inv-kpi-body">
+        <span>Valor inventario</span>
+        <strong>{{ formatValue(totalInventoryValue) }}</strong>
+        <small>valorizado</small>
+      </div>
+    </article>
+
+    <article class="inv-kpi-card" [class.inv-kpi-card--alert]="activeAlerts > 0">
+      <div class="inv-kpi-icon inv-kpi-icon--red">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+          <line x1="12" y1="9" x2="12" y2="13"/>
+          <line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+      </div>
+
+      <div class="inv-kpi-body">
+        <span>Alertas de stock</span>
+        <strong>{{ activeAlerts }}</strong>
+        <small>productos bajo mínimo</small>
+      </div>
+    </article>
+  </div>
+
+  <!-- ══ FLUJO LOGÍSTICO ═══════════════════════════════════════════════════════ -->
+  <section class="ui-card inv-flow-card">
+    <div class="inv-section-header">
+      <div>
+        <h3>Flujo logístico en la red</h3>
+      </div>
+    </div>
+
+    <div class="inv-flow-body">
+      <div class="inv-flow-nodes">
+
+        <div class="inv-flow-node inv-node--provider">
+          <div class="inv-node-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <rect x="1" y="3" width="15" height="13"/>
+              <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+              <circle cx="5.5" cy="18.5" r="2.5"/>
+              <circle cx="18.5" cy="18.5" r="2.5"/>
+            </svg>
+          </div>
+          <div>
+            <strong>Proveedores</strong>
+            <span>12 proveedores activos</span>
+            <span class="inv-node-stock">suministrando productos</span>
+          </div>
+        </div>
+
+        <div class="inv-flow-arrow">
+          <div class="inv-arrow-track">
+            <div class="inv-arrow-fill"></div>
+          </div>
+        </div>
+
+        <div class="inv-flow-node inv-node--central">
+          <div class="inv-node-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+              <polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+          </div>
+          <div>
+            <strong>Almacén Central Lima</strong>
+            <span>{{ centralWarehouse?.nombre || 'Sin almacén central' }}</span>
+            <span class="inv-node-stock">{{ formatNumber(totalStock) }} unidades disponibles</span>
+          </div>
+        </div>
+
+        <div class="inv-flow-arrow inv-flow-arrow--regional">
+          <div class="inv-arrow-track">
+            <div class="inv-arrow-fill"></div>
+          </div>
+        </div>
+
+        <div class="inv-flow-node inv-node--tienda">
+          <div class="inv-node-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+              <line x1="3" y1="6" x2="21" y2="6"/>
+              <path d="M16 10a4 4 0 0 1-8 0"/>
+            </svg>
+          </div>
+          <div>
+            <strong>Tiendas</strong>
+            <span>{{ storeWarehouses.length }} tiendas activas</span>
+            <span class="inv-node-stock inv-node-stock--tienda">{{ formatNumber(transitToStores) }} unidades en tránsito</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ STOCK Y ALERTAS ═══════════════════════════════════════════════════════ -->
+  <div class="inv-mid-grid">
+
+    <section class="ui-card inv-panel">
+      <div class="inv-section-header">
+        <div>
+          <h3>Stock por almacén</h3>
+          <p>Disponibilidad consolidada por ubicación.</p>
+        </div>
+      </div>
+
+      <div class="inv-warehouse-list">
+        <article class="inv-warehouse-item" *ngFor="let item of warehouseSummary">
+          <div class="inv-warehouse-main">
+            <div class="inv-warehouse-title">
+              <div class="inv-warehouse-icon">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                </svg>
+              </div>
+
+              <div>
+                <strong>{{ item.warehouse.nombre }}</strong>
+                <span>{{ warehouseTypeLabel(item.warehouse.tipo) }} - {{ item.warehouse.ciudad }}</span>
+              </div>
+            </div>
+
+            <b>{{ formatNumber(item.stockTotal) }} unid.</b>
+          </div>
+
+          <div class="inv-progress">
+            <span [style.width.%]="warehouseOccupancy(item)"></span>
+          </div>
+
+          <div class="inv-warehouse-meta">
+            <span>{{ formatNumber(item.totalProductos) }} productos</span>
+            <span>{{ warehouseOccupancy(item) }}% ocupación</span>
+          </div>
+        </article>
+
+        <div class="inv-empty-state" *ngIf="warehouseSummary.length === 0">
+          Sin stock por almacén para mostrar.
+        </div>
+      </div>
+    </section>
+
+    <section class="ui-card inv-panel">
+      <div class="inv-section-header">
+        <div>
+          <h3>Alertas de stock mínimo</h3>
+          <p>Productos que necesitan reposición.</p>
+        </div>
+      </div>
+
+      <div class="ui-table-wrap">
+        <table class="ui-table">
+          <thead>
+            <tr>
+              <th>Producto</th>
+              <th>Almacén</th>
+              <th>Stock actual</th>
+              <th>Mínimo</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let item of stockAlerts">
+              <td>{{ item.nombre }}</td>
+              <td class="inv-td-muted">{{ item.almacenNombre }}</td>
+              <td>{{ item.stock }}</td>
+              <td class="inv-td-muted">{{ item.stockMinimo }}</td>
+              <td>
+                <span
+                  class="inv-alert-badge"
+                  [class.inv-alert--critico]="getAlertLevel(item) === 'CRITICO'"
+                  [class.inv-alert--bajo]="getAlertLevel(item) === 'BAJO'">
+                  {{ getAlertLevel(item) === 'CRITICO' ? 'Crítico' : 'Bajo' }}
+                </span>
+              </td>
+            </tr>
+
+            <tr *ngIf="stockAlerts.length === 0">
+              <td colspan="5" class="inv-empty-row">Sin alertas activas</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ══ KARDEX ════════════════════════════════════════════════════════════════ -->
+  <section class="ui-card inv-kardex-card">
+    <div class="inv-kardex-header">
+      <div>
+        <h3>Kardex - Movimientos recientes</h3>
+        <p>Todos los movimientos de inventario registrados en el sistema.</p>
+      </div>
+
+      <div class="inv-kardex-filters">
+        <span class="inv-filter-label">Almacén</span>
+        <select [(ngModel)]="warehouseFilter" name="kWh" class="inv-filter-select">
+          <option value="todos">Todos</option>
+          <option *ngFor="let w of warehouses" [value]="w.nombre">{{ w.nombre }}</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="ui-table-wrap">
+      <table class="ui-table inv-kardex-table">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Producto</th>
+            <th>Tipo</th>
+            <th>Cantidad</th>
+            <th>Origen</th>
+            <th>Destino</th>
+            <th>Referencia</th>
+            <th>Usuario</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let m of filteredMovements">
+            <td class="inv-td-date">{{ m.fecha }}</td>
+
+            <td>
+              <div class="inv-product-cell">
+                <div class="inv-product-avatar">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                  </svg>
+                </div>
+                <strong>{{ m.productoNombre }}</strong>
+              </div>
+            </td>
+
+            <td>
+              <span class="inv-movement-badge" [ngClass]="movementClass(m.tipo)">
+                {{ m.tipo }}
+              </span>
+            </td>
+
+            <td>
+              <span
+                class="inv-qty-val"
+                [class.inv-qty--pos]="m.tipo === 'Ingreso'"
+                [class.inv-qty--neg]="m.tipo === 'Egreso'"
+                [class.inv-qty--neutral]="m.tipo === 'Transferencia'">
+                {{ movementSign(m) }}
+              </span>
+            </td>
+
+            <td class="inv-td-muted">{{ m.almacenOrigen || '-' }}</td>
+            <td class="inv-td-muted">{{ m.almacenDestino || '-' }}</td>
+            <td class="inv-td-ref">{{ m.referencia || '-' }}</td>
+            <td class="inv-td-muted">{{ m.usuario || '-' }}</td>
+          </tr>
+
+          <tr *ngIf="filteredMovements.length === 0">
+            <td colspan="8" class="inv-empty-row">Sin movimientos registrados</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</section>

@@ -1,0 +1,118 @@
+:host {
+  display: block;
+}
+
+.stores-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.store-card {
+  padding: 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(123, 90, 209, 0.1);
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.store-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.store-head strong,
+.store-head span,
+.store-card p,
+.store-card small {
+  display: block;
+}
+
+.store-head span,
+.store-card p,
+.store-card small {
+  color: #7a7794;
+}
+
+.progress-track {
+  width: 100%;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(111, 66, 217, 0.12);
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #7a4cff, #f0b23f);
+}
+
+.error-text {
+  color: #b42318;
+  font-weight: 700;
+}
+
+@media (max-width: 900px) {
+  .stores-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Mockup alignment for Tiendas */
+:host .ui-page {
+  gap: 18px;
+}
+
+:host .ui-hero,
+:host .ui-card,
+:host .ui-stat-card {
+  border: 1px solid #dde1ea;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 10px 26px rgba(17, 24, 39, 0.055);
+}
+
+:host .ui-hero {
+  min-height: 120px;
+  padding: 22px 26px 22px 108px;
+}
+
+:host .ui-hero::before {
+  left: 26px;
+  width: 66px;
+  height: 66px;
+  border-radius: 16px;
+  background: #f3e7f8;
+}
+
+:host .ui-title {
+  color: #17122f;
+  font-size: 1.45rem;
+  font-weight: 900;
+}
+
+:host .ui-description {
+  display: block;
+  max-width: 650px;
+  color: #67617c;
+}
+
+:host .stores-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+:host .store-card {
+  padding: 18px;
+  border: 1px solid #dde1ea;
+  border-radius: 14px;
+  box-shadow: 0 10px 26px rgba(17, 24, 39, 0.045);
+}
+
+@media (max-width: 1100px) {
+  :host .stores-grid {
+    grid-template-columns: 1fr;
+  }
+}

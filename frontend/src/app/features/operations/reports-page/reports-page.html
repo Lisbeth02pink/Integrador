@@ -1,0 +1,238 @@
+<section class="ui-page">
+  <div class="ui-hero">
+    <div class="ui-toolbar">
+      <div>
+        <p class="ui-kicker">Analitica</p>
+        <h2 class="ui-title">Reportes operativos</h2>
+        <p class="ui-description">
+          Consolidado de abastecimiento, almacen central, pedidos internos, transferencias y ventas del sistema.
+        </p>
+      </div>
+      <div class="date-filters">
+        <div class="ui-field">
+          <label>Desde</label>
+          <input type="date" [(ngModel)]="fromDate" name="reportFromDate" />
+        </div>
+        <div class="ui-field">
+          <label>Hasta</label>
+          <input type="date" [(ngModel)]="toDate" name="reportToDate" />
+        </div>
+        <button class="ui-btn ui-btn-secondary" type="button" (click)="loadReports()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M21 12a9 9 0 0 1-15.5 6.2"/>
+            <path d="M3 12a9 9 0 0 1 15.5-6.2"/>
+            <path d="M18 2v4h4"/>
+            <path d="M6 22v-4H2"/>
+          </svg>
+          Actualizar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <p *ngIf="errorMessage" class="error-text">{{ errorMessage }}</p>
+  <p *ngIf="loading" class="ui-helper-text">Cargando reportes...</p>
+
+  <div class="ui-stats-grid">
+    <article class="ui-stat-card">
+      <span>Stock central</span>
+      <strong>{{ stockCentral }}</strong>
+      <small>Unidades en el almacen central</small>
+    </article>
+    <article class="ui-stat-card">
+      <span>Stock en tiendas</span>
+      <strong>{{ totalStockTiendas }}</strong>
+      <small>Inventario distribuido</small>
+    </article>
+    <article class="ui-stat-card">
+      <span>Pedidos pendientes</span>
+      <strong>{{ pedidosPendientes }}</strong>
+      <small>Solicitudes por atender</small>
+    </article>
+    <article class="ui-stat-card">
+      <span>Pedidos entregados</span>
+      <strong>{{ pedidosEntregados }}</strong>
+      <small>Despachos completados</small>
+    </article>
+    <article class="ui-stat-card">
+      <span>Ingresos proveedor</span>
+      <strong>{{ deliveries.length }}</strong>
+      <small>Entregas registradas</small>
+    </article>
+    <article class="ui-stat-card">
+      <span>Proveedores activos</span>
+      <strong>{{ proveedoresActivos }}</strong>
+      <small>Abastecimiento disponible</small>
+    </article>
+    <article class="ui-stat-card">
+      <span>Ventas</span>
+      <strong>{{ ingresosPeriodo | currency:'PEN':'symbol':'1.0-0' }}</strong>
+      <small>Ingresos del periodo</small>
+    </article>
+    <article class="ui-stat-card">
+      <span>Utilidad</span>
+      <strong>{{ utilidadPeriodo | currency:'PEN':'symbol':'1.0-0' }}</strong>
+      <small>Resultado operativo</small>
+    </article>
+  </div>
+
+  <div class="reports-grid">
+    <section class="ui-card">
+      <div class="ui-card-header">
+        <div>
+          <h3>Top proveedores por unidades</h3>
+          <p>Quienes mas abastecieron al almacen central.</p>
+        </div>
+      </div>
+      <div class="report-list">
+        <article class="report-item" *ngFor="let item of topSuppliersList">
+          <strong>{{ item.name }}</strong>
+          <small>{{ item.quantity }} unidades ingresadas</small>
+        </article>
+      </div>
+    </section>
+
+    <section class="ui-card">
+      <div class="ui-card-header">
+        <div>
+          <h3>Productos con mas movimiento</h3>
+          <p>Ingresos, salidas y transferencias acumuladas.</p>
+        </div>
+      </div>
+      <div class="report-list">
+        <article class="report-item" *ngFor="let item of topProductsMoved">
+          <strong>{{ item.name }}</strong>
+          <small>{{ item.quantity }} unidades movilizadas</small>
+        </article>
+      </div>
+    </section>
+  </div>
+
+  <div class="reports-grid">
+    <section class="ui-card">
+      <div class="ui-card-header">
+        <div>
+          <h3>Stock critico</h3>
+          <p>Productos que requieren reposicion inmediata.</p>
+        </div>
+      </div>
+      <div class="ui-table-wrap">
+        <table class="ui-table">
+          <thead>
+            <tr>
+              <th>Producto</th>
+              <th>SKU</th>
+              <th>Ubicacion</th>
+              <th>Stock</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of lowStock">
+              <td>{{ item.nombre }}</td>
+              <td>{{ item.sku }}</td>
+              <td>{{ item.almacenNombre }}</td>
+              <td>{{ item.stock }} / min {{ item.stockMinimo }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="ui-card">
+      <div class="ui-card-header">
+        <div>
+          <h3>Resumen por ubicacion</h3>
+          <p>Inventario consolidado por almacen y tienda.</p>
+        </div>
+      </div>
+      <div class="ui-table-wrap">
+        <table class="ui-table">
+          <thead>
+            <tr>
+              <th>Ubicacion</th>
+              <th>Ciudad</th>
+              <th>Productos</th>
+              <th>Stock</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of warehouseSummary">
+              <td>{{ item.warehouse.nombre }}</td>
+              <td>{{ item.warehouse.ciudad }}</td>
+              <td>{{ item.totalProductos }}</td>
+              <td>{{ item.stockTotal }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <section class="ui-card">
+    <div class="ui-card-header">
+      <div>
+        <h3>Pedidos internos</h3>
+        <p>Seguimiento de solicitudes desde tiendas hacia el almacen central.</p>
+      </div>
+    </div>
+    <div class="ui-table-wrap">
+      <table class="ui-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Tienda</th>
+            <th>Solicitante</th>
+            <th>Prioridad</th>
+            <th>Estado</th>
+            <th>Fecha</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let order of orders">
+            <td>#{{ order.id }}</td>
+            <td>{{ order.storeName }}</td>
+            <td>{{ order.requestedBy }}</td>
+            <td>{{ order.priority }}</td>
+            <td>{{ order.status }}</td>
+            <td>{{ order.requestedAt }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="ui-card">
+    <div class="ui-card-header">
+      <div>
+        <h3>Abastecimiento y transferencias</h3>
+        <p>Ultimos movimientos del circuito logistico.</p>
+      </div>
+    </div>
+    <div class="ui-table-wrap">
+      <table class="ui-table">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Tipo</th>
+            <th>Producto</th>
+            <th>Cantidad</th>
+            <th>Origen</th>
+            <th>Destino</th>
+            <th>Referencia</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let movement of movements.slice(0, 12)">
+            <td>{{ movement.fecha }}</td>
+            <td>{{ movement.tipo }}</td>
+            <td>{{ movement.productoNombre }}</td>
+            <td>{{ movement.cantidad }}</td>
+            <td>{{ movement.almacenOrigen || '-' }}</td>
+            <td>{{ movement.almacenDestino || '-' }}</td>
+            <td>{{ movement.referencia }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</section>

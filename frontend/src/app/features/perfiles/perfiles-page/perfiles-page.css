@@ -1,0 +1,86 @@
+:host {
+  display: block;
+}
+
+.profile-modules {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  max-width: 520px;
+}
+
+.profile-module-chip {
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: #f3eef8;
+  color: #5f2a7a;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* Mockup alignment for Roles */
+:host .ui-page {
+  gap: 18px;
+}
+
+:host .ui-card,
+:host .ui-modal {
+  border: 1px solid #dde1ea;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 10px 26px rgba(17, 24, 39, 0.055);
+}
+
+:host .ui-card {
+  overflow: hidden;
+  padding: 0;
+}
+
+:host .ui-toolbar {
+  min-height: 78px;
+  padding: 18px 22px;
+  margin: 0;
+  border-bottom: 1px solid #dde1ea;
+}
+
+:host .ui-kicker {
+  display: none;
+}
+
+:host .ui-title {
+  color: #17122f;
+  font-size: 1.35rem;
+  font-weight: 900;
+}
+
+:host .ui-btn-primary {
+  min-width: 150px;
+  min-height: 44px;
+  border-radius: 10px;
+}
+
+:host .ui-table-wrap {
+  border: 0;
+  border-radius: 0;
+}
+
+:host .ui-table th {
+  background: #f7f7fa;
+}
+
+:host .ui-action-btn {
+  border-radius: 10px;
+  box-shadow: none;
+}
+
+:host .profile-module-chip {
+  background: #f3e7f8;
+  color: #7b178d;
+}
+
+:host .ui-field input,
+:host .ui-field textarea {
+  min-height: 42px;
+  border-radius: 10px;
+}

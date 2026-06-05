@@ -1,0 +1,624 @@
+<section class="ui-page">
+
+  <!-- ══ HERO ══════════════════════════════════════════════════════════════════ -->
+  <div class="wh-hero">
+    <div class="wh-hero-icon">
+      <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+        <polyline points="9 22 9 12 15 12 15 22"/>
+        <path d="M9 16h6"/>
+      </svg>
+    </div>
+
+    <div class="wh-hero-content">
+      <div>
+        <h2 class="wh-hero-title">Red de sedes del abastecimiento centralizado</h2>
+      </div>
+
+      <button type="button" class="ui-btn ui-btn-primary wh-btn-new" (click)="openNewModal()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="12" y1="5" x2="12" y2="19"/>
+          <line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+        Nueva sede
+      </button>
+    </div>
+  </div>
+
+  <!-- ══ STATS ══════════════════════════════════════════════════════════════════ -->
+  <div class="wh-stats-row">
+
+    <article class="wh-stat-card">
+      <div class="wh-stat-icon wh-stat-icon--purple">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M3 21h18"/>
+          <path d="M5 21V7l8-4v18"/>
+          <path d="M19 21V11l-6-4"/>
+          <path d="M9 9v.01"/>
+          <path d="M9 12v.01"/>
+          <path d="M9 15v.01"/>
+          <path d="M9 18v.01"/>
+        </svg>
+      </div>
+      <div>
+        <span>Sedes totales</span>
+        <strong>{{ totalWarehouses }}</strong>
+        <small>1 almacén + {{ stores.length }} tiendas</small>
+      </div>
+    </article>
+
+    <article class="wh-stat-card">
+      <div class="wh-stat-icon wh-stat-icon--orange">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+      </div>
+      <div>
+        <span>Almacén central</span>
+        <strong>{{ centralWarehouse ? 1 : 0 }}</strong>
+        <small>Punto de origen</small>
+      </div>
+    </article>
+
+    <article class="wh-stat-card">
+      <div class="wh-stat-icon wh-stat-icon--green">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <path d="M16 10a4 4 0 0 1-8 0"/>
+        </svg>
+      </div>
+      <div>
+        <span>Tiendas activas</span>
+        <strong>{{ stores.length }}</strong>
+        <small>100% operativas</small>
+      </div>
+    </article>
+
+    <article class="wh-stat-card">
+      <div class="wh-stat-icon wh-stat-icon--purple">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M21.21 15.89A10 10 0 1 1 8 2.83"/>
+          <path d="M22 12A10 10 0 0 0 12 2v10z"/>
+        </svg>
+      </div>
+      <div>
+        <span>Ocupación promedio</span>
+        <strong>{{ averageOccupancy }}%</strong>
+        <small>Capacidad utilizada</small>
+      </div>
+    </article>
+
+  </div>
+
+  <!-- ══ MAPA OPERATIVO ═════════════════════════════════════════════════════════ -->
+  <section class="ui-card">
+    <div class="ui-card-header">
+      <div>
+        <h3>Mapa operativo de sedes</h3>
+        <p>El almacén central abastece a todas las tiendas de la red.</p>
+      </div>
+    </div>
+
+    <p *ngIf="errorMessage" class="error-text">{{ errorMessage }}</p>
+    <p *ngIf="loading" class="ui-helper-text">Cargando sedes...</p>
+
+    <div class="warehouse-grid" *ngIf="!loading">
+      <article class="warehouse-card" *ngFor="let warehouse of warehouses">
+        <div class="warehouse-top">
+          <div class="wh-card-brand">
+            <div
+              class="wh-card-avatar"
+              [class.wh-avatar--central]="warehouse.tipo === 'CENTRAL'"
+              [class.wh-avatar--regional]="warehouse.tipo === 'REGIONAL'"
+              [class.wh-avatar--tienda]="warehouse.tipo === 'TIENDA'">
+
+              <svg *ngIf="warehouse.tipo === 'CENTRAL'" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                <polyline points="9 22 9 12 15 12 15 22"/>
+              </svg>
+
+              <svg *ngIf="warehouse.tipo === 'REGIONAL'" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <rect x="1" y="3" width="15" height="13"/>
+                <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+                <circle cx="5.5" cy="18.5" r="2.5"/>
+                <circle cx="18.5" cy="18.5" r="2.5"/>
+              </svg>
+
+              <svg *ngIf="warehouse.tipo === 'TIENDA'" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                <line x1="3" y1="6" x2="21" y2="6"/>
+                <path d="M16 10a4 4 0 0 1-8 0"/>
+              </svg>
+            </div>
+
+            <div>
+              <strong>{{ warehouse.nombre }}</strong>
+              <span>{{ warehouse.ciudad }}</span>
+            </div>
+          </div>
+
+          <div class="wh-badges">
+            <span
+              class="wh-type-badge"
+              [class.wh-badge--central]="warehouse.tipo === 'CENTRAL'"
+              [class.wh-badge--regional]="warehouse.tipo === 'REGIONAL'"
+              [class.wh-badge--tienda]="warehouse.tipo === 'TIENDA'">
+              {{ typeLabel(warehouse.tipo) }}
+            </span>
+
+            <span class="ui-chip is-success" *ngIf="warehouse.estado === 1">
+              <span class="wh-dot wh-dot--green"></span>Activo
+            </span>
+
+            <span class="ui-chip is-danger" *ngIf="warehouse.estado !== 1">
+              <span class="wh-dot wh-dot--red"></span>Inactivo
+            </span>
+          </div>
+        </div>
+
+        <div class="wh-card-info">
+          <div class="wh-card-row wh-row-city">
+            <span>{{ warehouse.ciudad }}</span>
+          </div>
+
+          <div class="wh-card-row wh-row-address">
+            <span>{{ warehouse.direccion }}</span>
+          </div>
+
+          <div class="wh-card-row wh-row-owner">
+            <span>{{ warehouse.responsable }}</span>
+          </div>
+        </div>
+
+        <div class="wh-capacity-box">
+          <div class="wh-capacity-head">
+            <span>Capacidad usada</span>
+            <strong>{{ warehouse.ocupacion }} / {{ warehouse.capacidad }} m³</strong>
+          </div>
+
+          <div class="ui-progress wh-progress-bar">
+            <span [style.width.%]="occupancyPercent(warehouse)" [class]="occupancyClass(warehouse)"></span>
+          </div>
+
+          <p
+            class="wh-occ-label"
+            [class.wh-occ--danger]="occupancyPercent(warehouse) >= 85"
+            [class.wh-occ--warning]="occupancyPercent(warehouse) >= 60 && occupancyPercent(warehouse) < 85">
+            {{ occupancyPercent(warehouse) }}% de ocupación
+          </p>
+        </div>
+
+        <div class="ui-inline-actions wh-card-actions">
+          <button class="ui-btn ui-btn-secondary wh-btn-sm" type="button" (click)="editWarehouse(warehouse)">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+            </svg>
+            Editar
+          </button>
+
+          <button class="ui-btn wh-btn-delete wh-btn-sm" type="button" (click)="deleteWarehouse(warehouse)">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <polyline points="3 6 5 6 21 6"/>
+              <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+              <path d="M10 11v6"/>
+              <path d="M14 11v6"/>
+            </svg>
+            Eliminar
+          </button>
+        </div>
+      </article>
+
+      <div class="wh-empty" *ngIf="warehouses.length === 0 && !loading">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+        </svg>
+        <p>No hay sedes registradas</p>
+        <small>Haz clic en "Nueva sede" para comenzar.</small>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ CAPACIDAD Y COBERTURA ════════════════════════════════════════════════ -->
+  <section class="ui-card wh-table-card">
+    <div class="ui-card-header">
+      <div>
+        <h3>Capacidad y cobertura por sede</h3>
+        <p>Resumen de ocupación, capacidad y productos gestionados por cada sede.</p>
+      </div>
+    </div>
+
+    <div class="ui-table-wrap">
+      <table class="ui-table wh-table">
+        <thead>
+          <tr>
+            <th>Tipo</th>
+            <th>Sede</th>
+            <th>Ciudad</th>
+            <th>Rol</th>
+            <th>Capacidad</th>
+            <th>Usado</th>
+            <th>Ocupación</th>
+            <th>Cobertura</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let warehouse of warehouses">
+            <td>
+              <span
+                class="wh-table-type"
+                [class.wh-table-type--central]="warehouse.tipo === 'CENTRAL'"
+                [class.wh-table-type--regional]="warehouse.tipo === 'REGIONAL'"
+                [class.wh-table-type--tienda]="warehouse.tipo === 'TIENDA'">
+
+                <svg *ngIf="warehouse.tipo === 'CENTRAL'" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                </svg>
+
+                <svg *ngIf="warehouse.tipo === 'REGIONAL'" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="1" y="3" width="15" height="13"/>
+                  <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+                </svg>
+
+                <svg *ngIf="warehouse.tipo === 'TIENDA'" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                </svg>
+              </span>
+            </td>
+
+            <td>{{ warehouse.nombre }}</td>
+            <td>{{ warehouse.ciudad }}</td>
+            <td>{{ warehouse.tipo === 'CENTRAL' ? 'Origen (Central)' : 'Destino (Tienda)' }}</td>
+            <td>{{ warehouse.capacidad }} m³</td>
+            <td>{{ warehouse.ocupacion }} m³</td>
+
+            <td>
+              <div class="wh-table-progress">
+                <span [style.width.%]="occupancyPercent(warehouse)" [class]="occupancyClass(warehouse)"></span>
+              </div>
+              <strong class="wh-table-percent">{{ occupancyPercent(warehouse) }}%</strong>
+            </td>
+
+            <td>
+              <span *ngIf="warehouse.tipo === 'CENTRAL'">
+                {{ stores.length }} tiendas
+              </span>
+              <span *ngIf="warehouse.tipo !== 'CENTRAL'">
+                {{ warehouse.ciudad }} y zonas aledañas
+              </span>
+            </td>
+          </tr>
+
+          <tr *ngIf="warehouses.length === 0">
+            <td colspan="8" class="wh-table-empty">
+              No hay sedes registradas.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ══ MODAL: NUEVA / EDITAR SEDE ════════════════════════════════════════════ -->
+  <div class="ui-modal-backdrop wh-backdrop" *ngIf="modalOpen" (click)="closeModal()">
+    <div class="wh-modal" (click)="$event.stopPropagation()">
+
+      <!-- Header -->
+      <div class="wh-modal-header">
+        <div>
+          <p class="ui-kicker">NUEVA SEDE</p>
+          <h3>{{ editingId ? 'Editar sede / almacén' : 'Registrar nueva sede / almacén' }}</h3>
+        </div>
+
+        <button class="ui-icon-btn" type="button" (click)="closeModal()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="wh-modal-body">
+
+        <!-- ── Columna izquierda: formulario ─────────────────────────────── -->
+        <div class="wh-form-col">
+
+          <!-- Sección: Información general -->
+          <div class="wh-form-section">
+            <div class="wh-section-title">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="7" height="7"/>
+                <rect x="14" y="3" width="7" height="7"/>
+                <rect x="14" y="14" width="7" height="7"/>
+                <rect x="3" y="14" width="7" height="7"/>
+              </svg>
+              Información general
+            </div>
+
+            <div class="ui-field">
+              <label>Nombre de la sede <span class="wh-req">*</span></label>
+              <input [(ngModel)]="form.nombre" name="whName" placeholder="Ej. Tienda Tambo Chiclayo Centro" />
+            </div>
+
+            <div class="ui-field">
+              <label>Tipo de sede <span class="wh-req">*</span></label>
+              <select [(ngModel)]="form.tipo" name="whType">
+                <option value="" disabled>Seleccionar tipo de sede</option>
+                <option value="CENTRAL">Almacén Central</option>
+                <option value="REGIONAL">Hub Regional</option>
+                <option value="TIENDA">Tienda</option>
+              </select>
+            </div>
+
+            <div class="wh-tipo-hint" *ngIf="form.tipo">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="8" x2="12" y2="12"/>
+                <line x1="12" y1="16" x2="12.01" y2="16"/>
+              </svg>
+              {{ tipoHint }}
+            </div>
+
+            <div class="ui-field">
+              <label>Dirección <span class="wh-req">*</span></label>
+              <input [(ngModel)]="form.direccion" name="whAddress" placeholder="Ej. Av. Balta 922" />
+            </div>
+
+            <div class="wh-two-col">
+              <div class="ui-field">
+                <label>Ciudad <span class="wh-req">*</span></label>
+                <select [(ngModel)]="form.ciudad" name="whCity" (ngModelChange)="onCityChange()">
+                  <option value="" disabled>Seleccionar ciudad</option>
+                  <option *ngFor="let c of cities" [value]="c">{{ c }}</option>
+                </select>
+              </div>
+
+              <div class="ui-field">
+                <label>Distrito <span class="wh-req">*</span></label>
+                <select [(ngModel)]="form.distrito" name="whDistrict" [disabled]="districts.length === 0">
+                  <option value="" disabled>Seleccionar distrito</option>
+                  <option *ngFor="let d of districts" [value]="d">{{ d }}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sección: Capacidad -->
+          <div class="wh-form-section">
+            <div class="wh-section-title">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+              </svg>
+              Capacidad y configuración
+            </div>
+
+            <div class="wh-two-col">
+              <div class="ui-field">
+                <label>Capacidad total (posiciones) <span class="wh-req">*</span></label>
+                <input type="number" min="1" [(ngModel)]="form.capacidad" name="whCapacity" placeholder="Ej. 640" />
+              </div>
+
+              <div class="ui-field">
+                <label>Capacidad inicial utilizada</label>
+                <div class="wh-pct-field">
+                  <input type="number" min="0" max="100" [(ngModel)]="form.ocupacionPct" name="whOcupacion" placeholder="0" />
+                  <span>%</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="ui-field">
+              <label>Responsable de la sede <span class="wh-req">*</span></label>
+              <input [(ngModel)]="form.responsable" name="whOwner" placeholder="Nombre del responsable" />
+            </div>
+
+            <div class="wh-two-col">
+              <div class="ui-field">
+                <label>Teléfono de contacto</label>
+                <input [(ngModel)]="form.telefono" name="whPhone" placeholder="Ej. 987 654 321" />
+              </div>
+
+              <div class="ui-field">
+                <label>Correo electrónico</label>
+                <input [(ngModel)]="form.correo" name="whEmail" placeholder="Ej. responsable@tambo.com" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Sección: Configuración adicional -->
+          <div class="wh-form-section">
+            <div class="wh-section-title">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+              </svg>
+              Configuración adicional
+            </div>
+
+            <div class="ui-field">
+              <label>Estado de la sede</label>
+
+              <div class="wh-toggle-group">
+                <label class="wh-toggle-opt" [class.is-active]="form.estado === 'activo'">
+                  <input type="radio" [(ngModel)]="form.estado" name="whEstado" value="activo" />
+                  <span class="wh-toggle-dot wh-toggle-dot--active"></span>
+                  Activa
+                </label>
+
+                <label class="wh-toggle-opt" [class.is-active]="form.estado === 'inactivo'">
+                  <input type="radio" [(ngModel)]="form.estado" name="whEstado" value="inactivo" />
+                  <span class="wh-toggle-dot wh-toggle-dot--inactive"></span>
+                  Inactiva
+                </label>
+              </div>
+            </div>
+
+            <div class="ui-field">
+              <label>Observaciones <span class="wh-char-count">{{ form.observaciones.length }}/200</span></label>
+              <textarea rows="4" [(ngModel)]="form.observaciones" name="whObs" maxlength="200" placeholder="Información adicional (opcional)"></textarea>
+            </div>
+          </div>
+
+          <p *ngIf="errorMessage" class="error-text">{{ errorMessage }}</p>
+        </div>
+
+        <!-- ── Columna derecha: preview ──────────────────────────────────── -->
+        <div class="wh-preview-col">
+          <p class="wh-preview-title">Resumen de la sede</p>
+
+          <div
+            class="wh-preview-icon-wrap"
+            [class.wh-pi--central]="form.tipo === 'CENTRAL'"
+            [class.wh-pi--regional]="form.tipo === 'REGIONAL'"
+            [class.wh-pi--tienda]="form.tipo === 'TIENDA'">
+
+            <svg *ngIf="form.tipo === 'CENTRAL' || !form.tipo" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+              <polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+
+            <svg *ngIf="form.tipo === 'REGIONAL'" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+              <rect x="1" y="3" width="15" height="13"/>
+              <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+              <circle cx="5.5" cy="18.5" r="2.5"/>
+              <circle cx="18.5" cy="18.5" r="2.5"/>
+            </svg>
+
+            <svg *ngIf="form.tipo === 'TIENDA'" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+              <line x1="3" y1="6" x2="21" y2="6"/>
+              <path d="M16 10a4 4 0 0 1-8 0"/>
+            </svg>
+          </div>
+
+          <div class="wh-preview-rows">
+            <div class="wh-preview-row">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+              </svg>
+              <div>
+                <span>Nombre</span>
+                <strong>{{ form.nombre || '—' }}</strong>
+              </div>
+            </div>
+
+            <div class="wh-preview-row">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+                <line x1="7" y1="7" x2="7.01" y2="7"/>
+              </svg>
+              <div>
+                <span>Tipo de sede</span>
+                <strong>{{ form.tipo ? tipoLabel : '—' }}</strong>
+              </div>
+            </div>
+
+            <div class="wh-preview-row">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                <circle cx="12" cy="10" r="3"/>
+              </svg>
+              <div>
+                <span>Dirección</span>
+                <strong>{{ form.direccion || '—' }}</strong>
+              </div>
+            </div>
+
+            <div class="wh-preview-row">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+              </svg>
+              <div>
+                <span>Ciudad / Distrito</span>
+                <strong>{{ (form.ciudad || '—') }} / {{ (form.distrito || '—') }}</strong>
+              </div>
+            </div>
+
+            <div class="wh-preview-row">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+              </svg>
+              <div>
+                <span>Capacidad total</span>
+                <strong>{{ form.capacidad > 0 ? form.capacidad + ' posiciones' : '—' }}</strong>
+              </div>
+            </div>
+
+            <div class="wh-preview-row">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+              <div>
+                <span>Capacidad utilizada</span>
+                <strong>{{ form.ocupacionPct }}%</strong>
+              </div>
+            </div>
+
+            <div class="wh-preview-row">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+              </svg>
+              <div>
+                <span>Responsable</span>
+                <strong>{{ form.responsable || '—' }}</strong>
+              </div>
+            </div>
+
+            <div class="wh-preview-row">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              </svg>
+              <div>
+                <span>Estado</span>
+                <strong class="wh-preview-estado" [class.is-active]="form.estado === 'activo'">
+                  <span
+                    class="wh-dot"
+                    [class.wh-dot--green]="form.estado === 'activo'"
+                    [class.wh-dot--red]="form.estado !== 'activo'">
+                  </span>
+                  {{ form.estado === 'activo' ? 'Activa' : 'Inactiva' }}
+                </strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="wh-preview-tip">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="8" x2="12" y2="12"/>
+              <line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+            <div>
+              <strong>¿Qué significa registrar una sede?</strong>
+              <p>Al registrar una nueva sede, podrás gestionar su inventario, transferencias y movimientos de forma independiente.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="wh-modal-footer">
+        <button class="ui-btn ui-btn-secondary" type="button" (click)="closeModal()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+          Cancelar
+        </button>
+
+        <button class="ui-btn ui-btn-primary wh-btn-save" type="button" (click)="saveWarehouse()" [disabled]="saving">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          </svg>
+          {{ saving ? 'Guardando...' : (editingId ? 'Actualizar sede' : 'Registrar nueva sede') }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+</section>

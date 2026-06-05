@@ -1,0 +1,245 @@
+<section class="attendance-page">
+
+
+  <div class="attendance-grid">
+
+    <section class="camera-card">
+
+      <div class="camera-header">
+
+        <div>
+          <h2>Camara activa</h2>
+        </div>
+
+        <div class="live-status">
+          <span class="live-dot"></span>
+          Listo
+        </div>
+
+      </div>
+
+      <!-- CAMERA -->
+      <div class="camera-stage">
+
+        <video
+          #videoElement
+          autoplay
+          muted
+          playsinline
+        ></video>
+
+        <canvas #canvasElement></canvas>
+
+      </div>
+
+      <!-- ACTIONS -->
+      <div class="camera-actions">
+
+        <button
+          class="entry-btn"
+          (click)="validateAttendance('ENTRADA')"
+          [disabled]="processing"
+        >
+          Marcar entrada
+        </button>
+
+        <button
+          class="exit-btn"
+          (click)="validateAttendance('SALIDA')"
+          [disabled]="processing"
+        >
+          Marcar salida
+        </button>
+
+      </div>
+
+      <p class="camera-helper">
+        {{ actionStatus }}
+      </p>
+
+    </section>
+
+    <!-- RIGHT -->
+    <aside class="side-column">
+
+      <!-- USERS -->
+      <section class="side-card">
+
+        <div class="side-header">
+
+          <h3>Usuarios registrados</h3>
+
+          <span class="side-counter">
+            {{ registeredFaces.length }}
+          </span>
+
+        </div>
+
+        <div
+          class="user-item"
+          *ngFor="let record of registeredFaces"
+        >
+
+          <div class="user-avatar">
+            {{ record.nombre.charAt(0) }}
+          </div>
+
+          <div class="user-content">
+
+            <strong>
+              {{ record.nombre }}
+            </strong>
+
+            <small>
+              {{ record.usuario || record.codigo }}
+            </small>
+
+          </div>
+
+          <button
+            class="remove-btn"
+            (click)="removeFace(record)"
+          >
+            Quitar
+          </button>
+
+        </div>
+
+      </section>
+
+      <!-- LOGS -->
+      <section class="side-card">
+
+        <div class="side-header">
+
+          <h3>Marcaciones recientes</h3>
+
+          <span class="side-counter">
+            {{ attendanceLogs.length }}
+          </span>
+
+        </div>
+
+        <div
+          class="log-item"
+          *ngFor="let log of attendanceLogs.slice(0, 5)"
+        >
+
+          <div class="log-left">
+
+            <strong>
+              {{ log.nombre }}
+            </strong>
+
+            <small>
+              {{ log.usuario || log.codigo }}
+            </small>
+
+          </div>
+
+          <span
+            class="log-badge"
+            [class.exit]="log.tipo === 'SALIDA'"
+          >
+            {{ log.tipo }}
+          </span>
+
+        </div>
+
+      </section>
+
+    </aside>
+
+  </div>
+
+  <!-- EMPLOYEES -->
+  <section class="employees-card">
+
+    <div class="employees-header">
+
+      <div>
+
+        <span class="employees-kicker">
+          CONTROL DE EMPLEADOS
+        </span>
+
+        <h2>
+          Asistencia, tardanzas y faltas
+        </h2>
+
+      </div>
+
+      <div class="employees-actions">
+
+        <button
+          class="excel-btn"
+          (click)="exportEmployeeExcelReport()"
+        >
+          Exportar Excel
+        </button>
+
+        <button
+          class="pdf-btn"
+          (click)="exportEmployeeReport()"
+        >
+          Exportar PDF
+        </button>
+
+      </div>
+
+    </div>
+
+    <div class="table-wrap">
+
+      <table class="employees-table">
+
+        <thead>
+
+          <tr>
+            <th>Empleado</th>
+            <th>Cargo</th>
+            <th>Entrada</th>
+            <th>Salida</th>
+            <th>Tardanzas</th>
+            <th>Faltas</th>
+            <th>Asistencias</th>
+            <th>Estado</th>
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          <tr *ngFor="let employee of employeeControl">
+
+            <td>{{ employee.nombre }}</td>
+            <td>{{ employee.cargo }}</td>
+            <td>{{ employee.entrada }}</td>
+            <td>{{ employee.salida }}</td>
+            <td>{{ employee.tardanzas }}</td>
+            <td>{{ employee.faltas }}</td>
+            <td>{{ employee.asistencias }}</td>
+
+            <td>
+
+              <span
+                class="status-badge"
+                [class.late]="employee.estado === 'Tarde'"
+                [class.absent]="employee.estado === 'Falta'"
+              >
+                {{ employee.estado }}
+              </span>
+
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </section>
+
+</section>

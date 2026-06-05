@@ -1,0 +1,98 @@
+<section class="ui-page mermas-page">
+  <div class="ui-hero">
+    <div class="ui-toolbar">
+      <div>
+        <p class="ui-kicker">Control de perdidas</p>
+        <h2 class="ui-title">Mermas y productos danados</h2>
+        <p class="ui-description">Registra vencidos, productos danados o perdidos, descuenta stock y conserva trazabilidad en kardex.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="ui-stats-grid">
+    <article class="ui-stat-card">
+      <span>Total registros</span>
+      <strong>{{ mermas.length }}</strong>
+      <small>Eventos de merma registrados</small>
+    </article>
+    <article class="ui-stat-card">
+      <span>Unidades descontadas</span>
+      <strong>{{ totalMermas }}</strong>
+      <small>Impacto acumulado en stock</small>
+    </article>
+  </div>
+
+  <div class="ui-pane-grid">
+    <section class="ui-card">
+      <div class="ui-card-header">
+        <div>
+          <h3>Registrar merma</h3>
+          <p>El producto seleccionado se descuenta del inventario actual.</p>
+        </div>
+      </div>
+
+      <p class="ui-error" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+      <div class="ui-form-grid">
+        <div class="ui-field">
+          <label>Producto</label>
+          <select [(ngModel)]="form.productoId" name="productoId">
+            <option [ngValue]="0">Seleccionar producto</option>
+            <option *ngFor="let product of products" [ngValue]="product.id">
+              {{ product.nombre }} - {{ product.almacenNombre }} - {{ product.stock }} und
+            </option>
+          </select>
+        </div>
+
+        <div class="ui-field">
+          <label>Cantidad</label>
+          <input type="number" min="1" [(ngModel)]="form.cantidad" name="cantidad" />
+        </div>
+
+        <div class="ui-field">
+          <label>Motivo</label>
+          <select [(ngModel)]="form.motivo" name="motivo">
+            <option>Producto danado</option>
+            <option>Producto vencido</option>
+            <option>Diferencia de inventario</option>
+            <option>Producto perdido</option>
+          </select>
+        </div>
+
+        <div class="ui-field">
+          <label>Responsable</label>
+          <input [(ngModel)]="form.responsable" name="responsable" />
+        </div>
+      </div>
+
+      <div class="ui-field">
+        <label>Observaciones</label>
+        <textarea rows="3" [(ngModel)]="form.observaciones" name="observaciones"></textarea>
+      </div>
+
+      <button class="ui-btn ui-btn-primary" type="button" (click)="registerMerma()" [disabled]="saving">
+        <svg viewBox="0 0 24 24"><path d="M10.3 3.9 2 18a2 2 0 0 0 1.7 3h16.6A2 2 0 0 0 22 18L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+        {{ saving ? 'Guardando...' : 'Registrar merma' }}
+      </button>
+    </section>
+
+    <section class="ui-card">
+      <div class="ui-card-header">
+        <div>
+          <h3>Historial de mermas</h3>
+          <p>Movimientos registrados como salida por perdida logistica.</p>
+        </div>
+      </div>
+
+      <div class="ui-stack-list">
+        <article class="ui-stack-item" *ngFor="let merma of mermas.slice(0, 8)">
+          <div>
+            <strong>{{ merma.productoNombre }}</strong>
+            <span>{{ merma.almacenNombre }} - {{ merma.motivo }}</span>
+          </div>
+          <span class="ui-chip is-yellow">{{ merma.cantidad }} und</span>
+        </article>
+      </div>
+    </section>
+  </div>
+</section>

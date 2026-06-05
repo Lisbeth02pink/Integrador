@@ -1,0 +1,211 @@
+<div
+  class="dashboard-shell"
+  [class.is-mobile]="!isDesktop"
+  [class.sidebar-open]="isSidebarOpen"
+  [class.sidebar-collapsed]="!isSidebarOpen && isDesktop"
+>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+    <!-- BRAND -->
+    <div class="brand">
+
+      <img
+        src="assets/img/icono_tambo.png"
+        alt="Icono Tambo"
+        class="brand-icon"
+      />
+
+      <div class="brand-text">
+        <h1>Tambo</h1>
+      </div>
+
+    </div>
+
+    <!-- NAV -->
+    <nav class="nav-groups">
+
+      <section
+        class="nav-group"
+        *ngFor="let group of groups; trackBy: trackByTitle"
+      >
+
+        <!-- GROUP -->
+        <button
+          class="group-header"
+          type="button"
+          (click)="toggleGroup(group)"
+        >
+
+          <span class="group-title">
+            {{ group.title }}
+          </span>
+
+          <span
+            class="chevron"
+            [class.expanded]="group.expanded"
+          >
+            v
+          </span>
+
+        </button>
+
+        <!-- ITEMS -->
+        <div
+          class="group-items"
+          *ngIf="group.expanded"
+        >
+
+          <a
+            *ngFor="let item of group.items; trackBy: trackByLabel"
+            class="nav-item"
+            [routerLink]="item.route || null"
+            (click)="onNavigate()"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+            [class.disabled]="!item.route"
+          >
+
+            <!-- ICON -->
+            <span class="nav-icon">
+
+              <img
+                *ngIf="isImageIcon(item.icon); else iconName"
+                [src]="item.icon"
+                [alt]="item.label"
+                class="nav-icon-image"
+              />
+
+              <ng-template #iconName>
+                <app-icon
+                  [name]="item.icon"
+                  [size]="28"
+                ></app-icon>
+              </ng-template>
+
+            </span>
+
+            <!-- LABEL -->
+            <span class="nav-label">
+              {{ item.label }}
+            </span>
+
+          </a>
+
+        </div>
+
+      </section>
+
+    </nav>
+
+    <!-- USER CARD -->
+    <div class="sidebar-user">
+
+      <div class="sidebar-user-avatar">
+        {{ userInitials }}
+      </div>
+
+      <div class="sidebar-user-info">
+
+        <strong>
+          {{ currentUserName }}
+        </strong>
+
+        <span>
+          {{ currentUserEmail }}
+        </span>
+
+      </div>
+
+    </div>
+
+    <!-- FOOTER -->
+    <div class="sidebar-footer">
+
+      <button
+        class="logout-btn"
+        type="button"
+        (click)="logout()"
+      >
+
+        <app-icon
+          name="log-out"
+          [size]="22"
+        ></app-icon>
+
+        <span>
+          Cerrar sesion
+        </span>
+
+      </button>
+
+    </div>
+
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main-layout">
+
+    <!-- TOPBAR -->
+    <header class="topbar">
+
+      <div class="topbar-left">
+
+        <!-- HAMBURGER -->
+        <button
+          class="hamburger-btn"
+          type="button"
+          (click)="toggleSidebar()"
+          [attr.aria-expanded]="isSidebarOpen"
+          aria-label="Mostrar u ocultar menu lateral"
+        >
+
+          <app-icon
+            name="menu"
+            [size]="20"
+          ></app-icon>
+
+        </button>
+
+        <h1>
+          {{ currentRouteLabel }}
+        </h1>
+
+      </div>
+
+      <!-- RIGHT -->
+      <div class="topbar-right">
+
+        <div class="topbar-user">
+
+          <div class="user-avatar">
+            {{ userInitials }}
+          </div>
+
+          <div class="user-info">
+
+            <strong>
+              {{ currentUserName }}
+            </strong>
+
+            <span>
+              {{ currentUserEmail }}
+            </span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </header>
+
+    <!-- CONTENT -->
+    <main class="content">
+      <router-outlet></router-outlet>
+    </main>
+
+  </div>
+
+</div>

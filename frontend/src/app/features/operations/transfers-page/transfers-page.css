@@ -1,0 +1,544 @@
+:host {
+  display: block;
+}
+
+/* =========================================================
+   PAGE BASE
+   ========================================================= */
+:host .ui-page {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 18px;
+
+}
+
+/* =========================================================
+   HERO
+   ========================================================= */
+:host .ui-hero,
+.transfers-hero {
+  position: relative;
+  min-height: 110px;
+  padding: 22px 26px;
+  border: 1px solid #dde1ea;
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 10px 26px rgba(17, 24, 39, 0.055);
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
+/* Quitar pseudo-elementos heredados */
+:host .ui-hero::before,
+:host .ui-hero::after,
+.transfers-hero::before,
+.transfers-hero::after {
+  content: none !important;
+  display: none !important;
+}
+
+.transfers-hero-icon {
+  width: 66px;
+  height: 66px;
+  border-radius: 16px;
+  background: #f3e7f8;
+  color: #8b20c7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.transfers-hero-content {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+:host .ui-title {
+  color: #17122f;
+  font-size: 1.4rem;
+  font-weight: 900;
+  margin: 0 0 8px;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+}
+
+:host .ui-description {
+  display: block;
+  color: #67617c;
+  font-size: 14px;
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+:host .ui-btn {
+  border: none;
+  outline: none;
+  cursor: pointer;
+  font-family: inherit;
+  text-decoration: none;
+  transition: transform 0.15s ease, filter 0.15s ease, background 0.15s ease;
+}
+
+:host .ui-btn:hover {
+  transform: translateY(-1px);
+}
+
+:host .ui-btn-primary {
+  min-width: 170px;
+  min-height: 46px;
+  padding: 0 18px;
+  border-radius: 10px;
+  border: none;
+  background: linear-gradient(180deg, #ffd84d, #ffcb05);
+  color: #17122f;
+  font-weight: 900;
+  box-shadow: none;
+}
+
+:host .ui-btn-primary:hover {
+  filter: brightness(0.98);
+}
+
+:host .ui-btn-secondary {
+  min-height: 42px;
+  padding: 0 18px;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #17122f;
+  border: 1px solid #dde1ea;
+  font-weight: 800;
+}
+
+.transfers-btn-save {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* =========================================================
+   STATS
+   ========================================================= */
+:host .ui-stats-grid,
+.transfers-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+:host .ui-stat-card,
+.transfers-stat-card {
+  min-height: 92px;
+  padding: 18px 20px;
+  border: 1px solid #dde1ea;
+  border-top: 3px solid #8b20c7;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 10px 26px rgba(17, 24, 39, 0.055);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Quitar círculos heredados */
+:host .ui-stat-card::before,
+:host .ui-stat-card::after,
+.transfers-stat-card::before,
+.transfers-stat-card::after {
+  content: none !important;
+  display: none !important;
+}
+
+.transfers-stat-card > div:last-child,
+.transfers-stat-card > div:not(.transfers-stat-icon) {
+  min-width: 0;
+}
+
+.transfers-stat-icon {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  order: 2;
+}
+
+.transfers-stat-icon--purple {
+  background: #f3e7f8;
+  color: #8b20c7;
+}
+
+.transfers-stat-icon--green {
+  background: #e8f8eb;
+  color: #149447;
+}
+
+.transfers-stat-icon--blue {
+  background: #eaf2ff;
+  color: #2364d8;
+}
+
+.transfers-stat-card span {
+  display: block;
+  color: #67617c;
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 7px;
+}
+
+.transfers-stat-card strong {
+  display: block;
+  color: #17122f;
+  font-size: 24px;
+  font-weight: 900;
+  line-height: 1.15;
+}
+
+.transfers-stat-card small {
+  display: block;
+  margin-top: 6px;
+  color: #77728a;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* =========================================================
+   GENERAL CARD
+   ========================================================= */
+:host .ui-card {
+  border: 1px solid #dde1ea;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 10px 26px rgba(17, 24, 39, 0.055);
+  padding: 20px 22px;
+}
+
+:host .ui-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+:host .ui-card-header h3 {
+  color: #17122f;
+  font-size: 17px;
+  font-weight: 900;
+  margin: 0;
+}
+
+:host .ui-card-header p {
+  color: #67617c;
+  font-size: 13px;
+  margin: 6px 0 0;
+}
+
+/* =========================================================
+   LAYOUT
+   ========================================================= */
+.transfers-layout {
+  display: grid;
+  grid-template-columns: minmax(360px, 0.95fr) minmax(520px, 1.05fr);
+  gap: 18px;
+  align-items: start;
+}
+
+/* =========================================================
+   FORM
+   ========================================================= */
+.ui-form-grid {
+  display: grid;
+  gap: 14px;
+}
+
+.ui-form-grid-single {
+  grid-template-columns: 1fr;
+}
+
+.transfers-form-two {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.ui-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.ui-field label {
+  color: #25213b;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.ui-field input,
+.ui-field select,
+.ui-field textarea {
+  width: 100%;
+  min-height: 40px;
+  border: 1px solid #dde1ea;
+  border-radius: 10px;
+  padding: 10px 12px;
+  color: #17122f;
+  font-family: inherit;
+  font-size: 14px;
+  outline: none;
+  background: #ffffff;
+}
+
+.ui-field textarea {
+  min-height: 86px;
+  resize: vertical;
+}
+
+.ui-field input:focus,
+.ui-field select:focus,
+.ui-field textarea:focus {
+  border-color: #8b20c7;
+  box-shadow: 0 0 0 3px rgba(139, 32, 199, 0.10);
+}
+
+.transfers-input-disabled {
+  opacity: 0.65;
+  background: #f8f5fc !important;
+}
+
+.transfers-form-footer {
+  margin-top: 14px;
+}
+
+.ui-helper-text {
+  color: #67617c;
+  font-size: 13px;
+  font-weight: 600;
+  margin: 14px 0 0;
+}
+
+/* =========================================================
+   RECENT TRANSFERS
+   ========================================================= */
+.transfer-list {
+  display: grid;
+  gap: 12px;
+}
+
+.transfer-item {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  min-height: 88px;
+  padding: 14px 16px;
+  border: 1px solid #dde1ea;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.transfer-item::before {
+  content: none !important;
+  display: none !important;
+}
+
+.transfer-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: #f3e7f8;
+  color: #8b20c7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.transfer-item:nth-child(2) .transfer-icon {
+  background: #fff0f0;
+  color: #d92d20;
+}
+
+.transfer-item:nth-child(3) .transfer-icon {
+  background: #eaf6ff;
+  color: #2385d8;
+}
+
+.transfer-info strong {
+  display: block;
+  color: #17122f;
+  font-size: 14px;
+  font-weight: 900;
+  margin-bottom: 4px;
+}
+
+.transfer-info span,
+.transfer-info small {
+  display: block;
+  color: #67617c;
+  font-size: 12.5px;
+  font-weight: 600;
+  margin-top: 3px;
+}
+
+.ui-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: #eaf2ff;
+  color: #2364d8;
+  font-size: 12px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.transfer-list-footer,
+.transfers-table-footer {
+  padding: 10px 4px 0;
+}
+
+.transfers-link {
+  color: #6d148f;
+  font-size: 13px;
+  font-weight: 900;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.transfers-link span {
+  font-size: 22px;
+  line-height: 1;
+}
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+.ui-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid #e2e5ec;
+  border-radius: 10px;
+}
+
+.ui-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  font-size: 13px;
+}
+
+.ui-table thead {
+  background: #f8f9fc;
+}
+
+.ui-table th {
+  padding: 12px 14px;
+  color: #38334f;
+  font-size: 12px;
+  font-weight: 900;
+  text-align: left;
+  border-bottom: 1px solid #e2e5ec;
+}
+
+.ui-table td {
+  padding: 12px 14px;
+  color: #25213b;
+  font-weight: 600;
+  border-bottom: 1px solid #eef0f5;
+}
+
+.ui-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.ui-table small {
+  color: #77728a;
+  font-weight: 600;
+}
+
+.transfers-empty-row {
+  text-align: center;
+  padding: 30px !important;
+  color: #77728a !important;
+}
+
+/* =========================================================
+   ERROR
+   ========================================================= */
+.error-text {
+  color: #b42318;
+  font-weight: 800;
+  font-size: 13px;
+  margin: 0 0 12px;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+@media (max-width: 1100px) {
+  :host .ui-stats-grid,
+  .transfers-stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .transfers-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  :host .ui-page {
+    padding: 14px;
+  }
+
+  .transfers-hero {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 22px 20px;
+  }
+
+  .transfers-hero-icon {
+    width: 64px;
+    height: 64px;
+  }
+
+  :host .ui-title {
+    font-size: 1.25rem;
+  }
+
+  :host .ui-stats-grid,
+  .transfers-stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .transfers-form-two {
+    grid-template-columns: 1fr;
+  }
+
+  .transfer-item {
+    grid-template-columns: 52px minmax(0, 1fr);
+  }
+
+  .transfer-item .ui-status {
+    grid-column: 2;
+    width: fit-content;
+  }
+
+  .transfers-btn-save {
+    width: 100%;
+  }
+}

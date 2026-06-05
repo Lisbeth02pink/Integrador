@@ -1,0 +1,48 @@
+:host {
+  display: block;
+}
+
+.reports-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.report-list {
+  display: grid;
+  gap: 12px;
+}
+
+.report-item {
+  padding: 16px;
+  border: 1px solid #eadff2;
+  border-radius: 18px;
+  background: #fcfafc;
+}
+
+.report-item strong,
+.report-item small {
+  display: block;
+}
+
+.report-item small {
+  color: rgba(31, 36, 48, 0.72);
+}
+
+.date-filters {
+  display: flex;
+  align-items: end;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.error-text {
+  color: #b42318;
+  font-weight: 700;
+}
+
+@media (max-width: 900px) {
+  .reports-grid {
+    grid-template-columns: 1fr;
+  }
+}

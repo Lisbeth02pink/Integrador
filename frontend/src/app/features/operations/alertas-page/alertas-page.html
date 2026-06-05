@@ -1,0 +1,52 @@
+<section class="ui-page alertas-page">
+  <div class="ui-hero">
+    <div class="ui-toolbar">
+      <div>
+        <p class="ui-kicker">Monitoreo operativo</p>
+        <h2 class="ui-title">Alertas logisticas</h2>
+        <p class="ui-description">Avisos generados por bajo stock, productos agotados, transferencias pendientes y mermas recientes.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="ui-stats-grid">
+    <article class="ui-stat-card is-danger">
+      <span>Criticas</span>
+      <strong>{{ countBy('CRITICA') }}</strong>
+      <small>Requieren atencion inmediata</small>
+    </article>
+    <article class="ui-stat-card is-warning">
+      <span>Altas</span>
+      <strong>{{ countBy('ALTA') }}</strong>
+      <small>Riesgo operativo o perdida</small>
+    </article>
+    <article class="ui-stat-card is-info">
+      <span>Medias</span>
+      <strong>{{ countBy('MEDIA') }}</strong>
+      <small>Seguimiento logistico</small>
+    </article>
+  </div>
+
+  <p class="ui-error" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+  <section class="ui-card">
+    <div class="ui-card-header">
+      <div>
+        <h3>Panel de alertas</h3>
+        <p>Lista priorizada de eventos generados desde inventario y transferencias.</p>
+      </div>
+    </div>
+
+    <div class="ui-stack-list">
+      <article class="ui-stack-item" *ngFor="let alerta of alertas">
+        <div>
+          <strong>{{ alerta.titulo }}</strong>
+          <span>{{ alerta.detalle }}</span>
+        </div>
+        <span class="ui-status" [class.is-danger]="alerta.severidad === 'CRITICA'" [class.is-warning]="alerta.severidad === 'ALTA'" [class.is-info]="alerta.severidad === 'MEDIA'">
+          {{ alerta.severidad }}
+        </span>
+      </article>
+    </div>
+  </section>
+</section>

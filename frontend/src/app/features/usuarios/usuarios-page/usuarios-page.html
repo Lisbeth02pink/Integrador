@@ -1,0 +1,157 @@
+<section class="ui-page">
+  <div class="ui-card">
+    <div class="ui-toolbar">
+      <div>
+        <p class="ui-kicker">Administracion</p>
+        <h2 class="ui-title">Gestion de Usuarios</h2>
+      </div>
+      <button class="ui-btn ui-btn-primary" type="button" (click)="openModal()">
+        <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="9.5" cy="7" r="3"/><path d="M20 8v6"/><path d="M23 11h-6"/></svg>
+        Nuevo Usuario
+      </button>
+    </div>
+
+    <div class="ui-table-wrap">
+      <p *ngIf="loadingUsers" class="ui-helper-text">Cargando usuarios...</p>
+      <table class="ui-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Usuario</th>
+            <th>Perfil</th>
+            <th>Correo</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of users">
+            <td>{{ user.id }}</td>
+            <td>{{ user.nombre }}</td>
+            <td>{{ user.usuario }}</td>
+            <td>{{ user.perfilNombre || 'Sin perfil' }}</td>
+            <td>{{ user.correo }}</td>
+            <td>
+              <span class="ui-status" [class.is-inactive]="user.estado !== 1">
+                {{ user.estado === 1 ? 'Activo' : 'Inactivo' }}
+              </span>
+            </td>
+            <td>
+              <div class="ui-inline-actions">
+                <button class="ui-action-btn edit" type="button" title="Editar" (click)="editUser(user)">
+                  <svg viewBox="0 0 24 24">
+                    <path d="M12 20h9" />
+                    <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z" />
+                  </svg>
+                </button>
+                <button class="ui-action-btn status" type="button" title="Cambiar estado" (click)="toggleUserStatus(user)">
+                  <svg viewBox="0 0 24 24">
+                    <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6z" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                </button>
+                <button class="ui-action-btn delete" type="button" title="Eliminar" (click)="deleteUser(user)">
+                  <svg viewBox="0 0 24 24">
+                    <path d="M3 6h18" />
+                    <path d="M8 6V4h8v2" />
+                    <path d="M19 6l-1 14H6L5 6" />
+                    <path d="M10 11v6" />
+                    <path d="M14 11v6" />
+                  </svg>
+                </button>
+                <button class="ui-action-btn face" type="button" title="Registrar biometria" (click)="openFaceModal(user)">
+                  <svg viewBox="0 0 24 24">
+                    <path d="M4 7h3l2-2h6l2 2h3v13H4z" />
+                    <circle cx="12" cy="14" r="3" />
+                  </svg>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <p *ngIf="!loadingUsers && !users.length" class="ui-helper-text">Aun no hay usuarios registrados.</p>
+    </div>
+  </div>
+
+  <div class="ui-modal-backdrop" *ngIf="modalOpen" (click)="closeModal()">
+    <div class="ui-modal ui-modal-lg" (click)="$event.stopPropagation()">
+      <div class="ui-modal-header">
+        <h3>{{ editingUserId ? 'Editar Usuario' : 'Agregar Usuario' }}</h3>
+        <button class="ui-icon-btn" type="button" (click)="closeModal()" title="Cerrar">
+          <svg viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+      </div>
+
+      <div class="ui-form-grid">
+        <div class="ui-field">
+          <label>Nombre</label>
+          <input [(ngModel)]="form.nombre" name="nombre" type="text" />
+        </div>
+        <div class="ui-field">
+          <label>Usuario</label>
+          <input [(ngModel)]="form.usuario" name="usuario" type="text" />
+        </div>
+        <div class="ui-field">
+          <label>Clave</label>
+          <input [(ngModel)]="form.clave" name="clave" type="password" />
+        </div>
+        <div class="ui-field">
+          <label>Correo Electronico</label>
+          <input [(ngModel)]="form.correo" name="correo" type="email" />
+        </div>
+        <div class="ui-field">
+          <label>Perfil</label>
+          <select [(ngModel)]="form.idPerfil" name="idPerfil">
+            <option [ngValue]="0">Seleccione un perfil...</option>
+            <option *ngFor="let profile of profiles" [ngValue]="profile.id">
+              {{ profile.nombre }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <p class="ui-helper-text" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+      <div class="ui-modal-footer">
+        <button class="ui-btn ui-btn-secondary" type="button" (click)="closeModal()">
+          <svg viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+          Cancelar
+        </button>
+        <button class="ui-btn ui-btn-primary" type="button" (click)="saveUser()" [disabled]="saving">
+          <svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>
+          {{ saving ? 'Guardando...' : editingUserId ? 'Guardar Cambios' : 'Guardar Usuario' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="ui-modal-backdrop" *ngIf="faceModalOpen" (click)="closeFaceModal()">
+  <div class="ui-modal" (click)="$event.stopPropagation()">
+    <div class="ui-modal-header">
+      <h3>Registrar biometria - {{ selectedUser?.nombre }}</h3>
+      <button class="ui-icon-btn" type="button" (click)="closeFaceModal()" title="Cerrar">
+        <svg viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+    </div>
+
+    <p class="face-registered" *ngIf="selectedUserHasFace">
+      Este usuario ya tiene un rostro registrado. Si deseas cambiarlo, primero elimina el registro actual.
+    </p>
+
+    <div class="face-stage">
+      <video #videoElement autoplay muted playsinline class="face-video"></video>
+      <canvas #canvasElement class="face-canvas"></canvas>
+    </div>
+
+    <div class="face-actions">
+      <button class="ui-btn ui-btn-primary" (click)="captureAndSaveFace()" [disabled]="selectedUserHasFace">
+        Capturar biometria
+      </button>
+    </div>
+
+    <p class="face-status">{{ actionStatus }}</p>
+  </div>
+</div>

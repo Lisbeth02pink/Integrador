@@ -1,0 +1,352 @@
+<section class="ui-page">
+
+  <!-- ══ HERO ══════════════════════════════════════════════════════════════════ -->
+  <div class="ui-hero orders-hero">
+    <div class="orders-hero-icon">
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+        <polyline points="14 2 14 8 20 8"/>
+        <line x1="9" y1="13" x2="15" y2="13"/>
+        <line x1="9" y1="17" x2="15" y2="17"/>
+        <line x1="9" y1="9" x2="10" y2="9"/>
+      </svg>
+    </div>
+
+    <div class="orders-hero-content">
+      <div>
+        <h2 class="ui-title">Solicitudes de reposición de tiendas hacia el almacén central</h2>
+      </div>
+
+      <button type="button" class="ui-btn ui-btn-primary orders-btn-new">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="12" y1="5" x2="12" y2="19"/>
+          <line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+        Nuevo pedido
+      </button>
+    </div>
+  </div>
+
+  <!-- ══ STATS ═════════════════════════════════════════════════════════════════ -->
+  <div class="ui-stats-grid orders-stats-grid">
+
+    <article class="ui-stat-card orders-stat-card">
+      <div class="orders-stat-icon orders-stat-icon--purple">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+        </svg>
+      </div>
+      <div>
+        <span>Pendientes</span>
+        <strong>{{ pendingCount }}</strong>
+        <small class="orders-stat-down">↓ 3 vs. mes anterior</small>
+      </div>
+    </article>
+
+    <article class="ui-stat-card orders-stat-card">
+      <div class="orders-stat-icon orders-stat-icon--green">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+          <polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+      </div>
+      <div>
+        <span>En proceso</span>
+        <strong>{{ activeCount }}</strong>
+        <small class="orders-stat-up">↑ 5 vs. mes anterior</small>
+      </div>
+    </article>
+
+    <article class="ui-stat-card orders-stat-card">
+      <div class="orders-stat-icon orders-stat-icon--orange">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+        </svg>
+      </div>
+      <div>
+        <span>Pedidos registrados</span>
+        <strong>{{ orders.length }}</strong>
+        <small class="orders-stat-down">↓ 2 vs. mes anterior</small>
+      </div>
+    </article>
+
+    <article class="ui-stat-card orders-stat-card">
+      <div class="orders-stat-icon orders-stat-icon--blue">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <rect x="1" y="3" width="15" height="13"/>
+          <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+          <circle cx="5.5" cy="18.5" r="2.5"/>
+          <circle cx="18.5" cy="18.5" r="2.5"/>
+        </svg>
+      </div>
+      <div>
+        <span>Entregados</span>
+        <strong>{{ deliveredCount }}</strong>
+        <small class="orders-stat-up">↑ 7 vs. mes anterior</small>
+      </div>
+    </article>
+
+  </div>
+
+  <!-- ══ CONTENIDO PRINCIPAL ═══════════════════════════════════════════════════ -->
+  <div class="orders-layout">
+
+    <!-- ══ FORMULARIO NUEVO PEDIDO ════════════════════════════════════════════ -->
+    <section class="ui-card orders-form-card">
+      <div class="ui-card-header">
+        <div>
+          <h3>Nueva solicitud de tienda</h3>
+          <p>Genera el pedido que recibirá el almacén central para su preparación.</p>
+        </div>
+      </div>
+
+      <p *ngIf="errorMessage" class="error-text">{{ errorMessage }}</p>
+
+      <div class="ui-form-grid">
+        <div class="ui-field">
+          <label>Tienda <span class="orders-required">*</span></label>
+          <select [(ngModel)]="form.storeId" name="orderStore">
+            <option [ngValue]="0">Selecciona una tienda</option>
+            <option *ngFor="let store of stores" [ngValue]="store.id">{{ store.nombre }}</option>
+          </select>
+        </div>
+
+        <div class="ui-field">
+          <label>Solicitante <span class="orders-required">*</span></label>
+          <input [(ngModel)]="form.requestedBy" name="requestedBy" placeholder="Nombre del solicitante" />
+        </div>
+
+        <div class="ui-field">
+          <label>Prioridad <span class="orders-required">*</span></label>
+          <select [(ngModel)]="form.priority" name="orderPriority">
+            <option value="Alta">Alta</option>
+            <option value="Media">Media</option>
+            <option value="Baja">Baja</option>
+          </select>
+        </div>
+
+        <div class="ui-field">
+          <label>Producto del almacén central <span class="orders-required">*</span></label>
+          <div class="orders-search-field">
+            <select [(ngModel)]="form.productId" name="orderProduct">
+              <option [ngValue]="0">Busca un producto</option>
+              <option *ngFor="let product of productsFromCentral" [ngValue]="product.id">
+                {{ product.nombre }} - {{ product.sku }}
+              </option>
+            </select>
+
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <circle cx="11" cy="11" r="8"/>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="ui-field">
+          <label>Cantidad <span class="orders-required">*</span></label>
+          <input type="number" min="1" [(ngModel)]="form.quantity" name="orderQuantity" placeholder="Ingresa la cantidad" />
+        </div>
+
+        <div class="ui-field">
+          <label>Unidad</label>
+          <input value="und." disabled class="orders-input-disabled" />
+        </div>
+      </div>
+
+      <div class="ui-field">
+        <label>Observaciones</label>
+        <textarea rows="3" [(ngModel)]="form.notes" name="orderNotes" maxlength="200" placeholder="Detalle adicional del pedido (opcional)"></textarea>
+        <small class="orders-char-count">0 / 200</small>
+      </div>
+
+      <div class="draft-items" *ngIf="draftItems.length">
+        <article class="draft-item" *ngFor="let item of draftItems">
+          <div>
+            <strong>{{ item.productName }}</strong>
+            <span>{{ item.sku }}</span>
+          </div>
+
+          <div class="draft-item-actions">
+            <small>{{ item.quantity }} und</small>
+            <button class="ui-btn ui-btn-ghost orders-btn-remove" type="button" (click)="removeDraftItem(item.productId)">
+              Quitar
+            </button>
+          </div>
+        </article>
+      </div>
+
+      <div class="orders-form-actions">
+        <button type="button" class="ui-btn ui-btn-secondary orders-btn-add" (click)="addDraftItem()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          Agregar ítem
+        </button>
+
+        <button class="ui-btn ui-btn-primary orders-btn-save" type="button" (click)="saveOrder()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M22 2L11 13"/>
+            <path d="M22 2L15 22L11 13L2 9L22 2Z"/>
+          </svg>
+          Registrar pedido
+        </button>
+      </div>
+
+      <div class="orders-flow-tip">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8" x2="12" y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        <p>
+          <strong>Flujo:</strong> la tienda solicita → el supervisor aprueba → el almacén prepara el pedido
+          → transporte entrega → el kardex refleja el movimiento.
+        </p>
+      </div>
+    </section>
+
+    <!-- ══ PEDIDOS REGISTRADOS ════════════════════════════════════════════════ -->
+    <section class="ui-card orders-list-card">
+      <div class="ui-card-header">
+        <div>
+          <h3>Pedidos registrados</h3>
+          <p>Seguimiento del pedido desde la solicitud de tienda hasta la entrega.</p>
+        </div>
+      </div>
+
+      <div class="orders-list">
+        <article class="order-card" *ngFor="let order of orders">
+          <div class="order-card-main">
+            <div class="order-card-left">
+              <div class="order-doc-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                </svg>
+              </div>
+
+              <div>
+                <strong>{{ order.storeName }}</strong>
+                <span>Solicitante: {{ order.requestedBy }}</span>
+                <small>{{ order.requestedAt | date:'yyyy-MM-dd HH:mm' }}</small>
+              </div>
+            </div>
+
+            <div class="order-card-info">
+              <div>
+                <span>Prioridad</span>
+                <strong
+                  class="orders-priority"
+                  [class.orders-priority--alta]="order.priority === 'Alta'"
+                  [class.orders-priority--media]="order.priority === 'Media'"
+                  [class.orders-priority--baja]="order.priority === 'Baja'">
+                  {{ order.priority }}
+                </strong>
+              </div>
+
+              <div>
+                <span>Observación</span>
+                <strong>{{ order.notes || '-' }}</strong>
+              </div>
+            </div>
+
+            <div class="order-card-status">
+              <span
+                class="ui-status"
+                [class.is-inactive]="order.status === 'Pendiente'"
+                [class.is-delivered]="order.status === 'Entregado' || order.transferGenerated">
+                {{ order.transferGenerated ? 'Transferencia generada' : order.status }}
+              </span>
+            </div>
+          </div>
+
+          <div class="draft-items compact" *ngIf="order.items.length">
+            <article class="draft-item" *ngFor="let item of order.items">
+              <div>
+                <strong>{{ item.productName }}</strong>
+                <span>{{ item.sku }}</span>
+              </div>
+              <small>{{ item.quantity }} und</small>
+            </article>
+          </div>
+
+          <div class="orders-timeline">
+            <span class="orders-step is-done">
+              <i></i>Solicitado
+            </span>
+
+            <span
+              class="orders-step"
+              [class.is-done]="order.status === 'Aprobado' || order.status === 'Preparando' || order.status === 'En ruta' || order.status === 'Entregado' || order.transferGenerated">
+              <i></i>Aprobado
+            </span>
+
+            <span
+              class="orders-step"
+              [class.is-done]="order.status === 'Preparando' || order.status === 'En ruta' || order.status === 'Entregado' || order.transferGenerated">
+              <i></i>En preparación
+            </span>
+
+            <span
+              class="orders-step"
+              [class.is-done]="order.status === 'En ruta' || order.status === 'Entregado' || order.transferGenerated">
+              <i></i>Despachado
+            </span>
+
+            <span
+              class="orders-step"
+              [class.is-done]="order.status === 'Entregado'">
+              <i></i>Entregado
+            </span>
+          </div>
+
+          <div class="status-actions">
+            <button class="ui-btn ui-btn-ghost orders-action-primary" type="button" (click)="updateStatus(order, 'Aprobado')">
+              Aprobar
+            </button>
+
+            <button class="ui-btn ui-btn-ghost orders-action-warning" type="button" (click)="updateStatus(order, 'Preparando')">
+              En preparación
+            </button>
+
+            <button
+              class="ui-btn ui-btn-ghost orders-action-purple"
+              type="button"
+              (click)="generateTransfer(order)"
+              *ngIf="(order.status === 'Pendiente' || order.status === 'Aprobado' || order.status === 'Preparando') && !order.transferGenerated">
+              Generar transferencia
+            </button>
+
+            <a
+              class="ui-btn ui-btn-ghost orders-action-detail"
+              routerLink="/dashboard/transferencias"
+              *ngIf="order.transferGenerated">
+              Ver transferencia
+            </a>
+
+            <button class="ui-btn ui-btn-ghost orders-action-blue" type="button" (click)="updateStatus(order, 'En ruta')">
+              Despachado
+            </button>
+
+            <button class="ui-btn ui-btn-secondary orders-action-delivered" type="button" (click)="updateStatus(order, 'Entregado')">
+              Entregado
+            </button>
+          </div>
+        </article>
+
+        <div class="orders-empty" *ngIf="orders.length === 0">
+          <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+          </svg>
+          <p>No hay pedidos registrados</p>
+          <small>Registra una nueva solicitud para comenzar.</small>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+</section>

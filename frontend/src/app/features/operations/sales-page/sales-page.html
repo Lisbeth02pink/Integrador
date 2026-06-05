@@ -1,0 +1,282 @@
+<section class="ui-page sales-page">
+
+  <!-- HERO -->
+  <div class="sales-hero">
+    <div class="sales-hero-icon">
+      <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1">
+        <circle cx="9" cy="21" r="1"/>
+        <circle cx="20" cy="21" r="1"/>
+        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h8.72a2 2 0 0 0 2-1.61L23 6H6"/>
+      </svg>
+    </div>
+
+    <div class="sales-hero-content">
+      <div>
+        <h2 class="ui-title">Ventas y flujo comercial</h2>
+        <p class="ui-description">
+          Consulta el rendimiento de ventas, ingresos y utilidad por canal o tienda.
+        </p>
+      </div>
+
+      <div class="date-filters">
+        <div class="ui-field">
+          <label>Desde</label>
+          <input type="date" [(ngModel)]="fromDate" name="fromDate" />
+        </div>
+
+        <div class="ui-field">
+          <label>Hasta</label>
+          <input type="date" [(ngModel)]="toDate" name="toDate" />
+        </div>
+
+        <button class="ui-btn sales-btn-filter" type="button" (click)="loadSales()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3">
+            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+          </svg>
+          Filtrar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="sales-stats-grid">
+
+    <article class="sales-stat-card">
+      <div class="sales-stat-icon sales-stat-icon--purple">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <line x1="12" y1="1" x2="12" y2="23"/>
+          <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7H14a3.5 3.5 0 0 1 0 7H6"/>
+        </svg>
+      </div>
+
+      <div>
+        <span>Ingresos</span>
+        <strong>{{ ingresos | currency:'PEN':'symbol':'1.0-0' }}</strong>
+        <small class="sales-up">↑ 18.6% vs. mes anterior</small>
+      </div>
+    </article>
+
+    <article class="sales-stat-card">
+      <div class="sales-stat-icon sales-stat-icon--red">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M8 12l4 4 4-4"/>
+          <path d="M12 8v8"/>
+        </svg>
+      </div>
+
+      <div>
+        <span>Egresos</span>
+        <strong>{{ egresos | currency:'PEN':'symbol':'1.0-0' }}</strong>
+        <small class="sales-down">↑ 12.2% vs. mes anterior</small>
+      </div>
+    </article>
+
+    <article class="sales-stat-card">
+      <div class="sales-stat-icon sales-stat-icon--green">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+          <polyline points="17 6 23 6 23 12"/>
+        </svg>
+      </div>
+
+      <div>
+        <span>Utilidad</span>
+        <strong>{{ utilidad | currency:'PEN':'symbol':'1.0-0' }}</strong>
+        <small class="sales-up">↑ 28.4% vs. mes anterior</small>
+      </div>
+    </article>
+
+    <article class="sales-stat-card">
+      <div class="sales-stat-icon sales-stat-icon--blue">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M4 7h16"/>
+          <path d="M4 12h16"/>
+          <path d="M4 17h16"/>
+          <path d="M7 4v16"/>
+          <path d="M17 4v16"/>
+        </svg>
+      </div>
+
+      <div>
+        <span>Ticket promedio</span>
+        <strong>{{ ticketPromedio | currency:'PEN':'symbol':'1.2-2' }}</strong>
+        <small class="sales-up">↑ 8.7% vs. mes anterior</small>
+      </div>
+    </article>
+
+  </div>
+
+  <!-- GRÁFICO + PRODUCTOS -->
+  <div class="sales-mid-grid">
+
+    <section class="ui-card sales-chart-card">
+      <div class="sales-card-header">
+        <div>
+          <h3>Tendencia de ventas por fecha</h3>
+        </div>
+
+        <button type="button" class="sales-view-btn">
+          Por tienda
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="sales-chart-legend">
+        <span><i class="legend-purple"></i> Ingresos</span>
+        <span><i class="legend-red"></i> Egresos</span>
+        <span><i class="legend-green"></i> Utilidad</span>
+        <span><i class="legend-orange"></i> Referencia</span>
+      </div>
+
+      <div class="sales-chart-wrap">
+        <div class="sales-chart-scale">
+          <span>100K</span>
+          <span>80K</span>
+          <span>60K</span>
+          <span>40K</span>
+          <span>20K</span>
+          <span>0</span>
+        </div>
+
+        <div class="sales-chart-bars">
+          <div class="sales-chart-group" *ngFor="let summary of salesTrend">
+            <div class="sales-bars">
+              <span
+                class="sales-bar sales-bar-purple"
+                [style.height.%]="chartHeight(summary.ingresos)">
+              </span>
+
+              <span
+                class="sales-bar sales-bar-red"
+                [style.height.%]="chartHeight(summary.egresos)">
+              </span>
+
+              <span
+                class="sales-bar sales-bar-green"
+                [style.height.%]="chartHeight(summary.utilidad)">
+              </span>
+
+              <span
+                class="sales-bar sales-bar-orange"
+                [style.height.%]="chartHeight(summary.unidades * 10)">
+              </span>
+            </div>
+
+            <small>{{ summary.fecha }}</small>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="ui-card sales-products-card">
+      <div class="sales-card-header">
+        <div>
+          <h3>Productos más vendidos</h3>
+        </div>
+
+        <button type="button" class="sales-view-btn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7Z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+          Ver todos
+        </button>
+      </div>
+
+      <div class="sales-products-head">
+        <span>Producto</span>
+        <span>Unidades</span>
+        <span>Ingresos</span>
+      </div>
+
+      <div class="sales-products-list">
+        <article class="sales-product-item" *ngFor="let product of topProducts; let i = index">
+          <div class="sales-product-rank">{{ i + 1 }}</div>
+
+          <div class="sales-product-info">
+            <strong>{{ product.nombre }}</strong>
+            <span>{{ product.categoria }}</span>
+          </div>
+
+          <div class="sales-product-units">
+            <strong>{{ formatNumber(product.unidades) }}</strong>
+            <div class="sales-product-track">
+              <i [style.width.%]="product.porcentaje"></i>
+            </div>
+          </div>
+
+          <div class="sales-product-income">
+            {{ product.ingresos | currency:'PEN':'symbol':'1.0-0' }}
+          </div>
+        </article>
+
+        <div class="sales-empty" *ngIf="topProducts.length === 0">
+          No hay productos para mostrar.
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- TABLA -->
+  <section class="ui-card sales-table-card">
+    <div class="sales-card-header">
+      <div>
+        <h3>Resumen de ventas</h3>
+      </div>
+    </div>
+
+    <p *ngIf="errorMessage" class="error-text">{{ errorMessage }}</p>
+
+    <div class="ui-table-wrap">
+      <table class="ui-table">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Canal o tienda</th>
+            <th>Ingresos</th>
+            <th>Egresos</th>
+            <th>Utilidad</th>
+            <th>Más vendido</th>
+            <th>Unidades</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let summary of salesRows">
+            <td>{{ summary.fecha }}</td>
+            <td>{{ summary.canal }}</td>
+            <td>{{ summary.ingresos | currency:'PEN':'symbol':'1.2-2' }}</td>
+            <td>{{ summary.egresos | currency:'PEN':'symbol':'1.2-2' }}</td>
+            <td class="sales-profit-cell">
+              {{ summary.utilidad | currency:'PEN':'symbol':'1.2-2' }}
+            </td>
+            <td>{{ summary.productoMasVendido }}</td>
+            <td>{{ summary.unidades | number:'1.0-0' }}</td>
+          </tr>
+
+          <tr *ngIf="salesRows.length === 0">
+            <td colspan="7" class="sales-empty-row">
+              No hay ventas registradas en el periodo seleccionado.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sales-pagination" *ngIf="salesRows.length > 0">
+      <button type="button">‹</button>
+      <button type="button" class="is-active">1</button>
+      <button type="button">2</button>
+      <button type="button">3</button>
+      <span>...</span>
+      <button type="button">6</button>
+      <button type="button">›</button>
+    </div>
+  </section>
+
+</section>

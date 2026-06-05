@@ -1,0 +1,22 @@
+:host {
+  display: block;
+}
+
+.placeholder-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.placeholder-item {
+  padding: 18px;
+  border-radius: 18px;
+  border: 1px solid #eadff2;
+  background: #fcfafc;
+}
+
+@media (max-width: 900px) {
+  .placeholder-grid {
+    grid-template-columns: 1fr;
+  }
+}

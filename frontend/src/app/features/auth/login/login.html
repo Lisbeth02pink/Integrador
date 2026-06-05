@@ -1,0 +1,43 @@
+<div class="container">
+  <div class="login-box">
+
+    <!-- LOGO -->
+    <img src="assets/img/logo.png" alt="Logo" class="logo">
+
+    <form (ngSubmit)="login()">
+
+      <div class="input-box">
+        <input 
+          type="text" 
+          required 
+          [(ngModel)]="username" 
+          name="username"
+        />
+        <label>Correo o usuario</label>
+      </div>
+
+      <div class="input-box">
+        <input 
+          type="password" 
+          required 
+          [(ngModel)]="password" 
+          name="password"
+        />
+        <label>Password</label>
+      </div>
+
+      <p *ngIf="errorMessage" class="login-error">{{ errorMessage }}</p>
+
+      <button class="btn" type="submit" [disabled]="loading">
+        {{ loading ? 'Ingresando...' : 'Login' }}
+      </button>
+
+  
+
+    </form>
+  </div>
+
+  <!-- EFECTO -->
+  <span *ngFor="let i of spans" [style.--i]="i"></span>
+
+</div>

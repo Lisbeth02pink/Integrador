@@ -1,0 +1,22 @@
+<section class="ui-page">
+  <div class="ui-hero">
+    <p class="ui-kicker">{{ kicker }}</p>
+    <h2 class="ui-title">{{ title }}</h2>
+    <p class="ui-description">{{ description }}</p>
+  </div>
+
+  <section class="ui-card" *ngIf="highlights.length">
+    <div class="ui-card-header">
+      <div>
+        <h3>Enfoque del modulo</h3>
+        <p>Este espacio ya esta alineado con el modelo centralizado de distribucion.</p>
+      </div>
+    </div>
+
+    <div class="placeholder-grid">
+      <article class="placeholder-item" *ngFor="let item of highlights">
+        <strong>{{ item }}</strong>
+      </article>
+    </div>
+  </section>
+</section>

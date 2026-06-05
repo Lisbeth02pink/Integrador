@@ -1,0 +1,459 @@
+<section class="ui-page dashboard-page">
+
+  <!-- HERO -->
+  <div class="ui-hero dashboard-hero">
+    <div class="hero-layout">
+
+      <div class="hero-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9">
+          <path d="M3 21h18"/>
+          <path d="M5 21V8l7-5 7 5v13"/>
+          <path d="M9 21v-7h6v7"/>
+        </svg>
+      </div>
+
+      <div class="hero-copy">
+        <h2 class="ui-title">Dashboard logístico centralizado</h2>
+      </div>
+
+      <div class="hero-flow">
+        <article class="flow-node flow-provider">
+          <div class="flow-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 7h18l-2 11H5L3 7Z"/>
+              <path d="M8 7V5a4 4 0 0 1 8 0v2"/>
+            </svg>
+          </div>
+          <div>
+            <strong>Proveedores</strong>
+            <span>Suministran al almacén central</span>
+          </div>
+        </article>
+
+        <span class="flow-arrow">→</span>
+
+        <article class="flow-node flow-central">
+          <div class="flow-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 21h18"/>
+              <path d="M5 21V8l7-5 7 5v13"/>
+              <path d="M9 21v-7h6v7"/>
+            </svg>
+          </div>
+          <div>
+            <strong>Almacén Central Lima</strong>
+            <span>Centro de distribución principal</span>
+          </div>
+        </article>
+
+        <span class="flow-arrow">→</span>
+
+        <article class="flow-node flow-store">
+          <div class="flow-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M6 2h12l3 7H3l3-7Z"/>
+              <path d="M4 9v11h16V9"/>
+              <path d="M9 20v-6h6v6"/>
+            </svg>
+          </div>
+          <div>
+            <strong>Tiendas</strong>
+            <span>Recepción y venta en tienda</span>
+          </div>
+        </article>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- KPIS: 8 CARDS -->
+  <div class="ui-stats-grid dashboard-kpis">
+    <article
+      class="ui-stat-card dashboard-kpi"
+      *ngFor="let card of cards | slice:0:8; let i = index"
+      [attr.data-tone]="card.tone"
+    >
+      <div class="stat-icon" [ngSwitch]="i">
+
+        <!-- 0 Proveedores activos -->
+        <svg *ngSwitchCase="0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+
+        <!-- 1 Entregas en ruta -->
+        <svg *ngSwitchCase="1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M10 17h4V5H2v12h3"/>
+          <path d="M14 17h1"/>
+          <path d="M19 17h3v-6l-3-4h-5"/>
+          <circle cx="7.5" cy="17.5" r="2.5"/>
+          <circle cx="17.5" cy="17.5" r="2.5"/>
+        </svg>
+
+        <!-- 2 Ingresos del día -->
+        <svg *ngSwitchCase="2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 1v22"/>
+          <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+        </svg>
+
+        <!-- 3 Tiendas conectadas -->
+        <svg *ngSwitchCase="3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M6 2h12l3 7H3l3-7Z"/>
+          <path d="M4 9v11h16V9"/>
+          <path d="M9 20v-6h6v6"/>
+        </svg>
+
+        <!-- 4 Centros regionales -->
+        <svg *ngSwitchCase="4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M12 2v4"/>
+          <path d="M12 18v4"/>
+          <path d="M2 12h4"/>
+          <path d="M18 12h4"/>
+        </svg>
+
+        <!-- 5 Ocupación nacional -->
+        <svg *ngSwitchCase="5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M12 6v6l4 2"/>
+        </svg>
+
+        <!-- 6 Total productos -->
+        <svg *ngSwitchCase="6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4Z"/>
+          <path d="M3.3 7 12 12l8.7-5"/>
+          <path d="M12 22V12"/>
+        </svg>
+
+        <!-- 7 Stock crítico -->
+        <svg *ngSwitchCase="7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/>
+          <path d="M12 9v4"/>
+          <path d="M12 17h.01"/>
+        </svg>
+
+      </div>
+
+      <div class="stat-content">
+        <span>{{ card.label }}</span>
+        <strong>{{ card.value }}</strong>
+        <small>{{ card.detail }}</small>
+      </div>
+    </article>
+  </div>
+
+  <!-- ACCESOS RÁPIDOS -->
+  <section class="ui-card quick-card">
+    <div class="ui-toolbar">
+      <div>
+        <h2 class="ui-title">Accesos rápidos del circuito logístico</h2>
+      </div>
+    </div>
+
+    <div class="ui-actions-grid">
+
+      <a class="ui-btn quick-purple" routerLink="/dashboard/almacenes">
+        <div class="quick-left">
+          <span class="quick-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 21h18"/>
+              <path d="M5 21V8l7-5 7 5v13"/>
+              <path d="M9 21v-7h6v7"/>
+            </svg>
+          </span>
+          <span>Sedes y capacidad</span>
+        </div>
+        <strong>›</strong>
+      </a>
+
+      <a class="ui-btn quick-green" routerLink="/dashboard/inventario">
+        <div class="quick-left">
+          <span class="quick-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4Z"/>
+              <path d="M3.3 7 12 12l8.7-5"/>
+              <path d="M12 22V12"/>
+            </svg>
+          </span>
+          <span>Inventario centralizado</span>
+        </div>
+        <strong>›</strong>
+      </a>
+
+      <a class="ui-btn quick-blue" routerLink="/dashboard/pedidos">
+        <div class="quick-left">
+          <span class="quick-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/>
+              <path d="M14 2v6h6"/>
+              <path d="M9 13h6"/>
+              <path d="M9 17h6"/>
+            </svg>
+          </span>
+          <span>Pedidos internos</span>
+        </div>
+        <strong>›</strong>
+      </a>
+
+      <a class="ui-btn quick-purple" routerLink="/dashboard/transferencias">
+        <div class="quick-left">
+          <span class="quick-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 1l4 4-4 4"/>
+              <path d="M3 11V9a4 4 0 0 1 4-4h14"/>
+              <path d="M7 23l-4-4 4-4"/>
+              <path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+            </svg>
+          </span>
+          <span>Transferencias</span>
+        </div>
+        <strong>›</strong>
+      </a>
+
+      <a class="ui-btn quick-green" routerLink="/dashboard/mermas">
+        <div class="quick-left">
+          <span class="quick-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/>
+              <path d="M12 9v4"/>
+              <path d="M12 17h.01"/>
+            </svg>
+          </span>
+          <span>Mermas</span>
+        </div>
+        <strong>›</strong>
+      </a>
+
+      <a class="ui-btn quick-blue" routerLink="/dashboard/alertas">
+        <div class="quick-left">
+          <span class="quick-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 7h18s-3 0-3-7"/>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+            </svg>
+          </span>
+          <span>Alertas</span>
+        </div>
+        <strong>›</strong>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- ALERTAS + FLUJO -->
+  <div class="ui-pane-grid">
+    <section class="ui-card">
+      <div class="ui-card-header">
+        <div>
+          <h3>Alertas operativas</h3>
+        </div>
+      </div>
+
+      <div class="ui-stack-list">
+        <article class="ui-stack-item alert-item" *ngFor="let alert of alerts">
+          <div class="alert-left">
+            <span
+              class="alert-icon"
+              [class.is-warning]="alert.tone === 'warning'"
+              [class.is-danger]="alert.tone === 'danger'"
+              [class.is-info]="alert.tone === 'info'"
+              [class.is-success]="alert.tone === 'success'"
+            >
+              <svg *ngIf="alert.tone === 'danger'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/>
+                <path d="M12 9v4"/>
+                <path d="M12 17h.01"/>
+              </svg>
+
+              <svg *ngIf="alert.tone === 'warning'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M12 6v6l4 2"/>
+              </svg>
+
+              <svg *ngIf="alert.tone === 'info'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M10 17h4V5H2v12h3"/>
+                <path d="M14 17h1"/>
+                <path d="M19 17h3v-6l-3-4h-5"/>
+              </svg>
+
+              <svg *ngIf="alert.tone === 'success'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 6 9 17l-5-5"/>
+              </svg>
+            </span>
+
+            <div>
+              <strong>{{ alert.title }}</strong>
+              <span>{{ alert.detail }}</span>
+            </div>
+          </div>
+
+          <span
+            class="ui-status"
+            [class.is-warning]="alert.tone === 'warning'"
+            [class.is-danger]="alert.tone === 'danger'"
+            [class.is-info]="alert.tone === 'info'"
+          >
+            {{ alert.tone === 'warning' ? 'Monitoreo' : alert.tone === 'danger' ? 'Crítico' : alert.tone === 'success' ? 'Estable' : 'Trazado' }}
+          </span>
+        </article>
+      </div>
+    </section>
+
+    <section class="ui-card">
+      <div class="ui-card-header">
+        <div>
+          <h3>Flujo semanal de movimientos</h3>
+        </div>
+      </div>
+
+      <div class="timeline-chart">
+        <article class="timeline-day" *ngFor="let item of timelineBars">
+          <strong>{{ item.day }}</strong>
+          <div class="timeline-bars">
+            <span class="bar inbound" [style.height.%]="item.inbound"></span>
+            <span class="bar outbound" [style.height.%]="item.outbound"></span>
+          </div>
+          <small>{{ item.inbound + item.outbound }} movimientos</small>
+        </article>
+      </div>
+    </section>
+  </div>
+
+  <!-- MÉTRICAS -->
+  <div class="ui-pane-grid">
+    <section class="ui-card">
+      <div class="ui-card-header">
+        <div>
+          <h3>Mix de inventario por categoría</h3>
+        </div>
+      </div>
+
+      <div class="ui-metric-list">
+        <article class="ui-metric-row" *ngFor="let item of categoryMix">
+          <div>
+            <strong>{{ item.label }}</strong>
+            <span>{{ item.value }} unidades</span>
+          </div>
+
+          <div class="metric-progress">
+            <small>{{ item.share }}%</small>
+            <div class="ui-progress">
+              <span [style.width.%]="item.share"></span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="ui-card">
+      <div class="ui-card-header">
+        <div>
+          <h3>Stock por sede priorizada</h3>
+        </div>
+      </div>
+
+      <div class="ui-metric-list">
+        <article class="ui-metric-row" *ngFor="let item of storeSummary">
+          <div>
+            <strong>{{ item.name }}</strong>
+            <span>{{ item.city }} · {{ item.type }}</span>
+          </div>
+
+          <div class="metric-progress">
+            <small>{{ item.stock }} und · {{ item.fill }}%</small>
+            <div class="ui-progress">
+              <span [style.width.%]="item.fill"></span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+  </div>
+
+  <!-- PRODUCTOS + RUTAS -->
+  <div class="ui-pane-grid">
+    <section class="ui-card">
+      <div class="ui-card-header">
+        <div>
+          <h3>Productos con mayor disponibilidad</h3>
+        </div>
+      </div>
+
+      <div class="ui-stack-list">
+        <article class="ui-stack-item" *ngFor="let product of topProducts">
+          <div>
+            <strong>{{ product.nombre }}</strong>
+            <span>{{ product.sku }} · {{ product.almacenNombre }}</span>
+          </div>
+
+          <span class="ui-chip is-yellow">{{ product.stock }} und</span>
+        </article>
+      </div>
+    </section>
+
+    <section class="ui-card">
+      <div class="ui-card-header">
+        <div>
+          <h3>Rutas en seguimiento</h3>
+        </div>
+      </div>
+
+      <div class="ui-stack-list">
+        <article class="ui-stack-item" *ngFor="let route of routeHealth">
+          <div>
+            <strong>{{ route.nombre }}</strong>
+            <span>{{ route.zona }} · {{ route.repartidor }}</span>
+          </div>
+
+          <div class="route-inline">
+            <small>{{ route.progreso }}%</small>
+            <span
+              class="ui-status"
+              [class.is-warning]="route.estado === 'retrasado' || route.estado === 'detenido' || route.estado === 'pendiente'"
+              [class.is-info]="route.estado === 'en ruta' || route.estado === 'cargando'"
+            >
+              {{ route.estado }}
+            </span>
+          </div>
+        </article>
+      </div>
+    </section>
+  </div>
+
+  <!-- MOVIMIENTOS -->
+  <section class="ui-card">
+    <div class="ui-card-header">
+      <div>
+        <h3>Movimientos recientes</h3>
+      </div>
+    </div>
+
+    <div class="ui-table-wrap">
+      <table class="ui-table">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Producto</th>
+            <th>Tipo</th>
+            <th>Origen</th>
+            <th>Destino</th>
+            <th>Referencia</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let movement of latestMovements">
+            <td>{{ movement.fecha }}</td>
+            <td>{{ movement.productoNombre }}</td>
+            <td>{{ movement.tipo }}</td>
+            <td>{{ movement.almacenOrigen || '-' }}</td>
+            <td>{{ movement.almacenDestino || '-' }}</td>
+            <td>{{ movement.referencia }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</section>

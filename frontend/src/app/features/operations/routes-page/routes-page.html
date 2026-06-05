@@ -1,0 +1,544 @@
+<section class="ui-page">
+
+  <!-- ══ HERO ══════════════════════════════════════════════════════════════════ -->
+  <div class="ui-hero routes-hero">
+    <div class="routes-hero-icon">
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1">
+        <rect x="1" y="3" width="15" height="13" rx="1.5"/>
+        <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+        <circle cx="5.5" cy="18.5" r="2.5"/>
+        <circle cx="18.5" cy="18.5" r="2.5"/>
+      </svg>
+    </div>
+
+    <div class="routes-hero-content">
+      <div>
+        <h2 class="ui-title">Control avanzado de rutas y entregas</h2>
+        <p class="ui-description">
+          Monitorea en tiempo real la distribución desde el Almacén Central Lima hasta cada tienda Tambo.
+          Optimiza rutas, controla entregas y mejora la eficiencia logística.
+        </p>
+      </div>
+
+      <button type="button" class="ui-btn ui-btn-primary routes-btn-new" (click)="openNewModal()">
+        Nueva ruta
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="12" y1="5" x2="12" y2="19"/>
+          <line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="routes-hero-map" aria-hidden="true">
+      <svg viewBox="0 0 430 120" fill="none">
+        <path d="M30 72 C74 20, 99 108, 135 48 C168 -9, 214 91, 252 58 C292 23, 342 44, 396 28"
+              stroke="#8b20c7" stroke-width="2" stroke-dasharray="4 5"/>
+        <circle cx="48" cy="68" r="13" fill="#f3e7f8"/>
+        <circle cx="48" cy="68" r="7" fill="#8b20c7"/>
+        <circle cx="175" cy="64" r="6" fill="#8b20c7"/>
+        <circle cx="278" cy="56" r="6" fill="#8b20c7"/>
+        <path d="M378 22 L395 28 L378 34" stroke="#8b20c7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <rect x="230" y="66" width="28" height="18" rx="3" fill="#8b20c7"/>
+        <path d="M258 71h12l8 8v5h-20V71z" fill="#8b20c7"/>
+        <circle cx="238" cy="88" r="4" fill="#8b20c7"/>
+        <circle cx="269" cy="88" r="4" fill="#8b20c7"/>
+        <path d="M398 70h20l-3 8v24h-14V78l-3-8z" fill="#8b20c7" opacity=".9"/>
+        <path d="M394 70h28" stroke="#8b20c7" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- ══ STATS ═════════════════════════════════════════════════════════════════ -->
+  <div class="ui-stats-grid routes-stats-grid">
+
+    <article class="ui-stat-card routes-stat-card">
+      <div class="routes-stat-icon routes-stat-icon--purple">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M3 12h15"/>
+          <path d="M14 7l5 5-5 5"/>
+          <path d="M3 6h8"/>
+          <path d="M3 18h8"/>
+        </svg>
+      </div>
+      <div>
+        <span>Rutas activas</span>
+        <strong>{{ activeRoutes }}</strong>
+        <small class="routes-stat-up">↑ 2 vs. ayer</small>
+      </div>
+    </article>
+
+    <article class="ui-stat-card routes-stat-card">
+      <div class="routes-stat-icon routes-stat-icon--green">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+          <polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+      </div>
+      <div>
+        <span>Entregadas</span>
+        <strong>{{ deliveredRoutes }}</strong>
+        <small class="routes-stat-up">↑ 6 vs. ayer</small>
+      </div>
+    </article>
+
+    <article class="ui-stat-card routes-stat-card">
+      <div class="routes-stat-icon routes-stat-icon--red">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <circle cx="12" cy="12" r="10"/>
+          <polyline points="12 6 12 12 16 14"/>
+        </svg>
+      </div>
+      <div>
+        <span>Con retraso</span>
+        <strong>{{ delayedRoutes }}</strong>
+        <small class="routes-stat-down">↑ 1 vs. ayer</small>
+      </div>
+    </article>
+
+    <article class="ui-stat-card routes-stat-card">
+      <div class="routes-stat-icon routes-stat-icon--blue">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M12 20a8 8 0 1 0-8-8"/>
+          <path d="M12 12l4-4"/>
+          <path d="M4 12h4"/>
+        </svg>
+      </div>
+      <div>
+        <span>Progreso promedio</span>
+        <strong>{{ averageProgress }}%</strong>
+        <small class="routes-stat-up">↑ 8% vs. ayer</small>
+      </div>
+    </article>
+
+  </div>
+
+  <!-- ══ MAPA + SEGUIMIENTO ═══════════════════════════════════════════════════ -->
+  <div class="routes-main-grid">
+
+    <section class="ui-card routes-map-card">
+      <div class="ui-card-header">
+        <div>
+          <h3>Mapa logístico en tiempo real</h3>
+        </div>
+      </div>
+
+      <div class="routes-map-wrap">
+        <div #routeMap class="route-leaflet-map"></div>
+      </div>
+    </section>
+
+    <section class="ui-card routes-tracking-card">
+      <div class="routes-table-header">
+        <div>
+          <h3>Rutas en seguimiento</h3>
+        </div>
+
+        <button type="button" class="routes-view-all">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7Z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+          Ver todas
+        </button>
+      </div>
+
+      <div class="routes-table-wrap">
+        <table class="routes-table">
+          <thead>
+            <tr>
+              <th>Ruta</th>
+              <th>Destino</th>
+              <th>Conductor</th>
+              <th>Vehículo</th>
+              <th>Carga</th>
+              <th>ETA</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let route of routes | slice:0:3">
+              <td>
+                <strong
+                  class="routes-code"
+                  [class.routes-code--delay]="route.estado === 'retrasado' || route.estado === 'detenido'"
+                  [class.routes-code--ok]="route.estado === 'entregado'">
+                  {{ route.nombre }}
+                </strong>
+              </td>
+
+              <td>{{ route.destino }}</td>
+
+              <td>
+                <span class="routes-driver">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                  </svg>
+                  {{ route.repartidor }}
+                </span>
+              </td>
+
+              <td>
+                <span class="routes-vehicle">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="1" y="3" width="15" height="13"/>
+                    <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+                  </svg>
+                  {{ route.vehiculo }}
+                </span>
+              </td>
+
+              <td>
+                <div class="routes-progress-mini">
+                  <span>{{ route.progreso }}%</span>
+                  <div class="routes-mini-track">
+                    <i [style.width.%]="route.progreso"></i>
+                  </div>
+                </div>
+              </td>
+
+              <td>{{ route.horaEstimadaLlegada }}</td>
+
+              <td>
+                <span class="ui-status" [ngClass]="statusTone(route)">
+                  {{ prettyStatus(route.estado) }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="routes-tracking-footer">
+        <span>Mostrando {{ routes.length < 3 ? routes.length : 3 }} de {{ routes.length }} rutas activas</span>
+        <a href="javascript:void(0)">Ver todas las rutas →</a>
+      </div>
+    </section>
+
+  </div>
+
+  <p *ngIf="errorMessage" class="error-text">{{ errorMessage }}</p>
+
+  <!-- ══ CARDS DE RUTAS ═══════════════════════════════════════════════════════ -->
+  <div class="routes-grid">
+    <article class="route-card" *ngFor="let route of routes">
+
+      <div class="route-header">
+        <div>
+          <div class="route-title-row">
+            <strong>{{ route.nombre }}</strong>
+            <span class="ui-status" [ngClass]="statusTone(route)">
+              {{ prettyStatus(route.estado) }}
+            </span>
+          </div>
+          <span>{{ route.origen }} → {{ route.destino }}</span>
+        </div>
+      </div>
+
+      <div class="route-meta-grid">
+        <div>
+          <small>Conductor</small>
+          <strong>{{ route.repartidor }}</strong>
+        </div>
+        <div>
+          <small>Vehículo</small>
+          <strong>{{ route.vehiculo }}</strong>
+        </div>
+        <div>
+          <small>Placa</small>
+          <strong>{{ route.placa }}</strong>
+        </div>
+        <div>
+          <small>GPS</small>
+          <strong>{{ route.estadoGps || 'Sin dato' }}</strong>
+        </div>
+      </div>
+
+      <div class="route-card-detail">
+        <div>
+          <small>Horario</small>
+          <strong>Salida {{ route.horaSalida }}</strong>
+          <strong>ETA: {{ route.horaEstimadaLlegada }}</strong>
+        </div>
+
+        <div>
+          <small>Ubicación actual</small>
+          <strong>{{ route.ubicacionActual || 'No reportada' }}</strong>
+        </div>
+
+        <div>
+          <small>Carga / Avance</small>
+          <strong>{{ route.progreso }}%</strong>
+          <div class="ui-progress route-progress">
+            <span [style.width.%]="route.progreso"></span>
+          </div>
+        </div>
+      </div>
+
+      <small *ngIf="route.incidencias" class="route-note route-note-danger">
+        Incidencias: {{ route.incidencias }}
+      </small>
+
+      <small *ngIf="route.observaciones" class="route-note">
+        Observaciones: {{ route.observaciones }}
+      </small>
+
+      <div class="route-flags">
+        <span class="ui-chip" [class.is-danger]="route.vehiculoActivo === false">
+          {{ route.vehiculoActivo === false ? 'Vehículo inactivo' : 'Vehículo operativo' }}
+        </span>
+
+        <span class="ui-chip" [class.is-danger]="route.conductorBloqueado === true">
+          {{ route.conductorBloqueado ? 'Conductor bloqueado' : 'Conductor habilitado' }}
+        </span>
+
+        <span class="ui-chip is-success" *ngIf="route.confirmacionEntrega">
+          Entrega confirmada
+        </span>
+      </div>
+
+      <div class="ui-inline-actions route-actions">
+        <button class="ui-btn ui-btn-secondary routes-btn-outline" type="button" (click)="editRoute(route)">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7Z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+          Ver detalle
+        </button>
+
+        <button class="ui-btn ui-btn-secondary routes-btn-outline" type="button" (click)="editRoute(route)">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M21 12a9 9 0 0 1-15.5 6.2"/>
+            <path d="M3 12a9 9 0 0 1 15.5-6.2"/>
+            <path d="M18 2v4h4"/>
+            <path d="M6 22v-4H2"/>
+          </svg>
+          Reprogramar
+        </button>
+
+        <button class="ui-btn ui-btn-primary routes-btn-contact" type="button">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.4 19.4 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.7.6 2.5a2 2 0 0 1-.4 2.1L8.1 9.5a16 16 0 0 0 6.4 6.4l1.2-1.2a2 2 0 0 1 2.1-.4c.8.3 1.6.5 2.5.6a2 2 0 0 1 1.7 2Z"/>
+          </svg>
+          Contactar conductor
+        </button>
+
+        <button class="ui-btn ui-btn-ghost routes-btn-delete" type="button" (click)="deleteRoute(route)">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <polyline points="3 6 5 6 21 6"/>
+            <path d="M19 6l-1 14H6L5 6"/>
+            <path d="M10 11v6"/>
+            <path d="M14 11v6"/>
+            <path d="M9 6V4h6v2"/>
+          </svg>
+          Eliminar
+        </button>
+      </div>
+
+    </article>
+  </div>
+
+  <!-- ══ MODAL ════════════════════════════════════════════════════════════════ -->
+  <div class="ui-modal-backdrop" *ngIf="modalOpen" (click)="closeModal()">
+    <div class="ui-modal ui-modal-lg routes-modal" (click)="$event.stopPropagation()">
+
+      <div class="ui-modal-header routes-modal-header">
+        <div>
+          <p class="ui-kicker">Ruta</p>
+          <h3>{{ editingId ? 'Editar ruta' : 'Registrar ruta' }}</h3>
+        </div>
+
+        <button class="ui-icon-btn" type="button" (click)="closeModal()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="ui-form-grid">
+        <div class="ui-field">
+          <label>Nombre</label>
+          <input [(ngModel)]="form.nombre" name="routeName" />
+        </div>
+
+        <div class="ui-field">
+          <label>Zona</label>
+          <input [(ngModel)]="form.zona" name="routeArea" />
+        </div>
+
+        <div class="ui-field">
+          <label>Conductor</label>
+          <input [(ngModel)]="form.repartidor" name="deliveryPerson" />
+        </div>
+
+        <div class="ui-field">
+          <label>Pedido interno</label>
+          <select [(ngModel)]="form.pedidoId" (ngModelChange)="onOrderSelected($event)" name="routeOrderId">
+            <option [ngValue]="null">Sin pedido</option>
+            <option *ngFor="let order of routableOrders" [ngValue]="order.id">
+              #{{ order.id }} - {{ order.storeName }} - {{ order.status }}
+            </option>
+          </select>
+        </div>
+
+        <div class="ui-field">
+          <label>Transferencia</label>
+          <select [(ngModel)]="form.transferenciaId" (ngModelChange)="onTransferSelected($event)" name="routeTransferId">
+            <option [ngValue]="null">Sin transferencia</option>
+            <option *ngFor="let transfer of routableTransfers" [ngValue]="transfer.id">
+              #{{ transfer.id }} - {{ transfer.almacenDestinoNombre }} - {{ transfer.estado }}
+            </option>
+          </select>
+        </div>
+
+        <div class="ui-field">
+          <label>Vehículo</label>
+          <input [(ngModel)]="form.vehiculo" name="vehicleName" />
+        </div>
+
+        <div class="ui-field">
+          <label>Tipo vehículo</label>
+          <input [(ngModel)]="form.tipoVehiculo" name="vehicleType" />
+        </div>
+
+        <div class="ui-field">
+          <label>Placa</label>
+          <input [(ngModel)]="form.placa" name="vehiclePlate" />
+        </div>
+
+        <div class="ui-field">
+          <label>Capacidad</label>
+          <input type="number" min="1" [(ngModel)]="form.capacidadVehiculo" name="vehicleCapacity" />
+        </div>
+
+        <div class="ui-field">
+          <label>Carga</label>
+          <input type="number" min="1" [(ngModel)]="form.cantidadCarga" name="vehicleLoad" />
+        </div>
+
+        <div class="ui-field">
+          <label>Pedidos</label>
+          <input type="number" min="1" [(ngModel)]="form.pedidos" name="routeOrders" />
+        </div>
+
+        <div class="ui-field">
+          <label>Origen</label>
+          <input [(ngModel)]="form.origen" name="routeOrigin" />
+        </div>
+
+        <div class="ui-field">
+          <label>Destino</label>
+          <input [(ngModel)]="form.destino" name="routeDestination" />
+        </div>
+
+        <div class="ui-field">
+          <label>Fecha entrega</label>
+          <input type="date" [(ngModel)]="form.fechaEntrega" name="routeDeliveryDate" />
+        </div>
+
+        <div class="ui-field">
+          <label>Hora salida</label>
+          <input type="time" [(ngModel)]="form.horaSalida" name="routeDeparture" />
+        </div>
+
+        <div class="ui-field">
+          <label>Hora estimada llegada</label>
+          <input type="time" [(ngModel)]="form.horaEstimadaLlegada" name="routeEta" />
+        </div>
+
+        <div class="ui-field">
+          <label>Hora entrega real</label>
+          <input type="time" [(ngModel)]="form.horaEntregaReal" name="routeRealDelivery" />
+        </div>
+
+        <div class="ui-field">
+          <label>Estado</label>
+          <select [(ngModel)]="form.estado" name="routeStatus">
+            <option *ngFor="let status of statusOptions" [value]="status">
+              {{ prettyStatus(status) }}
+            </option>
+          </select>
+        </div>
+
+        <div class="ui-field">
+          <label>Progreso</label>
+          <input type="number" min="0" max="100" [(ngModel)]="form.progreso" name="routeProgress" />
+        </div>
+
+        <div class="ui-field">
+          <label>Ubicación actual</label>
+          <input [(ngModel)]="form.ubicacionActual" name="routeLocation" />
+        </div>
+
+        <div class="ui-field">
+          <label>Estado GPS</label>
+          <input [(ngModel)]="form.estadoGps" name="routeGps" />
+        </div>
+
+        <div class="ui-field">
+          <label>Evidencia entrega</label>
+          <input [(ngModel)]="form.evidenciaEntrega" name="deliveryEvidence" />
+        </div>
+
+        <div class="ui-field">
+          <label>Firma digital</label>
+          <input [(ngModel)]="form.firmaDigital" name="digitalSignature" />
+        </div>
+
+        <div class="ui-field">
+          <label>Foto entrega</label>
+          <input [(ngModel)]="form.fotoEntrega" name="deliveryPhoto" />
+        </div>
+
+        <div class="ui-field ui-field-full">
+          <label>Observaciones</label>
+          <textarea rows="3" [(ngModel)]="form.observaciones" name="routeNotes"></textarea>
+        </div>
+
+        <div class="ui-field ui-field-full">
+          <label>Incidencias</label>
+          <textarea rows="3" [(ngModel)]="form.incidencias" name="routeIncidents"></textarea>
+        </div>
+      </div>
+
+      <div class="route-checks">
+        <label>
+          <input type="checkbox" [(ngModel)]="form.vehiculoActivo" name="vehicleActive" />
+          Vehículo activo
+        </label>
+
+        <label>
+          <input type="checkbox" [(ngModel)]="form.conductorBloqueado" name="driverBlocked" />
+          Conductor bloqueado
+        </label>
+
+        <label>
+          <input type="checkbox" [(ngModel)]="form.confirmacionEntrega" name="deliveryConfirmed" />
+          Confirmación de entrega
+        </label>
+      </div>
+
+      <div class="ui-modal-footer">
+        <button class="ui-btn ui-btn-secondary" type="button" (click)="closeModal()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+          Cancelar
+        </button>
+        <button class="ui-btn ui-btn-primary" type="button" (click)="saveRoute()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z"/>
+            <path d="M17 21v-8H7v8"/>
+            <path d="M7 3v5h8"/>
+          </svg>
+          Guardar ruta
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+</section>

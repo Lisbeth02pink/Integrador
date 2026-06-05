@@ -1,0 +1,255 @@
+<section class="ui-page">
+
+  <!-- ══ HERO ══════════════════════════════════════════════════════════════════ -->
+  <div class="ui-hero transfers-hero">
+    <div class="transfers-hero-icon">
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1">
+        <path d="M7 17L17 7"/>
+        <path d="M7 7h10v10"/>
+        <path d="M3 21h18"/>
+      </svg>
+    </div>
+
+    <div class="transfers-hero-content">
+      <div>
+        <h2 class="ui-title">Transferencias desde almacén central</h2>
+        <p class="ui-description">
+          Registra y gestiona las salidas de stock desde el almacén central hacia las tiendas.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ STATS ═════════════════════════════════════════════════════════════════ -->
+  <div class="ui-stats-grid transfers-stats-grid">
+
+    <article class="ui-stat-card transfers-stat-card">
+      <div class="transfers-stat-icon transfers-stat-icon--purple">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M3 21h18"/>
+          <path d="M5 21V7l8-4v18"/>
+          <path d="M19 21V11l-6-4"/>
+        </svg>
+      </div>
+
+      <div>
+        <span>Almacén origen</span>
+        <strong>{{ centralWarehouse?.nombre || 'Sin definir' }}</strong>
+        <small>Centro principal de despacho</small>
+      </div>
+    </article>
+
+    <article class="ui-stat-card transfers-stat-card">
+      <div class="transfers-stat-icon transfers-stat-icon--green">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <path d="M16 10a4 4 0 0 1-8 0"/>
+        </svg>
+      </div>
+
+      <div>
+        <span>Tiendas destino</span>
+        <strong>{{ destinationStores.length }}</strong>
+        <small>Sucursales conectadas al reparto</small>
+      </div>
+    </article>
+
+    <article class="ui-stat-card transfers-stat-card">
+      <div class="transfers-stat-icon transfers-stat-icon--blue">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M17 1l4 4-4 4"/>
+          <path d="M3 11V9a4 4 0 0 1 4-4h14"/>
+          <path d="M7 23l-4-4 4-4"/>
+          <path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+        </svg>
+      </div>
+
+      <div>
+        <span>Transferencias</span>
+        <strong>{{ transferMovements.length }}</strong>
+        <small>Movimientos históricos en kardex</small>
+      </div>
+    </article>
+
+    <article class="ui-stat-card transfers-stat-card">
+      <div class="transfers-stat-icon transfers-stat-icon--purple">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="9" y1="13" x2="15" y2="13"/>
+        </svg>
+      </div>
+
+      <div>
+        <span>Despachos generados</span>
+        <strong>{{ pendingLikeTransfers }}</strong>
+        <small>Despachos generados por transferencias</small>
+      </div>
+    </article>
+
+  </div>
+
+  <!-- ══ CONTENIDO PRINCIPAL ═══════════════════════════════════════════════════ -->
+  <div class="transfers-layout">
+
+    <!-- ══ REGISTRAR TRANSFERENCIA ════════════════════════════════════════════ -->
+    <section class="ui-card transfers-form-card">
+      <div class="ui-card-header">
+        <div>
+          <h3>Registrar salida de stock</h3>
+          <p>Despacha stock desde el almacén central hacia una tienda Tambo.</p>
+        </div>
+      </div>
+
+      <p *ngIf="errorMessage" class="error-text">{{ errorMessage }}</p>
+
+      <div class="ui-form-grid ui-form-grid-single">
+        <div class="ui-field">
+          <label>Producto del almacén central</label>
+          <select [(ngModel)]="form.productId" name="transferProduct">
+            <option [ngValue]="0">Seleccione</option>
+            <option *ngFor="let product of centralProducts" [ngValue]="product.id">
+              {{ product.nombre }} - {{ product.sku }} - {{ product.stock }} und
+            </option>
+          </select>
+        </div>
+
+        <div class="ui-field">
+          <label>Tienda destino</label>
+          <select [(ngModel)]="form.destinationWarehouseId" name="destinationStore">
+            <option [ngValue]="0">Seleccione</option>
+            <option *ngFor="let store of destinationStores" [ngValue]="store.id">{{ store.nombre }}</option>
+          </select>
+        </div>
+
+        <div class="transfers-form-two">
+          <div class="ui-field">
+            <label>Cantidad</label>
+            <input type="number" min="1" [(ngModel)]="form.quantity" name="transferQuantity" />
+          </div>
+
+          <div class="ui-field">
+            <label>Fecha programada</label>
+            <input type="date" [(ngModel)]="form.scheduledDate" name="transferDate" />
+          </div>
+        </div>
+
+        <div class="ui-field">
+          <label>Estado</label>
+          <input value="Pendiente" disabled class="transfers-input-disabled" />
+        </div>
+
+        <div class="ui-field">
+          <label>Observación</label>
+          <textarea rows="3" [(ngModel)]="form.observation" name="transferObservation" placeholder="Agrega observaciones (opcional)"></textarea>
+        </div>
+      </div>
+
+      <div class="transfers-form-footer">
+        <button class="ui-btn ui-btn-primary transfers-btn-save" type="button" (click)="registerTransfer()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M17 1l4 4-4 4"/>
+            <path d="M3 11V9a4 4 0 0 1 4-4h14"/>
+            <path d="M7 23l-4-4 4-4"/>
+            <path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+          </svg>
+          Registrar transferencia
+        </button>
+      </div>
+
+      <p class="ui-helper-text">
+        Flujo operativo: solicita, supervisa, prepara, transporta y entrega en tienda.
+      </p>
+    </section>
+
+    <!-- ══ DESPACHOS RECIENTES ════════════════════════════════════════════════ -->
+    <section class="ui-card transfers-recent-card">
+      <div class="ui-card-header">
+        <div>
+          <h3>Despachos recientes</h3>
+          <p>Trazabilidad de los despachos generados desde el almacén central.</p>
+        </div>
+      </div>
+
+      <div class="transfer-list">
+        <article class="transfer-item" *ngFor="let movement of transferMovements.slice(0, 6)">
+          <div class="transfer-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+            </svg>
+          </div>
+
+          <div class="transfer-info">
+            <strong>{{ movement.productoNombre }}</strong>
+            <span>{{ movement.almacenOrigen }} → {{ movement.almacenDestino }}</span>
+            <small>Cantidad: {{ movement.cantidad }} und · {{ movement.fecha }}</small>
+            <small>Referencia: {{ movement.referencia }}</small>
+          </div>
+
+          <span class="ui-status">En tránsito</span>
+        </article>
+
+        <div class="transfer-list-footer">
+          <a class="transfers-link" href="javascript:void(0)">
+            Ver todas las transferencias
+            <span>›</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ══ HISTORIAL ═════════════════════════════════════════════════════════════ -->
+  <section class="ui-card transfers-history-card">
+    <div class="ui-card-header">
+      <div>
+        <h3>Historial de transferencias</h3>
+        <p>Registro completo de transferencias realizadas desde el almacén central.</p>
+      </div>
+    </div>
+
+    <div class="ui-table-wrap">
+      <table class="ui-table">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Producto</th>
+            <th>Cantidad</th>
+            <th>Origen</th>
+            <th>Destino</th>
+            <th>Referencia</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let movement of transferMovements">
+            <td>{{ movement.fecha }}</td>
+            <td>{{ movement.productoNombre }}<br /><small>{{ movement.productoSku }}</small></td>
+            <td>{{ movement.cantidad }} und</td>
+            <td>{{ movement.almacenOrigen || '-' }}</td>
+            <td>{{ movement.almacenDestino || '-' }}</td>
+            <td>{{ movement.referencia }}</td>
+            <td><span class="ui-status">En tránsito</span></td>
+          </tr>
+
+          <tr *ngIf="transferMovements.length === 0">
+            <td colspan="7" class="transfers-empty-row">
+              Sin transferencias registradas.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="transfers-table-footer">
+      <a class="transfers-link" href="javascript:void(0)">
+        Ver todo el historial
+        <span>›</span>
+      </a>
+    </div>
+  </section>
+
+</section>

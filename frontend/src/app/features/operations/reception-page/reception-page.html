@@ -1,0 +1,90 @@
+<section class="ui-page reception-page">
+  <div class="ui-hero">
+    <div class="ui-toolbar">
+      <div>
+        <p class="ui-kicker">Confirmacion logistica</p>
+        <h2 class="ui-title">Recepcion en tienda</h2>
+        <p class="ui-description">
+          Confirma transferencias recibidas en tienda y actualiza el inventario destino.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="ui-stats-grid">
+    <article class="ui-stat-card">
+      <span>Pendientes de recepcion</span>
+      <strong>{{ pendingReception.length }}</strong>
+      <small>Transferencias enviadas</small>
+    </article>
+    <article class="ui-stat-card">
+      <span>Recibidas</span>
+      <strong>{{ receivedTransfers.length }}</strong>
+      <small>Confirmadas por tienda</small>
+    </article>
+    <article class="ui-stat-card">
+      <span>Total transferencias</span>
+      <strong>{{ transfers.length }}</strong>
+      <small>Historial logistico</small>
+    </article>
+  </div>
+
+  <div class="ui-pane-grid">
+    <section class="ui-card">
+      <div class="ui-card-header">
+        <div>
+          <h3>Confirmar recepcion</h3>
+          <p>Solo se pueden confirmar transferencias en estado enviada.</p>
+        </div>
+      </div>
+
+      <p *ngIf="errorMessage" class="error-text">{{ errorMessage }}</p>
+
+      <div class="ui-field">
+        <label>Transferencia</label>
+        <select [(ngModel)]="selectedTransferId" name="selectedTransferId">
+          <option [ngValue]="0">Seleccionar transferencia</option>
+          <option *ngFor="let transfer of pendingReception" [ngValue]="transfer.id">
+            #{{ transfer.id }} - {{ transfer.almacenOrigenNombre }} a {{ transfer.almacenDestinoNombre }}
+          </option>
+        </select>
+      </div>
+
+      <div class="ui-field">
+        <label>Responsable</label>
+        <input [(ngModel)]="responsable" name="responsable" placeholder="Encargado de tienda" />
+      </div>
+
+      <div class="ui-field">
+        <label>Observaciones</label>
+        <textarea rows="3" [(ngModel)]="observaciones" name="observaciones"></textarea>
+      </div>
+
+      <button class="ui-btn ui-btn-primary" type="button" (click)="confirmReception()" [disabled]="saving">
+        <svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>
+        {{ saving ? 'Confirmando...' : 'Confirmar recepcion' }}
+      </button>
+    </section>
+
+    <section class="ui-card">
+      <div class="ui-card-header">
+        <div>
+          <h3>Transferencias recientes</h3>
+          <p>Seguimiento de envios entre almacen central y tiendas.</p>
+        </div>
+      </div>
+
+      <div class="ui-stack-list">
+        <article class="ui-stack-item" *ngFor="let transfer of transfers.slice(0, 8)">
+          <div>
+            <strong>#{{ transfer.id }} - {{ transfer.almacenDestinoNombre }}</strong>
+            <span>{{ transfer.almacenOrigenNombre }} a {{ transfer.almacenDestinoNombre }}</span>
+          </div>
+          <span class="ui-status" [class.is-info]="transfer.estado === 'ENVIADA'" [class.is-warning]="transfer.estado === 'PENDIENTE'">
+            {{ transfer.estado }}
+          </span>
+        </article>
+      </div>
+    </section>
+  </div>
+</section>

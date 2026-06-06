@@ -13,13 +13,13 @@
 
   <div class="ui-stats-grid">
     <article class="ui-stat-card">
-      <span>Pendientes de recepcion</span>
-      <strong>{{ pendingReception.length }}</strong>
+      <span>En transito</span>
+      <strong>{{ inTransitCount }}</strong>
       <small>Transferencias enviadas</small>
     </article>
     <article class="ui-stat-card">
       <span>Recibidas</span>
-      <strong>{{ receivedTransfers.length }}</strong>
+      <strong>{{ completedCount }}</strong>
       <small>Confirmadas por tienda</small>
     </article>
     <article class="ui-stat-card">
@@ -34,36 +34,40 @@
       <div class="ui-card-header">
         <div>
           <h3>Confirmar recepcion</h3>
-          <p>Solo se pueden confirmar transferencias en estado enviada.</p>
+          <p>Solo se pueden confirmar transferencias en estado En transito.</p>
         </div>
       </div>
 
       <p *ngIf="errorMessage" class="error-text">{{ errorMessage }}</p>
 
-      <div class="ui-field">
-        <label>Transferencia</label>
-        <select [(ngModel)]="selectedTransferId" name="selectedTransferId">
-          <option [ngValue]="0">Seleccionar transferencia</option>
-          <option *ngFor="let transfer of pendingReception" [ngValue]="transfer.id">
-            #{{ transfer.id }} - {{ transfer.almacenOrigenNombre }} a {{ transfer.almacenDestinoNombre }}
-          </option>
-        </select>
-      </div>
+      <form [formGroup]="receptionForm" (ngSubmit)="confirmReception()">
+        <div class="ui-field">
+          <label>Transferencia</label>
+          <select formControlName="transferenciaId" [class.input-error]="isFieldInvalid('transferenciaId')">
+            <option value="" disabled>Seleccionar transferencia</option>
+            <option *ngFor="let transfer of transfers" [value]="transfer.id">
+              #{{ transfer.id }} - {{ transfer.almacenOrigenNombre }} a {{ transfer.almacenDestinoNombre }} ({{ transfer.estado }})
+            </option>
+          </select>
+          <p *ngIf="isFieldInvalid('transferenciaId')" class="validation-error">Debes elegir la transferencia a recibir.</p>
+        </div>
 
-      <div class="ui-field">
-        <label>Responsable</label>
-        <input [(ngModel)]="responsable" name="responsable" placeholder="Encargado de tienda" />
-      </div>
+        <div class="ui-field">
+          <label>Responsable</label>
+          <input formControlName="responsable" placeholder="Encargado de tienda" [class.input-error]="isFieldInvalid('responsable')" />
+          <p *ngIf="isFieldInvalid('responsable')" class="validation-error">El responsable es obligatorio (mínimo 3 caracteres).</p>
+        </div>
 
-      <div class="ui-field">
-        <label>Observaciones</label>
-        <textarea rows="3" [(ngModel)]="observaciones" name="observaciones"></textarea>
-      </div>
+        <div class="ui-field">
+          <label>Observaciones</label>
+          <textarea rows="3" formControlName="observaciones" placeholder="Ej. Llego incompleto, caja en buen estado, etc."></textarea>
+        </div>
 
-      <button class="ui-btn ui-btn-primary" type="button" (click)="confirmReception()" [disabled]="saving">
-        <svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>
-        {{ saving ? 'Confirmando...' : 'Confirmar recepcion' }}
-      </button>
+        <button class="ui-btn ui-btn-primary" type="submit" [disabled]="saving">
+          <svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>
+          {{ saving ? 'Confirmando...' : 'Confirmar recepcion' }}
+        </button>
+      </form>
     </section>
 
     <section class="ui-card">
@@ -80,7 +84,7 @@
             <strong>#{{ transfer.id }} - {{ transfer.almacenDestinoNombre }}</strong>
             <span>{{ transfer.almacenOrigenNombre }} a {{ transfer.almacenDestinoNombre }}</span>
           </div>
-          <span class="ui-status" [class.is-info]="transfer.estado === 'ENVIADA'" [class.is-warning]="transfer.estado === 'PENDIENTE'">
+          <span class="ui-status" [class.is-info]="transfer.estado === 'En transito'" [class.is-success]="transfer.estado === 'Completado'">
             {{ transfer.estado }}
           </span>
         </article>

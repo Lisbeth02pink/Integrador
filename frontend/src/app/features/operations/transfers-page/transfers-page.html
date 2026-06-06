@@ -93,7 +93,6 @@
   <!-- ══ CONTENIDO PRINCIPAL ═══════════════════════════════════════════════════ -->
   <div class="transfers-layout">
 
-    <!-- ══ REGISTRAR TRANSFERENCIA ════════════════════════════════════════════ -->
     <section class="ui-card transfers-form-card">
       <div class="ui-card-header">
         <div>
@@ -104,34 +103,41 @@
 
       <p *ngIf="errorMessage" class="error-text">{{ errorMessage }}</p>
 
-      <div class="ui-form-grid ui-form-grid-single">
+      <form [formGroup]="transferForm" class="ui-form-grid ui-form-grid-single" (ngSubmit)="registerTransfer()">
         <div class="ui-field">
           <label>Producto del almacén central</label>
-          <select [(ngModel)]="form.productId" name="transferProduct">
-            <option [ngValue]="0">Seleccione</option>
+          <select formControlName="productId" name="transferProduct" [class.input-error]="transferForm.get('productId')?.touched && transferForm.get('productId')?.invalid">
+            <option [ngValue]="0">Seleccione un producto</option>
             <option *ngFor="let product of centralProducts" [ngValue]="product.id">
               {{ product.nombre }} - {{ product.sku }} - {{ product.stock }} und
             </option>
           </select>
+          <small *ngIf="transferForm.get('productId')?.touched && transferForm.get('productId')?.hasError('min')" class="validation-error">Selecciona un producto válido.</small>
         </div>
 
         <div class="ui-field">
           <label>Tienda destino</label>
-          <select [(ngModel)]="form.destinationWarehouseId" name="destinationStore">
-            <option [ngValue]="0">Seleccione</option>
+          <select formControlName="destinationWarehouseId" name="destinationStore" [class.input-error]="transferForm.get('destinationWarehouseId')?.touched && transferForm.get('destinationWarehouseId')?.invalid">
+            <option [ngValue]="0">Seleccione una tienda</option>
             <option *ngFor="let store of destinationStores" [ngValue]="store.id">{{ store.nombre }}</option>
           </select>
+          <small *ngIf="transferForm.get('destinationWarehouseId')?.touched && transferForm.get('destinationWarehouseId')?.hasError('min')" class="validation-error">Selecciona un destino válido.</small>
         </div>
 
         <div class="transfers-form-two">
           <div class="ui-field">
-            <label>Cantidad</label>
-            <input type="number" min="1" [(ngModel)]="form.quantity" name="transferQuantity" />
+            <label>Cantidad a transferir</label>
+            <input type="number" formControlName="quantity" name="transferQuantity" [class.input-error]="transferForm.get('quantity')?.touched && transferForm.get('quantity')?.invalid" />
+            <small *ngIf="transferForm.get('quantity')?.touched && transferForm.get('quantity')?.hasError('min')" class="validation-error">Ingresa una cantidad mayor a 0.</small>
+            <small *ngIf="stockError" class="validation-error">¡Stock insuficiente! Máximo disponible: {{ stockError.max }}</small>
+            <small *ngIf="capacityError" class="validation-error">¡Capacidad excedida! Solo queda espacio para {{ capacityError.max }} unidades.</small>
           </div>
 
           <div class="ui-field">
             <label>Fecha programada</label>
-            <input type="date" [(ngModel)]="form.scheduledDate" name="transferDate" />
+            <input type="date" formControlName="scheduledDate" name="transferDate" [class.input-error]="transferForm.get('scheduledDate')?.touched && transferForm.get('scheduledDate')?.invalid" />
+            <small *ngIf="transferForm.get('scheduledDate')?.touched && transferForm.get('scheduledDate')?.hasError('required')" class="validation-error">La fecha es obligatoria.</small>
+            <small *ngIf="isInvalidDate" class="validation-error">La fecha no puede ser en el pasado.</small>
           </div>
         </div>
 
@@ -141,22 +147,22 @@
         </div>
 
         <div class="ui-field">
-          <label>Observación</label>
-          <textarea rows="3" [(ngModel)]="form.observation" name="transferObservation" placeholder="Agrega observaciones (opcional)"></textarea>
+          <label>Observación (Opcional)</label>
+          <textarea rows="3" formControlName="observation" name="transferObservation" placeholder="Agrega observaciones o referencias"></textarea>
         </div>
-      </div>
 
-      <div class="transfers-form-footer">
-        <button class="ui-btn ui-btn-primary transfers-btn-save" type="button" (click)="registerTransfer()">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-            <path d="M17 1l4 4-4 4"/>
-            <path d="M3 11V9a4 4 0 0 1 4-4h14"/>
-            <path d="M7 23l-4-4 4-4"/>
-            <path d="M21 13v2a4 4 0 0 1-4 4H3"/>
-          </svg>
-          Registrar transferencia
-        </button>
-      </div>
+        <div class="transfers-form-footer">
+          <button class="ui-btn ui-btn-primary transfers-btn-save" type="submit" [disabled]="transferForm.invalid" [class.disabled-btn]="transferForm.invalid">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M17 1l4 4-4 4"/>
+              <path d="M3 11V9a4 4 0 0 1 4-4h14"/>
+              <path d="M7 23l-4-4 4-4"/>
+              <path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+            </svg>
+            Registrar transferencia
+          </button>
+        </div>
+      </form>
 
       <p class="ui-helper-text">
         Flujo operativo: solicita, supervisa, prepara, transporta y entrega en tienda.

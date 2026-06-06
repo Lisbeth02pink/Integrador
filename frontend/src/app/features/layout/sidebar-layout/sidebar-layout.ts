@@ -110,18 +110,6 @@ export class SidebarLayout implements OnInit {
           icon: 'clipboard-check',
           route: '/dashboard/recepcion',
         },
-        {
-          moduleName: 'Mermas y Danados',
-          label: 'Mermas',
-          icon: 'alert-triangle',
-          route: '/dashboard/mermas',
-        },
-        {
-          moduleName: 'Alertas Logisticas',
-          label: 'Alertas',
-          icon: 'bell',
-          route: '/dashboard/alertas',
-        },
       ],
     },
 

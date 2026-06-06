@@ -1,83 +1,124 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import Swal from 'sweetalert2';
-import { InventoryService, InventoryTransfer } from '../../../core/services/inventory';
+import { TransfersService } from '../../../core/services/transfers';
+import { ReceptionService, TransferenciaRecepcion } from '../../../core/services/reception';
 
 @Component({
   selector: 'app-reception-page',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule, DatePipe, RouterLink],
   templateUrl: './reception-page.html',
   styleUrl: './reception-page.css',
 })
 export class ReceptionPage implements OnInit {
-  transfers: InventoryTransfer[] = [];
+  transfers: TransferenciaRecepcion[] = [];
   errorMessage = '';
-  selectedTransferId = 0;
-  responsable = '';
-  observaciones = '';
   saving = false;
 
+  receptionForm: FormGroup;
+
   constructor(
-    private inventoryService: InventoryService,
-    private cdr: ChangeDetectorRef
-  ) {}
+    private transfersService: TransfersService,
+    private receptionService: ReceptionService,
+    private cdr: ChangeDetectorRef,
+    private fb: FormBuilder
+  ) {
+    this.receptionForm = this.fb.group({
+      transferenciaId: ['', [Validators.required]],
+      responsable: ['', [Validators.required, Validators.minLength(3)]],
+      observaciones: ['']
+    });
+  }
 
   ngOnInit() {
-    this.loadTransfers();
+    this.loadData();
   }
 
-  get pendingReception() {
-    return this.transfers.filter((transfer) => transfer.estado === 'ENVIADA');
+  get inTransitCount() {
+    return this.transfers.filter((item) => item.estado === 'En transito').length;
   }
 
-  get receivedTransfers() {
-    return this.transfers.filter((transfer) => transfer.estado === 'RECIBIDA' || transfer.estado === 'COMPLETADA');
+  get completedCount() {
+    return this.transfers.filter((item) => item.estado === 'Completado').length;
+  }
+
+  isFieldInvalid(field: string): boolean {
+    const control = this.receptionForm.get(field);
+    return !!(control && control.invalid && (control.dirty || control.touched));
   }
 
   confirmReception() {
+    this.receptionForm.markAllAsTouched();
     this.errorMessage = '';
 
-    if (!this.selectedTransferId) {
-      this.errorMessage = 'Selecciona una transferencia enviada.';
+    if (this.receptionForm.invalid) {
+      this.errorMessage = 'Por favor, selecciona una transferencia y escribe el nombre del responsable.';
+      return;
+    }
+
+    const formValues = this.receptionForm.value;
+    const transferId = Number(formValues.transferenciaId);
+    
+    const transfer = this.transfers.find((t) => t.id === transferId);
+
+    if (!transfer) {
+      this.errorMessage = 'Transferencia no encontrada en la lista.';
+      return;
+    }
+    
+    if (transfer.estado === 'Completado') {
+      this.errorMessage = 'Esta transferencia ya ha sido recibida anteriormente.';
       return;
     }
 
     this.saving = true;
-    this.inventoryService.confirmReception({
-      transferenciaId: Number(this.selectedTransferId),
-      responsable: this.responsable.trim() || 'Encargado de tienda',
-      observaciones: this.observaciones.trim(),
-    }).subscribe({
-      next: async () => {
-        this.selectedTransferId = 0;
-        this.responsable = '';
-        this.observaciones = '';
-        this.saving = false;
-        this.loadTransfers();
-        await Swal.fire({
-          icon: 'success',
-          title: 'Recepcion confirmada',
-          text: 'La transferencia fue recibida y el stock de tienda fue actualizado.',
-          confirmButtonColor: '#7c3f97',
-        });
-      },
-      error: (error) => {
-        this.saving = false;
-        this.errorMessage = error?.error?.message || 'No se pudo confirmar la recepcion.';
-        this.cdr.detectChanges();
-      },
-    });
+
+    this.receptionService
+      .confirmReception({
+        transferenciaId: transfer.id,
+        responsable: formValues.responsable.trim(),
+        observaciones: formValues.observaciones ? formValues.observaciones.trim() : '',
+      })
+      .subscribe({
+        next: async () => {
+          this.receptionForm.reset({
+            transferenciaId: '',
+            responsable: '',
+            observaciones: ''
+          });
+          this.saving = false;
+          this.loadData();
+          await Swal.fire({
+            icon: 'success',
+            title: 'Recepción confirmada',
+            text: 'El inventario de la tienda ha sido actualizado y la transferencia marcada como completada.',
+            confirmButtonColor: '#7c3f97',
+          });
+        },
+        error: (error: any) => {
+          this.saving = false;
+          let msg = 'No se pudo confirmar la recepción.';
+          if (error.error && typeof error.error === 'object') {
+             msg = error.error.message || JSON.stringify(error.error);
+          } else if (error.message) {
+             msg = error.message;
+          }
+          this.errorMessage = `Error ${error.status || 'Desconocido'}: ${msg}`;
+          this.cdr.detectChanges();
+        },
+      });
   }
 
-  private loadTransfers() {
-    this.inventoryService.listTransfers().subscribe({
-      next: (transfers) => {
-        this.transfers = transfers;
+  private loadData() {
+    this.transfersService.list().subscribe({
+      next: (transfers: TransferenciaRecepcion[]) => {
+        this.transfers = transfers.filter((t: TransferenciaRecepcion) => t.estado !== 'Cancelado');
         this.cdr.detectChanges();
       },
       error: () => {
-        this.errorMessage = 'No se pudieron cargar las transferencias.';
+        this.errorMessage = 'Error al cargar las transferencias.';
         this.cdr.detectChanges();
       },
     });

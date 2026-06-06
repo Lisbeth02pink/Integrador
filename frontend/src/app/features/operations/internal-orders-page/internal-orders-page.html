@@ -101,64 +101,76 @@
         </div>
       </div>
 
-      <p *ngIf="errorMessage" class="error-text">{{ errorMessage }}</p>
-
-      <div class="ui-form-grid">
-        <div class="ui-field">
-          <label>Tienda <span class="orders-required">*</span></label>
-          <select [(ngModel)]="form.storeId" name="orderStore">
-            <option [ngValue]="0">Selecciona una tienda</option>
-            <option *ngFor="let store of stores" [ngValue]="store.id">{{ store.nombre }}</option>
-          </select>
-        </div>
-
-        <div class="ui-field">
-          <label>Solicitante <span class="orders-required">*</span></label>
-          <input [(ngModel)]="form.requestedBy" name="requestedBy" placeholder="Nombre del solicitante" />
-        </div>
-
-        <div class="ui-field">
-          <label>Prioridad <span class="orders-required">*</span></label>
-          <select [(ngModel)]="form.priority" name="orderPriority">
-            <option value="Alta">Alta</option>
-            <option value="Media">Media</option>
-            <option value="Baja">Baja</option>
-          </select>
-        </div>
-
-        <div class="ui-field">
-          <label>Producto del almacén central <span class="orders-required">*</span></label>
-          <div class="orders-search-field">
-            <select [(ngModel)]="form.productId" name="orderProduct">
-              <option [ngValue]="0">Busca un producto</option>
-              <option *ngFor="let product of productsFromCentral" [ngValue]="product.id">
-                {{ product.nombre }} - {{ product.sku }}
-              </option>
+      <form [formGroup]="orderForm">
+        <div class="ui-form-grid">
+          <div class="ui-field">
+            <label>Tienda <span class="orders-required">*</span></label>
+            <select formControlName="storeId" [class.input-error]="isFieldInvalid(orderForm, 'storeId')">
+              <option value="" disabled>Selecciona una tienda</option>
+              <option *ngFor="let store of stores" [value]="store.id">{{ store.nombre }}</option>
             </select>
+            <p *ngIf="isFieldInvalid(orderForm, 'storeId')" class="validation-error">Selecciona la tienda de destino.</p>
+          </div>
 
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-              <circle cx="11" cy="11" r="8"/>
-              <line x1="21" y1="21" x2="16.65" y2="16.65"/>
-            </svg>
+          <div class="ui-field">
+            <label>Solicitante <span class="orders-required">*</span></label>
+            <input formControlName="requestedBy" placeholder="Nombre del solicitante" [class.input-error]="isFieldInvalid(orderForm, 'requestedBy')" />
+            <p *ngIf="isFieldInvalid(orderForm, 'requestedBy')" class="validation-error">El solicitante es obligatorio (mínimo 3 caracteres).</p>
+          </div>
+
+          <div class="ui-field">
+            <label>Prioridad <span class="orders-required">*</span></label>
+            <select formControlName="priority" [class.input-error]="isFieldInvalid(orderForm, 'priority')">
+              <option value="Alta">Alta</option>
+              <option value="Media">Media</option>
+              <option value="Baja">Baja</option>
+            </select>
           </div>
         </div>
 
-        <div class="ui-field">
-          <label>Cantidad <span class="orders-required">*</span></label>
-          <input type="number" min="1" [(ngModel)]="form.quantity" name="orderQuantity" placeholder="Ingresa la cantidad" />
+        <div class="ui-field" style="margin-top: 14px;">
+          <label>Observaciones</label>
+          <textarea rows="2" formControlName="notes" maxlength="200" placeholder="Detalle adicional del pedido (opcional)"></textarea>
+          <small class="orders-char-count">{{ orderForm.get('notes')?.value?.length || 0 }} / 200</small>
         </div>
+      </form>
 
-        <div class="ui-field">
-          <label>Unidad</label>
-          <input value="und." disabled class="orders-input-disabled" />
+      <form [formGroup]="itemForm" (ngSubmit)="addDraftItem()" style="margin-top: 24px; padding-top: 16px; border-top: 1px dashed #dde1ea;">
+        <h4 style="margin: 0 0 12px; font-size: 14px; color: #17122f;">Añadir Productos al Pedido</h4>
+        
+        <p *ngIf="errorMessage" class="ui-error" style="margin-bottom: 14px;">{{ errorMessage }}</p>
+
+        <div style="display: flex; flex-direction: column; gap: 14px;">
+          <div class="ui-field">
+            <label>Producto del almacén central <span class="orders-required">*</span></label>
+            <div class="orders-search-field">
+              <select formControlName="productId" [class.input-error]="isFieldInvalid(itemForm, 'productId')">
+                <option value="" disabled>Busca un producto</option>
+                <option *ngFor="let product of productsFromCentral" [value]="product.id">
+                  {{ product.nombre }} - Stock: {{ product.stock }} und
+                </option>
+              </select>
+
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <circle cx="11" cy="11" r="8"/>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              </svg>
+            </div>
+            <p *ngIf="isFieldInvalid(itemForm, 'productId')" class="validation-error">Debes elegir un producto.</p>
+          </div>
+
+          <div class="ui-field">
+            <label>Cantidad <span class="orders-required">*</span></label>
+            <div style="display: flex; gap: 8px;">
+              <input type="number" min="1" formControlName="quantity" placeholder="Cant." [class.input-error]="isFieldInvalid(itemForm, 'quantity')" style="flex: 1; min-width: 80px;" />
+              <button type="submit" class="ui-btn ui-btn-secondary orders-btn-add" style="padding: 0 16px; white-space: nowrap;">
+                Añadir
+              </button>
+            </div>
+            <p *ngIf="isFieldInvalid(itemForm, 'quantity')" class="validation-error">Mínimo 1 und.</p>
+          </div>
         </div>
-      </div>
-
-      <div class="ui-field">
-        <label>Observaciones</label>
-        <textarea rows="3" [(ngModel)]="form.notes" name="orderNotes" maxlength="200" placeholder="Detalle adicional del pedido (opcional)"></textarea>
-        <small class="orders-char-count">0 / 200</small>
-      </div>
+      </form>
 
       <div class="draft-items" *ngIf="draftItems.length">
         <article class="draft-item" *ngFor="let item of draftItems">
@@ -177,13 +189,6 @@
       </div>
 
       <div class="orders-form-actions">
-        <button type="button" class="ui-btn ui-btn-secondary orders-btn-add" (click)="addDraftItem()">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3">
-            <line x1="12" y1="5" x2="12" y2="19"/>
-            <line x1="5" y1="12" x2="19" y2="12"/>
-          </svg>
-          Agregar ítem
-        </button>
 
         <button class="ui-btn ui-btn-primary orders-btn-save" type="button" (click)="saveOrder()">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">

@@ -1,6 +1,6 @@
 import { CommonModule, DatePipe } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import Swal from 'sweetalert2';
 import {
@@ -15,7 +15,7 @@ import { Warehouse, WarehousesService } from '../../../core/services/warehouses'
 
 @Component({
   selector: 'app-internal-orders-page',
-  imports: [CommonModule, FormsModule, DatePipe, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, DatePipe, RouterLink],
   templateUrl: './internal-orders-page.html',
   styleUrl: './internal-orders-page.css',
 })
@@ -25,15 +25,29 @@ export class InternalOrdersPage implements OnInit {
   products: Product[] = [];
   errorMessage = '';
 
-  form = this.createEmptyForm();
+  orderForm: FormGroup;
+  itemForm: FormGroup;
   draftItems: InternalOrderItem[] = [];
 
   constructor(
     private ordersService: InternalOrdersService,
     private warehousesService: WarehousesService,
     private productsService: ProductsService,
-    private cdr: ChangeDetectorRef
-  ) {}
+    private cdr: ChangeDetectorRef,
+    private fb: FormBuilder
+  ) {
+    this.orderForm = this.fb.group({
+      storeId: ['', [Validators.required]],
+      requestedBy: ['', [Validators.required, Validators.minLength(3)]],
+      priority: ['Media', [Validators.required]],
+      notes: ['']
+    });
+
+    this.itemForm = this.fb.group({
+      productId: ['', [Validators.required]],
+      quantity: [1, [Validators.required, Validators.min(1)]]
+    });
+  }
 
   ngOnInit() {
     this.loadData();
@@ -56,16 +70,33 @@ export class InternalOrdersPage implements OnInit {
     return this.orders.filter((item) => item.status === 'Entregado').length;
   }
 
-  addDraftItem() {
-    const product = this.productsFromCentral.find((item) => item.id === Number(this.form.productId));
-    const quantity = Number(this.form.quantity);
+  isFieldInvalid(form: FormGroup, field: string): boolean {
+    const control = form.get(field);
+    return !!(control && control.invalid && (control.dirty || control.touched));
+  }
 
-    if (!product || quantity <= 0) {
-      this.errorMessage = 'Selecciona un producto valido y una cantidad mayor a cero.';
+  addDraftItem() {
+    this.itemForm.markAllAsTouched();
+    if (this.itemForm.invalid) {
+      this.errorMessage = 'Selecciona un producto válido y una cantidad mayor a cero.';
       return;
     }
 
+    const productId = Number(this.itemForm.get('productId')?.value);
+    const quantity = Number(this.itemForm.get('quantity')?.value);
+    const product = this.productsFromCentral.find((item) => item.id === productId);
+
+    if (!product) return;
+
+    // Calcular cuánto se ha pedido ya de este producto en el borrador
     const existing = this.draftItems.find((item) => item.productId === product.id);
+    const pendingQuantity = existing ? existing.quantity + quantity : quantity;
+
+    if (pendingQuantity > product.stock) {
+       this.errorMessage = `¡Stock insuficiente! El Almacén Central solo tiene ${product.stock} unidades de ${product.nombre}.`;
+       return;
+    }
+
     if (existing) {
       existing.quantity += quantity;
     } else {
@@ -80,8 +111,7 @@ export class InternalOrdersPage implements OnInit {
       ];
     }
 
-    this.form.productId = 0;
-    this.form.quantity = 0;
+    this.itemForm.reset({ productId: '', quantity: 1 });
     this.errorMessage = '';
   }
 
@@ -90,17 +120,26 @@ export class InternalOrdersPage implements OnInit {
   }
 
   saveOrder() {
-    const store = this.stores.find((item) => item.id === Number(this.form.storeId));
-    if (!store || !this.form.requestedBy.trim() || !this.draftItems.length) {
-      this.errorMessage = 'Completa la tienda, el solicitante y agrega al menos un producto.';
+    this.orderForm.markAllAsTouched();
+    this.errorMessage = '';
+
+    if (this.orderForm.invalid) {
+      this.errorMessage = 'Completa los campos obligatorios del pedido.';
       return;
     }
 
+    if (!this.draftItems.length) {
+      this.errorMessage = 'Agrega al menos un producto al pedido.';
+      return;
+    }
+
+    const formValues = this.orderForm.value;
+
     this.ordersService.create({
-      tiendaId: store.id,
-      solicitadoPor: this.form.requestedBy.trim(),
-      prioridad: this.form.priority,
-      observaciones: this.form.notes.trim(),
+      tiendaId: Number(formValues.storeId),
+      solicitadoPor: formValues.requestedBy.trim(),
+      prioridad: formValues.priority,
+      observaciones: formValues.notes ? formValues.notes.trim() : '',
       items: this.draftItems.map((item) => ({
         productoId: item.productId,
         cantidad: item.quantity,
@@ -113,12 +152,18 @@ export class InternalOrdersPage implements OnInit {
         await Swal.fire({
           icon: 'success',
           title: 'Pedido registrado',
-          text: 'La solicitud de la tienda ya entro al flujo del almacen central.',
+          text: 'La solicitud de la tienda ya entró al flujo del almacén central.',
           confirmButtonColor: '#7c3f97',
         });
       },
       error: (error) => {
-        this.errorMessage = error?.error?.message || 'No se pudo registrar el pedido interno.';
+        let msg = 'No se pudo registrar el pedido interno.';
+        if (error.error && typeof error.error === 'object') {
+           msg = error.error.message || JSON.stringify(error.error);
+        } else if (error.message) {
+           msg = error.message;
+        }
+        this.errorMessage = `Error ${error.status || 'Desconocido'}: ${msg}`;
         this.cdr.detectChanges();
       },
     });
@@ -143,12 +188,18 @@ export class InternalOrdersPage implements OnInit {
         await Swal.fire({
           icon: 'success',
           title: 'Transferencia generada',
-          text: 'El stock salio del almacen central y el Kardex fue actualizado.',
+          text: 'El stock salió del almacén central y el Kardex fue actualizado.',
           confirmButtonColor: '#7c3f97',
         });
       },
       error: (error) => {
-        this.errorMessage = error?.error?.message || 'No se pudo generar la transferencia del pedido.';
+        let msg = 'No se pudo generar la transferencia.';
+        if (error.error && typeof error.error === 'object') {
+           msg = error.error.message || JSON.stringify(error.error);
+        } else if (error.message) {
+           msg = error.message;
+        }
+        this.errorMessage = `Error ${error.status || 'Desconocido'}: ${msg}`;
         this.cdr.detectChanges();
       },
     });
@@ -174,7 +225,7 @@ export class InternalOrdersPage implements OnInit {
         this.cdr.detectChanges();
       },
       error: () => {
-        this.errorMessage = 'No se pudieron cargar los productos del almacen central.';
+        this.errorMessage = 'No se pudieron cargar los productos del almacén central.';
         this.cdr.detectChanges();
       },
     });
@@ -198,19 +249,14 @@ export class InternalOrdersPage implements OnInit {
     return centralWarehouse?.almacenNombre ?? '';
   }
 
-  private createEmptyForm() {
-    return {
-      storeId: 0,
-      requestedBy: '',
-      priority: 'Media' as InternalOrderPriority,
-      productId: 0,
-      quantity: 0,
-      notes: '',
-    };
-  }
-
   private resetForm() {
-    this.form = this.createEmptyForm();
+    this.orderForm.reset({
+      storeId: '',
+      requestedBy: '',
+      priority: 'Media',
+      notes: ''
+    });
+    this.itemForm.reset({ productId: '', quantity: 1 });
     this.draftItems = [];
     this.errorMessage = '';
   }

@@ -5,6 +5,7 @@ import { RouterLink } from '@angular/router';
 import Swal from 'sweetalert2';
 import { TransfersService } from '../../../core/services/transfers';
 import { ReceptionService, TransferenciaRecepcion } from '../../../core/services/reception';
+import { WarehousesService } from '../../../core/services/warehouses';
 
 @Component({
   selector: 'app-reception-page',
@@ -14,6 +15,7 @@ import { ReceptionService, TransferenciaRecepcion } from '../../../core/services
 })
 export class ReceptionPage implements OnInit {
   transfers: TransferenciaRecepcion[] = [];
+  responsables: string[] = [];
   errorMessage = '';
   saving = false;
 
@@ -22,6 +24,7 @@ export class ReceptionPage implements OnInit {
   constructor(
     private transfersService: TransfersService,
     private receptionService: ReceptionService,
+    private warehousesService: WarehousesService,
     private cdr: ChangeDetectorRef,
     private fb: FormBuilder
   ) {
@@ -121,6 +124,17 @@ export class ReceptionPage implements OnInit {
         this.errorMessage = 'Error al cargar las transferencias.';
         this.cdr.detectChanges();
       },
+    });
+
+    this.warehousesService.list().subscribe({
+      next: (warehouses) => {
+        const uniqueResponsables = new Set(warehouses.map(w => w.responsable).filter(r => r));
+        this.responsables = Array.from(uniqueResponsables);
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        console.error('No se pudieron cargar los almacenes para obtener responsables');
+      }
     });
   }
 }

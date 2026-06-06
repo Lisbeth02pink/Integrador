@@ -54,8 +54,13 @@
 
         <div class="ui-field">
           <label>Responsable</label>
-          <input formControlName="responsable" placeholder="Encargado de tienda" [class.input-error]="isFieldInvalid('responsable')" />
-          <p *ngIf="isFieldInvalid('responsable')" class="validation-error">El responsable es obligatorio (mínimo 3 caracteres).</p>
+          <select formControlName="responsable" [class.input-error]="isFieldInvalid('responsable')">
+            <option value="" disabled>Seleccionar responsable</option>
+            <option *ngFor="let resp of responsables" [value]="resp">
+              {{ resp }}
+            </option>
+          </select>
+          <p *ngIf="isFieldInvalid('responsable')" class="validation-error">El responsable es obligatorio.</p>
         </div>
 
         <div class="ui-field">

@@ -54,8 +54,8 @@ export class InternalOrdersPage implements OnInit {
   }
 
   get productsFromCentral() {
-    const centralName = this.getCentralWarehouseName();
-    return this.products.filter((item) => item.almacenNombre === centralName);
+    // El cliente solicitó mostrar todos los productos registrados, no solo los del almacén central
+    return this.products;
   }
 
   get pendingCount() {

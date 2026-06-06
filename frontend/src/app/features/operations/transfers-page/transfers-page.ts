@@ -117,8 +117,8 @@ export class TransfersPage implements OnInit, OnDestroy {
   }
 
   get centralProducts() {
-    const centralName = this.centralWarehouse?.nombre;
-    return this.products.filter((item) => item.almacenNombre === centralName);
+    // El cliente solicitó mostrar todos los productos registrados
+    return this.products;
   }
 
   get transferMovements() {

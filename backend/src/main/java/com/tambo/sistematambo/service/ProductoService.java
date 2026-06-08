@@ -7,6 +7,7 @@ import com.tambo.sistematambo.repository.CategoriaRepository;
 import com.tambo.sistematambo.repository.ProductoRepository;
 import com.tambo.sistematambo.response.ProductoResponse;
 import java.util.List;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -58,7 +59,7 @@ public class ProductoService {
     }
 
     private void validarSku(Long productoId, String sku, Long almacenId) {
-        String normalized = sku.trim().toUpperCase();
+        String normalized = normalizeSku(sku);
         boolean duplicado = productoId == null
                 ? productoRepository.existsBySkuAndAlmacenId(normalized, almacenId)
                 : productoRepository.existsBySkuAndAlmacenIdAndIdNot(normalized, almacenId, productoId);
@@ -73,16 +74,26 @@ public class ProductoService {
         validarCategoriaActiva(categoria);
         validarStock(request.stock(), request.stockMinimo());
 
-        producto.setNombre(request.nombre().trim());
-        producto.setSku(request.sku().trim().toUpperCase());
+        producto.setNombre(StringUtils.trim(request.nombre()));
+        producto.setSku(normalizeSku(request.sku()));
         producto.setPrecioCompra(request.precioCompra());
         producto.setPrecioVenta(request.precioVenta());
         producto.setStock(request.stock());
         producto.setStockMinimo(request.stockMinimo());
         producto.setCategoria(categoria);
         producto.setAlmacen(almacenService.buscarEntidad(request.almacenId()));
-        producto.setImagen(request.imagen() != null ? request.imagen().trim() : "");
+        producto.setImagen(StringUtils.trimToEmpty(request.imagen()));
         producto.setEstado(request.estado());
+    }
+
+    private String normalizeSku(String sku) {
+        String normalized = StringUtils.upperCase(StringUtils.trimToEmpty(sku));
+
+        if (StringUtils.isBlank(normalized)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El SKU es obligatorio");
+        }
+
+        return normalized;
     }
 
     private void validarCategoriaActiva(Categoria categoria) {

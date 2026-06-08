@@ -155,6 +155,36 @@ Docker permite ejecutar el backend, frontend y base de datos mediante contenedor
 
 ---
 
+### 7.5 Patrones y principios aplicados
+
+El proyecto aplica una arquitectura por capas compatible con MVC y con separacion de responsabilidades:
+
+| Evidencia | Ubicacion | Aplicacion |
+|---|---|---|
+| MVC / arquitectura por capas | `controller`, `service`, `model`, `frontend/src/app/features` | Los controladores reciben solicitudes REST, los servicios contienen reglas de negocio, los modelos representan entidades y Angular actua como vista del sistema. |
+| DAO / Repository | `backend/src/main/java/com/tambo/sistematambo/repository` | Las interfaces `JpaRepository` encapsulan el acceso a datos y evitan que controladores o vistas consulten directamente la base de datos. |
+| SOLID - responsabilidad unica | `controller`, `service`, `repository`, `dto`, `response`, `security` | Cada paquete tiene una responsabilidad delimitada: entrada HTTP, negocio, persistencia, contratos de datos, salida segura y seguridad. |
+| SOLID - inversion de dependencias | Constructores de servicios y controladores | Las clases dependen de abstracciones inyectadas por Spring, por ejemplo repositorios, servicios de token y `PasswordEncoder`. |
+| Seguridad probada | `src/test/java/com/tambo/sistematambo/security` | Existen pruebas para hash de refresh token y proteccion de endpoints de reportes. |
+
+### 7.6 Uso justificado de librerias Java
+
+| Libreria | Uso en el sistema | Valor aportado |
+|---|---|---|
+| Apache POI | `ReporteExcelService` | Genera reportes Excel `.xlsx` con hojas, estilos, encabezados y descarga desde endpoints REST. |
+| Logback | `logback-spring.xml` | Centraliza logs en consola, archivo general y archivo especializado para reportes. |
+| Apache Commons Lang | `AuthService`, `ProductoService`, `ReporteExcelService` | Normaliza cadenas, valida textos vacios y ayuda a enmascarar correos en reportes. |
+| Google Guava | `RefreshTokenHashService` y `AuthService` | Construye listas inmutables de modulos y calcula SHA-256 del refresh token antes de guardarlo. |
+
+Medidas de seguridad asociadas al tratamiento de informacion:
+
+- Los reportes Excel requieren autenticacion y rol `ADMINISTRADOR`.
+- El reporte de usuarios no exporta contrasenas ni refresh tokens.
+- Los correos se exportan enmascarados en el reporte de usuarios.
+- Los refresh tokens se almacenan como hash SHA-256 y se comparan sin exponer el valor plano.
+
+---
+
 ## 8. Estructura del backend
 
 El backend se encuentra en la carpeta:
@@ -1067,6 +1097,31 @@ Ubicación:
 
 ```text
 frontend/src/app/core/auth/auth.interceptor.ts
+```
+
+---
+
+### 15.5 Proteccion de reportes
+
+Los endpoints `/api/reportes/**` no son publicos. En `SecurityConfig.java` se exige rol `ADMINISTRADOR` para descargar reportes Excel. Esta regla evita que usuarios anonimos o sin permisos descarguen informacion operativa del sistema.
+
+La proteccion esta respaldada por la prueba:
+
+```text
+backend/src/test/java/com/tambo/sistematambo/security/ReporteSecurityIntegrationTest.java
+```
+
+### 15.6 Refresh token protegido
+
+El sistema entrega el refresh token al usuario autenticado, pero no lo guarda en texto plano. Antes de persistirlo se calcula un hash SHA-256 mediante `RefreshTokenHashService`. En la renovacion de sesion, el token recibido se vuelve a hashear y se compara contra el valor almacenado.
+
+Esta medida reduce el impacto si alguien accede a la base de datos, porque no encontrara refresh tokens reutilizables directamente.
+
+Pruebas asociadas:
+
+```text
+backend/src/test/java/com/tambo/sistematambo/security/RefreshTokenHashServiceTest.java
+backend/src/test/java/com/tambo/sistematambo/service/AuthServiceTest.java
 ```
 
 ---

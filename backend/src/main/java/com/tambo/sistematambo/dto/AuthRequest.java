@@ -1,4 +1,8 @@
 package com.tambo.sistematambo.dto;
 
-public record AuthRequest(String username, String password) {
+import jakarta.validation.constraints.NotBlank;
+
+public record AuthRequest(
+        @NotBlank(message = "El usuario o correo es obligatorio") String username,
+        @NotBlank(message = "La clave es obligatoria") String password) {
 }

@@ -1,5 +1,6 @@
 package com.tambo.sistematambo.service;
 
+import com.google.common.collect.ImmutableList;
 import com.tambo.sistematambo.dto.AuthLogoutRequest;
 import com.tambo.sistematambo.dto.AuthRefreshRequest;
 import com.tambo.sistematambo.dto.AuthRequest;
@@ -8,10 +9,12 @@ import com.tambo.sistematambo.model.Perfil;
 import com.tambo.sistematambo.model.User;
 import com.tambo.sistematambo.repository.UserRepository;
 import com.tambo.sistematambo.response.AuthResponse;
+import com.tambo.sistematambo.security.RefreshTokenHashService;
 import com.tambo.sistematambo.security.JwtTokenService;
 import io.jsonwebtoken.JwtException;
 import java.time.LocalDateTime;
 import java.util.List;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -25,72 +28,55 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenService jwtTokenService;
+    private final RefreshTokenHashService refreshTokenHashService;
 
     public AuthService(
             UserRepository userRepository,
             PasswordEncoder passwordEncoder,
-            JwtTokenService jwtTokenService
+            JwtTokenService jwtTokenService,
+            RefreshTokenHashService refreshTokenHashService
     ) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtTokenService = jwtTokenService;
+        this.refreshTokenHashService = refreshTokenHashService;
     }
 
     public AuthResponse login(AuthRequest request) {
+        String username = normalizeCredential(request.username());
 
-        try {
-
-            System.out.println("========== LOGIN ==========");
-            System.out.println("REQUEST USERNAME: " + request.username());
-            System.out.println("REQUEST PASSWORD: " + request.password());
-
-            User user = userRepository.findByCorreoOrUsuario(
-                    request.username(),
-                    request.username()
-            ).orElseThrow(() ->
-                    new ResponseStatusException(
-                            HttpStatus.UNAUTHORIZED,
-                            "Credenciales incorrectas"
-                    )
-            );
-
-            System.out.println("USUARIO ENCONTRADO: " + user.getUsuario());
-            System.out.println("ESTADO: " + user.getEstado());
-            System.out.println("CLAVE BD: " + user.getClave());
-
-            validarUsuarioActivo(user);
-            validarBloqueo(user);
-
-            boolean passwordOk = passwordEncoder.matches(
-                    request.password(),
-                    user.getClave()
-            );
-
-            System.out.println("PASSWORD OK: " + passwordOk);
-
-            if (!passwordOk) {
-
-                registrarIntentoFallido(user);
-
-                throw new ResponseStatusException(
+        User user = userRepository.findByCorreoOrUsuario(
+                username,
+                username
+        ).orElseThrow(() ->
+                new ResponseStatusException(
                         HttpStatus.UNAUTHORIZED,
                         "Credenciales incorrectas"
-                );
-            }
+                )
+        );
 
-            user.setFailedLoginAttempts(0);
-            user.setLockedUntil(null);
+        validarUsuarioActivo(user);
+        validarBloqueo(user);
 
-            userRepository.save(user);
+        boolean passwordOk = passwordEncoder.matches(
+                request.password(),
+                user.getClave()
+        );
 
-            return emitirTokens(user, "Login correcto");
-
-        } catch (Exception e) {
-
-            e.printStackTrace();
-
-            throw e;
+        if (!passwordOk) {
+            registrarIntentoFallido(user);
+            throw new ResponseStatusException(
+                    HttpStatus.UNAUTHORIZED,
+                    "Credenciales incorrectas"
+            );
         }
+
+        user.setFailedLoginAttempts(0);
+        user.setLockedUntil(null);
+
+        userRepository.save(user);
+
+        return emitirTokens(user, "Login correcto");
     }
 
     public AuthResponse refresh(AuthRefreshRequest request) {
@@ -131,7 +117,7 @@ public class AuthService {
         if (user.getRefreshTokenHash() == null
                 || user.getRefreshTokenExpiresAt() == null
                 || user.getRefreshTokenExpiresAt().isBefore(LocalDateTime.now())
-                || !request.refreshToken().equals(user.getRefreshTokenHash())) {
+                || !refreshTokenHashService.matches(request.refreshToken(), user.getRefreshTokenHash())) {
 
             throw new ResponseStatusException(
                     HttpStatus.UNAUTHORIZED,
@@ -173,11 +159,11 @@ public class AuthService {
         Perfil perfil = user.getPerfil();
 
         List<String> modulos = perfil == null
-                ? List.of()
+                ? ImmutableList.of()
                 : perfil.getModulos()
                         .stream()
                         .map(Modulo::getNombre)
-                        .toList();
+                        .collect(ImmutableList.toImmutableList());
 
         String accessToken = jwtTokenService.generateAccessToken(
                 user.getId(),
@@ -194,8 +180,7 @@ public class AuthService {
         long expiresAt = System.currentTimeMillis()
                 + jwtTokenService.getAccessExpirationMs();
 
-        // CAMBIO IMPORTANTE
-        user.setRefreshTokenHash(refreshToken);
+        user.setRefreshTokenHash(refreshTokenHashService.hash(refreshToken));
 
         user.setRefreshTokenExpiresAt(
                 LocalDateTime.now().plusNanos(
@@ -217,6 +202,19 @@ public class AuthService {
                 expiresAt,
                 message
         );
+    }
+
+    private String normalizeCredential(String credential) {
+        String normalized = StringUtils.trimToEmpty(credential);
+
+        if (StringUtils.isBlank(normalized)) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "El usuario o correo es obligatorio"
+            );
+        }
+
+        return normalized;
     }
 
     private void validarUsuarioActivo(User user) {

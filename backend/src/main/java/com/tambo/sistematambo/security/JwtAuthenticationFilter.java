@@ -16,11 +16,15 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
+
+    private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
 
     private final JwtTokenService jwtTokenService;
     private final UserRepository userRepository;
@@ -40,17 +44,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             FilterChain filterChain
     ) throws ServletException, IOException {
 
-        System.out.println("========== JWT FILTER ==========");
-        System.out.println("URI => " + request.getRequestURI());
-
         String header = request.getHeader(HttpHeaders.AUTHORIZATION);
 
-        System.out.println("HEADER => " + header);
-
         if (header == null || !header.startsWith("Bearer ")) {
-
-            System.out.println("SIN TOKEN");
-
             filterChain.doFilter(request, response);
             return;
         }
@@ -59,47 +55,30 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         try {
 
-            System.out.println("TOKEN RECIBIDO");
-
             boolean isAccess = jwtTokenService.isAccessToken(token);
 
-            System.out.println("IS ACCESS TOKEN => " + isAccess);
-
             if (!isAccess) {
-
-                System.out.println("TOKEN INVALIDO");
-
+                logger.warn("JWT rechazado por tipo invalido en {}", request.getRequestURI());
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-
                 return;
             }
 
             String username =
                     jwtTokenService.extractClaims(token).getSubject();
 
-            System.out.println("USERNAME => " + username);
-
             User user = userRepository
                     .findByCorreoOrUsuario(username, username)
                     .orElse(null);
 
             if (user == null) {
-
-                System.out.println("USUARIO NO ENCONTRADO");
-
+                logger.warn("JWT valido para usuario inexistente");
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-
                 return;
             }
 
-            System.out.println("USUARIO OK");
-
             if (user.getEstado() == null || user.getEstado() != 1) {
-
-                System.out.println("USUARIO INACTIVO");
-
+                logger.warn("JWT rechazado por usuario inactivo");
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-
                 return;
             }
 
@@ -111,11 +90,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 role = "ROLE_" +
                         user.getPerfil()
                                 .getNombre()
-                                .replace(" ", "_")
+                        .replace(" ", "_")
                                 .toUpperCase();
             }
-
-            System.out.println("ROLE => " + role);
 
             UsernamePasswordAuthenticationToken authentication =
                     new UsernamePasswordAuthenticationToken(
@@ -133,15 +110,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     .getContext()
                     .setAuthentication(authentication);
 
-            System.out.println("AUTHENTICATION OK");
-
             filterChain.doFilter(request, response);
 
         } catch (Exception ex) {
-
-            System.out.println("ERROR JWT");
-            ex.printStackTrace();
-
+            logger.warn("JWT rechazado por validacion fallida en {}", request.getRequestURI());
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
         }
     }

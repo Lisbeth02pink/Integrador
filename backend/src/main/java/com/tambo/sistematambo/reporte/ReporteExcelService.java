@@ -15,6 +15,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.apache.commons.lang3.StringUtils;
  
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -71,7 +72,7 @@ public class ReporteExcelService {
                     LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
             sheet.createRow(2);
  
-            String[] encabezados = {"ID", "Nombre", "Usuario", "Correo", "Estado", "Perfil"};
+            String[] encabezados = {"ID", "Nombre", "Usuario", "Correo protegido", "Estado", "Perfil"};
             Row filaEncabezado = sheet.createRow(3);
             for (int i = 0; i < encabezados.length; i++) {
                 Cell celda = filaEncabezado.createCell(i);
@@ -86,7 +87,7 @@ public class ReporteExcelService {
                 setCelda(fila, 0, u.getId().toString(), estilo);
                 setCelda(fila, 1, u.getNombre(), estilo);
                 setCelda(fila, 2, u.getUsuario(), estilo);
-                setCelda(fila, 3, u.getCorreo(), estilo);
+                setCelda(fila, 3, maskCorreo(u.getCorreo()), estilo);
                 setCelda(fila, 4, u.getEstado() == 1 ? "Activo" : "Inactivo", estilo);
                 setCelda(fila, 5, u.getPerfil() != null ? u.getPerfil().getNombre() : "Sin perfil", estilo);
                 numFila++;
@@ -217,6 +218,17 @@ public class ReporteExcelService {
         Cell celda = fila.createCell(col);
         celda.setCellValue(valor != null ? valor : "");
         celda.setCellStyle(estilo);
+    }
+
+    private String maskCorreo(String correo) {
+        if (StringUtils.isBlank(correo) || !StringUtils.contains(correo, "@")) {
+            return "";
+        }
+
+        String usuario = StringUtils.substringBefore(correo, "@");
+        String dominio = StringUtils.substringAfter(correo, "@");
+        String prefijoVisible = StringUtils.left(usuario, Math.min(2, usuario.length()));
+        return prefijoVisible + "***@" + dominio;
     }
  
     private CellStyle crearEstiloTitulo(Workbook workbook) {

@@ -41,7 +41,8 @@ public class SecurityConfig {
         configuration.setAllowCredentials(true);
 
         configuration.setAllowedOrigins(List.of(
-                "http://localhost:4200"
+                "http://localhost:4200",
+                "http://192.168.1.41:4200"
         ));
 
         configuration.setAllowedHeaders(List.of("*"));
@@ -85,10 +86,11 @@ public class SecurityConfig {
 
                         .requestMatchers(
                         "/api/auth/login",
-                        "/api/auth/refresh"
+                        "/api/auth/refresh",
+                        "/api/upload",
+                        "/uploads/**",
+                        "/api/reportes/**"
                        ).permitAll()
-
-                        .requestMatchers("/api/reportes/**").hasRole("ADMINISTRADOR")
 
                         .anyRequest().authenticated()
                 )

@@ -1485,3 +1485,29 @@ Para mantener correctamente el sistema se recomienda:
 El Sistema Logístico Tambo permite automatizar procesos clave de abastecimiento, inventario, pedidos internos, transferencias y distribución. Su arquitectura separa el backend en Java Spring Boot y el frontend en Angular, facilitando el mantenimiento y escalabilidad del sistema.
 
 El uso de Docker permite ejecutar los servicios de forma ordenada y reproducible. Asimismo, la documentación técnica en Markdown permite que otros desarrolladores comprendan la estructura, tecnologías, procesos, módulos y forma de instalación del sistema.
+
+## 29. Arquitectura de Red, Servidores y Puertos
+
+Para soportar el flujo logístico del modelo **Proveedor → Almacén Central → Tienda**, el sistema simula una infraestructura de red empresarial aislada y segura mediante contenedores independientes.
+
+### Servidores del Sistema
+* **Servidor Web (Frontend):** Desarrollado en TypeScript/Angular para la interfaz de los operarios de almacén y tiendas.
+* **Servidor de Aplicaciones (Backend API):** Desarrollado en Java/Spring Boot para procesar las reglas de negocio (gestión de rutas, alertas de stock, transferencias).
+* **Servidor de Base de Datos:** Motor relacional MySQL 8 para el almacenamiento seguro y persistencia de inventarios, pedidos y usuarios.
+
+### Plan de Direccionamiento IP (Subredes)
+Para aislar el tráfico crítico del Almacén Central, se configuró una subred dedicada con direccionamiento IP estático para mitigar pérdidas de conectividad:
+* **Subred del Almacén Central:** `192.168.10.0/24`
+* **IP Servidor de Base de Datos:** `192.168.10.5` (Estática)
+* **IP Servidor Backend (API):** `192.168.10.10` (Estática)
+* **IP Servidor Frontend (Web):** `192.168.10.20` (Estática)
+
+*Nota de infraestructura:* Las tiendas físicas de Tambo se conectarían a esta subred central mediante un túnel **VPN IPsec (Site-to-Site)**, garantizando que las consultas de stock viajen cifradas a través de Internet. Los equipos POS de las tiendas obtienen su dirección mediante un servidor **DHCP** local en el rango `192.168.20.0/24`.
+
+### Matriz de Puertos y Protocolos (Capa de Transporte TCP)
+
+| Servicio / Servidor | Puerto Interno | Puerto Externo (Host) | Propósito |
+| :--- | :--- | :--- | :--- |
+| **Frontend Web** | `80` | `80` / `4200` | Acceso a las pantallas de gestión logística por HTTP. |
+| **Backend API** | `8080` | `8080` | Comunicación de peticiones REST (JSON). |
+| **Base de Datos** | `3306` | `3307` | Conexión e inserción de transacciones de inventario. |

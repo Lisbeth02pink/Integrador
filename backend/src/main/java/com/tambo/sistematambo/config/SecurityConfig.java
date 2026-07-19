@@ -42,7 +42,8 @@ public class SecurityConfig {
 
         configuration.setAllowedOrigins(List.of(
                 "http://localhost:4200",
-                "http://192.168.1.41:4200"
+                "http://192.168.1.41:4200",
+                "https://integrador-1.onrender.com"
         ));
 
         configuration.setAllowedHeaders(List.of("*"));
